@@ -1,4 +1,13 @@
-# Sequence
+# build.sh
+This file:
+1. Compiles `inc.nim` creating: `inc.so`
+2. It copies the library within the folder structure.
+3. zips the folder structure creating `inc.fmu`
+4. Tests the `inc.fmu` with `fmuCheck.linux64` (taken from [FMUComplianceChecker](https://github.com/modelica-tools/FMUComplianceChecker)).
+
+
+
+# Simulation sequence
 
 1. fmi2Instantiate: This function creates an instance of the FMU and returns a handle that can be used to access the FMU's functions and data.
 
