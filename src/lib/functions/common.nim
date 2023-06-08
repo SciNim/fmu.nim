@@ -6,7 +6,7 @@ import strformat
 {.push exportc:"$1",cdecl,dynlib.}
 
 #comp:ModelInstance
-proc fmi2SetupExperiment*(comp: ModelInstance; toleranceDefined: fmi2Boolean;
+proc fmi2SetupExperiment*(comp: var ModelInstance; toleranceDefined: fmi2Boolean;
                          tolerance: fmi2Real; startTime: fmi2Real;
                          stopTimeDefined: fmi2Boolean; stopTime: fmi2Real): fmi2Status =
 
