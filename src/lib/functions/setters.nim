@@ -4,7 +4,7 @@
 #import model
 import strformat
 
-proc fmi2SetReal*(comp: var ModelInstance; vr: ptr fmi2ValueReference; nvr: csize_t;
+proc fmi2SetReal*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize_t;
                  value: ptr fmi2Real): fmi2Status {.exportc:"$1".} =
     #var i:int
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
@@ -27,7 +27,7 @@ proc fmi2SetReal*(comp: var ModelInstance; vr: ptr fmi2ValueReference; nvr: csiz
     return fmi2OK
 
 
-proc fmi2SetInteger*( comp: var ModelInstance; vr: ptr fmi2ValueReference; nvr: csize_t;
+proc fmi2SetInteger*( comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize_t;
                       value: ptr fmi2Integer): fmi2Status {.exportc:"$1".} =
     #var i:int
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
@@ -51,7 +51,7 @@ proc fmi2SetInteger*( comp: var ModelInstance; vr: ptr fmi2ValueReference; nvr: 
     return fmi2OK
 
 
-proc fmi2SetBoolean*(comp: var ModelInstance; vr: ptr fmi2ValueReference; nvr: csize_t;
+proc fmi2SetBoolean*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize_t;
                     value: ptr fmi2Boolean): fmi2Status {.exportc:"$1".} =
     #var i:int
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
@@ -81,7 +81,7 @@ proc fmi2SetBoolean*(comp: var ModelInstance; vr: ptr fmi2ValueReference; nvr: c
     return fmi2OK
 
 
-proc fmi2SetString*(comp: var ModelInstance; vr: ptr fmi2ValueReference; nvr: csize_t;
+proc fmi2SetString*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize_t;
                    value: ptr fmi2String): fmi2Status  =
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     if invalidState(comp, "fmi2SetString", MASK_fmi2SetString):

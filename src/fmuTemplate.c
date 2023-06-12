@@ -140,96 +140,11 @@ const char* fmi2GetTypesPlatform() {
 
 
 
-fmi2Status fmi2GetReal (fmi2Component c, const fmi2ValueReference vr[], size_t nvr, fmi2Real value[]) {
-    int i;
-    ModelInstance *comp = (ModelInstance *)c;
-    if (invalidState(comp, "fmi2GetReal", MASK_fmi2GetReal))
-        return fmi2Error;
-    if (nvr > 0 && nullPointer(comp, "fmi2GetReal", "vr[]", vr))
-        return fmi2Error;
-    if (nvr > 0 && nullPointer(comp, "fmi2GetReal", "value[]", value))
-        return fmi2Error;
-    if (nvr > 0 && comp->isDirtyValues) {
-        calculateValues(comp);
-        comp->isDirtyValues = fmi2False;
-    }
-#if NUMBER_OF_REALS > 0
-    for (i = 0; i < nvr; i++) {
-        if (vrOutOfRange(comp, "fmi2GetReal", vr[i], NUMBER_OF_REALS))
-            return fmi2Error;
-        value[i] = getReal(comp, vr[i]); // to be implemented by the includer of this file
 
-        FILTERED_LOG(comp, fmi2OK, LOG_FMI_CALL, "fmi2GetReal: #r%u# = %.16g", vr[i], value[i])
-    }
-#endif
-    return fmi2OK;
-}
 
-fmi2Status fmi2GetInteger(fmi2Component c, const fmi2ValueReference vr[], size_t nvr, fmi2Integer value[]) {
-    int i;
-    ModelInstance *comp = (ModelInstance *)c;
-    if (invalidState(comp, "fmi2GetInteger", MASK_fmi2GetInteger))
-        return fmi2Error;
-    if (nvr > 0 && nullPointer(comp, "fmi2GetInteger", "vr[]", vr))
-            return fmi2Error;
-    if (nvr > 0 && nullPointer(comp, "fmi2GetInteger", "value[]", value))
-            return fmi2Error;
-    if (nvr > 0 && comp->isDirtyValues) {
-        calculateValues(comp);
-        comp->isDirtyValues = fmi2False;
-    }
-    for (i = 0; i < nvr; i++) {
-        if (vrOutOfRange(comp, "fmi2GetInteger", vr[i], NUMBER_OF_INTEGERS))
-            return fmi2Error;
-        value[i] = comp->i[vr[i]];
-        FILTERED_LOG(comp, fmi2OK, LOG_FMI_CALL, "fmi2GetInteger: #i%u# = %d", vr[i], value[i])
-    }
-    return fmi2OK;
-}
 
-fmi2Status fmi2GetBoolean(fmi2Component c, const fmi2ValueReference vr[], size_t nvr, fmi2Boolean value[]) {
-    int i;
-    ModelInstance *comp = (ModelInstance *)c;
-    if (invalidState(comp, "fmi2GetBoolean", MASK_fmi2GetBoolean))
-        return fmi2Error;
-    if (nvr > 0 && nullPointer(comp, "fmi2GetBoolean", "vr[]", vr))
-            return fmi2Error;
-    if (nvr > 0 && nullPointer(comp, "fmi2GetBoolean", "value[]", value))
-            return fmi2Error;
-    if (nvr > 0 && comp->isDirtyValues) {
-        calculateValues(comp);
-        comp->isDirtyValues = fmi2False;
-    }
-    for (i = 0; i < nvr; i++) {
-        if (vrOutOfRange(comp, "fmi2GetBoolean", vr[i], NUMBER_OF_BOOLEANS))
-            return fmi2Error;
-        value[i] = comp->b[vr[i]];
-        FILTERED_LOG(comp, fmi2OK, LOG_FMI_CALL, "fmi2GetBoolean: #b%u# = %s", vr[i], value[i]? "true" : "false")
-    }
-    return fmi2OK;
-}
 
-fmi2Status fmi2GetString (fmi2Component c, const fmi2ValueReference vr[], size_t nvr, fmi2String value[]) {
-    int i;
-    ModelInstance *comp = (ModelInstance *)c;
-    if (invalidState(comp, "fmi2GetString", MASK_fmi2GetString))
-        return fmi2Error;
-    if (nvr>0 && nullPointer(comp, "fmi2GetString", "vr[]", vr))
-            return fmi2Error;
-    if (nvr>0 && nullPointer(comp, "fmi2GetString", "value[]", value))
-            return fmi2Error;
-    if (nvr > 0 && comp->isDirtyValues) {
-        calculateValues(comp);
-        comp->isDirtyValues = fmi2False;
-    }
-    for (i=0; i<nvr; i++) {
-        if (vrOutOfRange(comp, "fmi2GetString", vr[i], NUMBER_OF_STRINGS))
-            return fmi2Error;
-        value[i] = comp->s[vr[i]];
-        FILTERED_LOG(comp, fmi2OK, LOG_FMI_CALL, "fmi2GetString: #s%u# = '%s'", vr[i], value[i])
-    }
-    return fmi2OK;
-}
+
 
 
 // fmi2Status fmi2GetFMUstate (fmi2Component c, fmi2FMUstate* FMUstate) {

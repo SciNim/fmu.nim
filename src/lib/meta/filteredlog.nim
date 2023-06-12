@@ -2,7 +2,7 @@ import ../defs/[definitions, modelinstance]
 
 
 # // return fmi2True if logging category is on. Else return fmi2False.
-# fmi2Boolean isCategoryLogged(ModelInstance *comp, int categoryIndex) {
+# fmi2Boolean isCategoryLogged(ModelInstanceRef *comp, int categoryIndex) {
 #     if (categoryIndex < NUMBER_OF_CATEGORIES
 #         && (comp->logCategories[categoryIndex] || comp->logCategories[LOG_ALL])) {
 #         return fmi2True;
@@ -15,7 +15,7 @@ import ../defs/[definitions, modelinstance]
 
 #proc `and`*(bool,)
 
-proc isCategoryLogged*(comp: ModelInstance; categoryIndex: cint): fmi2Boolean =
+proc isCategoryLogged*(comp: ModelInstanceRef; categoryIndex: cint): fmi2Boolean =
   if (categoryIndex < NUMBER_OF_CATEGORIES) and
       (comp.logCategories[categoryIndex].bool or comp.logCategories[LOG_ALL].bool):
     return fmi2True
@@ -26,7 +26,7 @@ proc isCategoryLogged*(comp: ModelInstance; categoryIndex: cint): fmi2Boolean =
 let # :seq[fmi2String]
   logCategoriesNames* = @["logAll", "logError", "logFmiCall", "logEvent"]
 
-template filteredLog*( instance: ModelInstance, 
+template filteredLog*( instance: ModelInstanceRef, 
                         status: fmi2Status, 
                         categoryIndex: int, 
                         message: string, 

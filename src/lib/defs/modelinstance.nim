@@ -1,5 +1,6 @@
 import definitions
-{.push exportc, dynlib,cdecl.}
+import strformat
+{.push exportc, dynlib, cdecl.}
 
 type
   fmi2CallbackLogger*  = proc( a1: fmi2ComponentEnvironment,
@@ -21,12 +22,12 @@ type
   #fmi2CallbackFunctions* = pointer
 
 type
-  ModelInstanceObj* = object
-    r*: ptr UncheckedArray[fmi2Real]
-    i*: ptr UncheckedArray[fmi2Integer] 
-    b*: ptr UncheckedArray[fmi2Boolean]
-    s*: ptr UncheckedArray[fmi2String]
-    isPositive*: ptr UncheckedArray[fmi2Boolean]
+  ModelInstance* = object
+    r*: seq[fmi2Real] #ptr UncheckedArray[fmi2Real]
+    i*: seq[fmi2Integer]  #ptr UncheckedArray[fmi2Integer] 
+    b*: seq[fmi2Boolean] #ptr UncheckedArray[fmi2Boolean]
+    s*: seq[fmi2String] #ptr UncheckedArray[fmi2String]
+    isPositive*: seq[fmi2Boolean]  #ptr UncheckedArray[fmi2Boolean]
     time*: fmi2Real
     instanceName*: fmi2String
     `type`*: fmi2Type
@@ -40,5 +41,21 @@ type
     isDirtyValues*: fmi2Boolean
     isNewEventIteration*: fmi2Boolean
 
-  ModelInstance* = ref ModelInstanceObj
+
+
+type
+  ModelInstanceRef* = ref ModelInstance
 {.pop.}
+
+#proc `=destroy`*(o: var ModelInstance) {.exportc,dynlib.} =
+#  echo "destroyed"
+
+proc `$`*(o: ModelInstanceRef):string =
+  result = "ref ModelInstance:"
+  result &= &"\n- r: {o.r}"
+  result &= &"\n- i: {o.i}"
+  result &= &"\n- b: {o.b}"
+  result &= &"\n- s: {o.s}"
+  result &= &"\n- isPositive: {o.isPositive}"
+  result &= &"\n- time: {o.time}"
+  result &= "\n"

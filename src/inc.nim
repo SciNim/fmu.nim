@@ -30,19 +30,18 @@ const
    counter = 0
 
 
-proc setStartValues*(comp:var ModelInstance) =
-    comp.i[counter] = 1
-
+proc setStartValues*(comp: ModelInstanceRef) =  # Con ref object, no es necesario usar "var"
+    comp.i &= 1.fmi2Integer
 
 # El código generado es: (*comp).i[((NI) 0)] = ((NI32) 1);
 
-proc calculateValues*(comp:var ModelInstance) =
+proc calculateValues*(comp:ModelInstanceRef) =
     if comp.state == modelInitializationMode:
         # set first time event
         comp.eventInfo.nextEventTimeDefined = fmi2True
         comp.eventInfo.nextEventTime        = 1 + comp.time
 
-proc eventUpdate*(comp:ModelInstance, 
+proc eventUpdate*(comp:ModelInstanceRef, 
                  eventInfo:ptr fmi2EventInfo, 
                  timeEvent:bool,  # cint
                  isNewEventIteration:fmi2Boolean) =  #cint
@@ -80,3 +79,4 @@ include lib/functions/cosimulation
 include lib/functions/common
 include lib/functions/setters
 include lib/functions/others
+include lib/functions/getters

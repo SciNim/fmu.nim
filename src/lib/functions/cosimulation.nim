@@ -1,9 +1,9 @@
 {.push exportc,cdecl,dynlib.}
 
-proc fmi2SetRealInputDerivatives*(comp: var ModelInstance; vr: ptr fmi2ValueReference;
+proc fmi2SetRealInputDerivatives*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference;
                                  nvr: csize_t; order: ptr fmi2Integer;
                                  value: ptr fmi2Real): fmi2Status =
-    ##var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
+    ##var comp: ptr ModelInstanceRef = cast[ptr ModelInstanceRef](c)
     if invalidState(comp, "fmi2SetRealInputDerivatives", MASK_fmi2SetRealInputDerivatives):
         return fmi2Error
 
@@ -11,10 +11,10 @@ proc fmi2SetRealInputDerivatives*(comp: var ModelInstance; vr: ptr fmi2ValueRefe
     filteredLog(comp, fmi2Error, LOG_ERROR, fmt"fmi2SetRealInputDerivatives: ignoring function call.\nThis model cannot interpolate inputs: canInterpolateInputs='{fmi2False}'")
     return fmi2Error
 
-proc fmi2GetRealOutputDerivatives*(comp: var ModelInstance; vr: ptr fmi2ValueReference;
+proc fmi2GetRealOutputDerivatives*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference;
                                   nvr: csize_t; order: ptr fmi2Integer;
                                   value: ptr fmi2Real): fmi2Status =
-    ##var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
+    ##var comp: ptr ModelInstanceRef = cast[ptr ModelInstanceRef](c)
     if invalidState(comp, "fmi2GetRealOutputDerivatives", MASK_fmi2GetRealOutputDerivatives):
         return fmi2Error
     filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2GetRealOutputDerivatives: nvr= {nvr}")
@@ -24,8 +24,8 @@ proc fmi2GetRealOutputDerivatives*(comp: var ModelInstance; vr: ptr fmi2ValueRef
     return fmi2Error
 
 
-proc fmi2CancelStep*(comp: var ModelInstance):fmi2Status =
-    ##var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
+proc fmi2CancelStep*(comp: ModelInstanceRef):fmi2Status =
+    ##var comp: ptr ModelInstanceRef = cast[ptr ModelInstanceRef](c)
     if invalidState(comp, "fmi2CancelStep", MASK_fmi2CancelStep):
         # always fmi2CancelStep is invalid, because model is never in modelStepInProgress state.
         return fmi2Error
@@ -36,7 +36,7 @@ proc fmi2CancelStep*(comp: var ModelInstance):fmi2Status =
     return fmi2Error
 
 
-proc fmi2DoStep*(comp: var ModelInstance; currentCommunicationPoint: fmi2Real;
+proc fmi2DoStep*(comp: ModelInstanceRef; currentCommunicationPoint: fmi2Real;
                 communicationStepSize: fmi2Real;
                 noSetFMUStatePriorToCurrentPoint: fmi2Boolean): fmi2Status =
     ##[

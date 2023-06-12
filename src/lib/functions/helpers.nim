@@ -7,7 +7,7 @@ import strformat
 import ../defs/[definitions, modelinstance]
 import ../meta/filteredlog
 
-proc invalidNumber*( comp:var ModelInstance; 
+proc invalidNumber*( comp:ModelInstanceRef; 
                      f, arg:string;
                      n:csize_t; nExpected:int):bool  =
     if n.int != nExpected:
@@ -17,7 +17,7 @@ proc invalidNumber*( comp:var ModelInstance;
         return true
     return false
 
-proc invalidState*( comp:var ModelInstance, f:string,
+proc invalidState*( comp:ModelInstanceRef, f:string,
                     statesExpected:ModelState):bool  =
     # FIXME
     #if comp.isNil:
@@ -32,7 +32,7 @@ proc invalidState*( comp:var ModelInstance, f:string,
 
     return false
 
-proc nullPointer*(comp:var ModelInstance, f:string, arg:string, p:pointer):bool =
+proc nullPointer*(comp:ModelInstanceRef, f:string, arg:string, p:pointer):bool =
     if p.isNil:
         comp.state = modelError
         filteredLog(comp, fmi2Error, LOG_ERROR, fmt"{f}: Invalid argument {arg} = NULL.")
@@ -40,7 +40,7 @@ proc nullPointer*(comp:var ModelInstance, f:string, arg:string, p:pointer):bool 
 
     return false
 
-proc vrOutOfRange*(comp:var ModelInstance, f:string,  vr:fmi2ValueReference, `end`:int):bool =
+proc vrOutOfRange*(comp:ModelInstanceRef, f:string,  vr:fmi2ValueReference, `end`:int):bool =
     if vr.int >= `end`:
         filteredLog(comp, fmi2Error, LOG_ERROR, fmt"{f}: Illegal value reference {vr}.")
         comp.state = modelError
@@ -48,8 +48,8 @@ proc vrOutOfRange*(comp:var ModelInstance, f:string,  vr:fmi2ValueReference, `en
 
     return false
 
-proc unsupportedFunction*(comp:var ModelInstance; fName: string; statesExpected: ModelState): fmi2Status =
-    #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
+proc unsupportedFunction*(comp:ModelInstanceRef; fName: string; statesExpected: ModelState): fmi2Status =
+    #var comp: ptr ModelInstanceRef = cast[ptr ModelInstanceRef](c)
     #var log:fmi2CallbackLogger = comp.functions.logger
     if invalidState(comp, fName, statesExpected):
         return fmi2Error

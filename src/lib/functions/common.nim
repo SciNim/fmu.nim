@@ -5,22 +5,26 @@ import strformat
 
 {.push exportc:"$1",cdecl,dynlib.}
 
-#comp:ModelInstance
-proc fmi2SetupExperiment*(comp: var ModelInstance; toleranceDefined: fmi2Boolean;
+#comp:ModelInstanceRef
+proc fmi2SetupExperiment*(comp: ModelInstanceRef; toleranceDefined: fmi2Boolean;
                          tolerance: fmi2Real; startTime: fmi2Real;
                          stopTimeDefined: fmi2Boolean; stopTime: fmi2Real): fmi2Status =
 
     # ignore arguments: stopTimeDefined, stopTime
     echo "ENTERING: fmi2SetupExperiment"
-    echo typeof(comp.functions)
+    echo ">> fmi2SetupExperiment: ", $comp.GUID
+    #var c = cast[ptr ModelInstanceRef](comp)
+    #echo $c.GUID
+    #-echo comp.isNil
+    echo "ok"
 
-
+    #echo c.GUID
     #echo repr c
-    #var comp = cast[ref ModelInstance](c)
+    #var comp = cast[ref ModelInstanceRef](c)
     #echo comp.GUID
     #echo comp.isNil
     if invalidState(comp, "fmi2SetupExperiment", MASK_fmi2SetupExperiment):
-    #if invalidState(cast[ptr ModelInstance](c), "fmi2SetupExperiment", MASK_fmi2SetupExperiment):
+    #if invalidState(cast[ptr ModelInstanceRef](c), "fmi2SetupExperiment", MASK_fmi2SetupExperiment):
         echo "INVALID STATE!!!"
         return fmi2Error
     filteredLog( comp, fmi2OK, LOG_FMI_CALL,
@@ -30,8 +34,8 @@ proc fmi2SetupExperiment*(comp: var ModelInstance; toleranceDefined: fmi2Boolean
     return fmi2OK
 
 
-proc fmi2EnterInitializationMode*(comp: var ModelInstance): fmi2Status =
-    ##var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
+proc fmi2EnterInitializationMode*(comp: ModelInstanceRef): fmi2Status =
+    ##var comp: ptr ModelInstanceRef = cast[ptr ModelInstanceRef](c)
     if invalidState(comp, "fmi2EnterInitializationMode", MASK_fmi2EnterInitializationMode):
         return fmi2Error
     filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2EnterInitializationMode")
@@ -39,8 +43,8 @@ proc fmi2EnterInitializationMode*(comp: var ModelInstance): fmi2Status =
     comp.state = modelInitializationMode
     return fmi2OK
 
-proc fmi2ExitInitializationMode*(comp: var ModelInstance): fmi2Status =
-    #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
+proc fmi2ExitInitializationMode*(comp: ModelInstanceRef): fmi2Status =
+    #var comp: ptr ModelInstanceRef = cast[ptr ModelInstanceRef](c)
     if invalidState(comp, "fmi2ExitInitializationMode", MASK_fmi2ExitInitializationMode):
         return fmi2Error
     filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2ExitInitializationMode")
@@ -60,8 +64,8 @@ proc fmi2ExitInitializationMode*(comp: var ModelInstance): fmi2Status =
     return fmi2OK
 
 
-proc fmi2Terminate*(comp: var ModelInstance): fmi2Status =
-    #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
+proc fmi2Terminate*(comp: ModelInstanceRef): fmi2Status =
+    #var comp: ptr ModelInstanceRef = cast[ptr ModelInstanceRef](c)
     if invalidState(comp, "fmi2Terminate", MASK_fmi2Terminate):
         return fmi2Error
     filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2Terminate")
@@ -69,9 +73,9 @@ proc fmi2Terminate*(comp: var ModelInstance): fmi2Status =
     comp.state = modelTerminated
     return fmi2OK
 
-# comp: ModelInstance
-proc fmi2Reset*(comp: var ModelInstance):fmi2Status =
-    ##var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
+# comp: ModelInstanceRef
+proc fmi2Reset*(comp: ModelInstanceRef):fmi2Status =
+    ##var comp: ptr ModelInstanceRef = cast[ptr ModelInstanceRef](c)
     #echo comp.GUID
     #var c = addr(comp)
     #echo type c
@@ -89,30 +93,30 @@ proc fmi2Reset*(comp: var ModelInstance):fmi2Status =
 
 
 
-proc fmi2GetFMUstate*(comp:var ModelInstance; FMUstate: ptr fmi2FMUstate): fmi2Status =
-    ##var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
+proc fmi2GetFMUstate*(comp:ModelInstanceRef; FMUstate: ptr fmi2FMUstate): fmi2Status =
+    ##var comp: ptr ModelInstanceRef = cast[ptr ModelInstanceRef](c)
     return unsupportedFunction(comp, "fmi2GetFMUstate", MASK_fmi2GetFMUstate)
 
-proc fmi2SetFMUstate*(comp: var ModelInstance; FMUstate: ptr fmi2FMUstate): fmi2Status =
+proc fmi2SetFMUstate*(comp: ModelInstanceRef; FMUstate: ptr fmi2FMUstate): fmi2Status =
     return unsupportedFunction(comp, "fmi2SetFMUstate", MASK_fmi2SetFMUstate)
 
-proc fmi2FreeFMUstate*(comp: var ModelInstance; FMUstate: ptr fmi2FMUstate): fmi2Status =
+proc fmi2FreeFMUstate*(comp: ModelInstanceRef; FMUstate: ptr fmi2FMUstate): fmi2Status =
     return unsupportedFunction(comp, "fmi2FreeFMUstate", MASK_fmi2FreeFMUstate)
 
 
-proc fmi2SerializedFMUstateSize*(comp: var ModelInstance, FMUstate: ptr fmi2FMUstate,size: ptr csize_t): fmi2Status =
+proc fmi2SerializedFMUstateSize*(comp: ModelInstanceRef, FMUstate: ptr fmi2FMUstate,size: ptr csize_t): fmi2Status =
     return unsupportedFunction(comp, "fmi2SerializedFMUstateSize", MASK_fmi2SerializedFMUstateSize)
 
-proc fmi2SerializeFMUstate*(comp:var ModelInstance; FMUstate: fmi2FMUstate;
+proc fmi2SerializeFMUstate*(comp:ModelInstanceRef; FMUstate: fmi2FMUstate;
                            serializedState: ptr fmi2Byte; size: csize_t): fmi2Status =
     return unsupportedFunction(comp, "fmi2SerializeFMUstate", MASK_fmi2SerializeFMUstate)
 
-proc fmi2DeSerializeFMUstate*(comp:var ModelInstance; serializedState: ptr fmi2Byte;
+proc fmi2DeSerializeFMUstate*(comp:ModelInstanceRef; serializedState: ptr fmi2Byte;
                              size: csize_t; FMUstate: ptr fmi2FMUstate): fmi2Status =
     return unsupportedFunction(comp, "fmi2DeSerializeFMUstate", MASK_fmi2DeSerializeFMUstate)
 
 
-proc fmi2GetDirectionalDerivative*(comp:var ModelInstance;
+proc fmi2GetDirectionalDerivative*(comp:ModelInstanceRef;
                                   vUnknown_ref: ptr fmi2ValueReference;
                                   nUnknown: csize_t;
                                   vKnown_ref: ptr fmi2ValueReference;
