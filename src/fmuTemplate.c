@@ -55,55 +55,55 @@ fmi2ValueReference vrStates[NUMBER_OF_STATES] = STATES;
 // Private helpers used below to validate function arguments
 // ---------------------------------------------------------------------------
 
-fmi2Boolean isCategoryLogged(ModelInstance *comp, int categoryIndex);
+// fmi2Boolean isCategoryLogged(ModelInstance *comp, int categoryIndex);
 
-static fmi2Boolean invalidNumber(ModelInstance *comp, const char *f, const char *arg, int n, int nExpected) {
-    if (n != nExpected) {
-        comp->state = modelError;
-        FILTERED_LOG(comp, fmi2Error, LOG_ERROR, "%s: Invalid argument %s = %d. Expected %d.", f, arg, n, nExpected)
-        return fmi2True;
-    }
-    return fmi2False;
-}
+// static fmi2Boolean invalidNumber(ModelInstance *comp, const char *f, const char *arg, int n, int nExpected) {
+//     if (n != nExpected) {
+//         comp->state = modelError;
+//         FILTERED_LOG(comp, fmi2Error, LOG_ERROR, "%s: Invalid argument %s = %d. Expected %d.", f, arg, n, nExpected)
+//         return fmi2True;
+//     }
+//     return fmi2False;
+// }
 
-static fmi2Boolean invalidState(ModelInstance *comp, const char *f, int statesExpected) {
-    if (!comp)
-        return fmi2True;
-    if (!(comp->state & statesExpected)) {
-        comp->state = modelError;
-        FILTERED_LOG(comp, fmi2Error, LOG_ERROR, "%s: Illegal call sequence.", f)
-        return fmi2True;
-    }
-    return fmi2False;
-}
+// static fmi2Boolean invalidState(ModelInstance *comp, const char *f, int statesExpected) {
+//     if (!comp)
+//         return fmi2True;
+//     if (!(comp->state & statesExpected)) {
+//         comp->state = modelError;
+//         FILTERED_LOG(comp, fmi2Error, LOG_ERROR, "%s: Illegal call sequence.", f)
+//         return fmi2True;
+//     }
+//     return fmi2False;
+// }
 
-static fmi2Boolean nullPointer(ModelInstance* comp, const char *f, const char *arg, const void *p) {
-    if (!p) {
-        comp->state = modelError;
-        FILTERED_LOG(comp, fmi2Error, LOG_ERROR, "%s: Invalid argument %s = NULL.", f, arg)
-        return fmi2True;
-    }
-    return fmi2False;
-}
+// static fmi2Boolean nullPointer(ModelInstance* comp, const char *f, const char *arg, const void *p) {
+//     if (!p) {
+//         comp->state = modelError;
+//         FILTERED_LOG(comp, fmi2Error, LOG_ERROR, "%s: Invalid argument %s = NULL.", f, arg)
+//         return fmi2True;
+//     }
+//     return fmi2False;
+// }
 
-static fmi2Boolean vrOutOfRange(ModelInstance *comp, const char *f, fmi2ValueReference vr, int end) {
-    if (vr >= end) {
-        FILTERED_LOG(comp, fmi2Error, LOG_ERROR, "%s: Illegal value reference %u.", f, vr)
-        comp->state = modelError;
-        return fmi2True;
-    }
-    return fmi2False;
-}
+// static fmi2Boolean vrOutOfRange(ModelInstance *comp, const char *f, fmi2ValueReference vr, int end) {
+//     if (vr >= end) {
+//         FILTERED_LOG(comp, fmi2Error, LOG_ERROR, "%s: Illegal value reference %u.", f, vr)
+//         comp->state = modelError;
+//         return fmi2True;
+//     }
+//     return fmi2False;
+// }
 
-static fmi2Status unsupportedFunction(fmi2Component c, const char *fName, int statesExpected) {
-    ModelInstance *comp = (ModelInstance *)c;
-    fmi2CallbackLogger log = comp->functions->logger;
-    if (invalidState(comp, fName, statesExpected))
-        return fmi2Error;
-    FILTERED_LOG(comp, fmi2OK, LOG_FMI_CALL, fName);
-    FILTERED_LOG(comp, fmi2Error, LOG_ERROR, "%s: Function not implemented.", fName)
-    return fmi2Error;
-}
+// static fmi2Status unsupportedFunction(fmi2Component c, const char *fName, int statesExpected) {
+//     ModelInstance *comp = (ModelInstance *)c;
+//     fmi2CallbackLogger log = comp->functions->logger;
+//     if (invalidState(comp, fName, statesExpected))
+//         return fmi2Error;
+//     FILTERED_LOG(comp, fmi2OK, LOG_FMI_CALL, fName);
+//     FILTERED_LOG(comp, fmi2Error, LOG_ERROR, "%s: Function not implemented.", fName)
+//     return fmi2Error;
+// }
 
 
 
@@ -112,35 +112,13 @@ static fmi2Status unsupportedFunction(fmi2Component c, const char *fName, int st
 // ---------------------------------------------------------------------------
 
 // return fmi2True if logging category is on. Else return fmi2False.
-fmi2Boolean isCategoryLogged(ModelInstance *comp, int categoryIndex) {
-    if (categoryIndex < NUMBER_OF_CATEGORIES
-        && (comp->logCategories[categoryIndex] || comp->logCategories[LOG_ALL])) {
-        return fmi2True;
-    }
-    return fmi2False;
-}
-
-
-
-// const char* fmi2GetVersion() {
-//     return fmi2Version;
+// fmi2Boolean isCategoryLogged(ModelInstance *comp, int categoryIndex) {
+//     if (categoryIndex < NUMBER_OF_CATEGORIES
+//         && (comp->logCategories[categoryIndex] || comp->logCategories[LOG_ALL])) {
+//         return fmi2True;
+//     }
+//     return fmi2False;
 // }
-
-// const char* fmi2GetTypesPlatform() {
-//     return fmi2TypesPlatform;
-// }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

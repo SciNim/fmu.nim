@@ -69,7 +69,7 @@ proc eventUpdate*(comp:ModelInstanceRef,
 {.passC: "-DNUMBER_OF_STATES=" & $NUMBER_OF_STATES .}
 {.passC: "-DNUMBER_OF_EVENT_INDICATORS=" & $NUMBER_OF_EVENT_INDICATORS .}
 {.passC: "-DDISABLE_PREFIX".}
-{.compile: "fmuTemplate.c".}
+#{.compile: "fmuTemplate.c".}
 
 #import lib/functions/modelexchange
 
