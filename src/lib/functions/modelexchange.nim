@@ -1,4 +1,27 @@
+import ../defs/[definitions, modelinstance, masks]
+import ../functions/helpers
+import ../meta/filteredlog
+import strformat
 
+
+# Forward declarations------------
+type
+  eventUpdateTyp* = proc( comp:ModelInstanceRef;
+                                       eventInfo:ptr fmi2EventInfo; 
+                                       timeEvent:bool;  # cint
+                                       isNewEventIteration:fmi2Boolean)
+
+  fmi2NewDiscreteStatesTyp* = proc(comp: ModelInstanceRef; 
+                                   eventInfo: ptr fmi2EventInfo): fmi2Status
+#proc getEventIndicator*(comp:ModelInstanceRef; i:uint64)
+
+#----------------------------------
+
+# FIXME -----------------
+var NUMBER_OF_STATES {.global.} = 0
+var NUMBER_OF_EVENT_INDICATORS {.global.} = 0
+#-----------------------
+# FIXME
 
 # FIXME: NO ME GUSTA NUMBER_OF_STATES como Global.
 
@@ -10,20 +33,41 @@
 # #endif
 
 
-#import fmi2TypesPlatform, status, modelinstance, modelstate, fmi2eventinfo, modelinstancetype,
-#       helpers, masks, logger
-       #modelstate
-#import model
-import strformat
+
+
 #import logging
 
 #var logger = newConsoleLogger()
 
-# Forward declaration
-# proc eventUpdate(comp:ModelInstance, 
-#                  eventInfo:ptr fmi2EventInfo, 
-#                  timeEvent:bool, #cint, 
-#                  isNewEventIteration:fmi2Boolean) # cint)
+proc gen_fmi2NewDiscreteStates(eventUpdateFunc: eventUpdateTyp): fmi2NewDiscreteStatesTyp =
+    return proc (comp: ModelInstanceRef; 
+                            eventInfo: ptr fmi2EventInfo): fmi2Status =
+        #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
+        var timeEvent = false
+        if invalidState(comp, "fmi2NewDiscreteStates", MASK_fmi2NewDiscreteStates):
+            return fmi2Error
+        #filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2NewDiscreteStates")
+
+        comp.eventInfo.newDiscreteStatesNeeded = fmi2False
+        comp.eventInfo.terminateSimulation = fmi2False
+        comp.eventInfo.nominalsOfContinuousStatesChanged = fmi2False
+        comp.eventInfo.valuesOfContinuousStatesChanged = fmi2False
+
+        if (comp.eventInfo.nextEventTimeDefined > 0 and comp.eventInfo.nextEventTime <= comp.time):
+            timeEvent = true
+
+        eventUpdateFunc(comp, addr(comp.eventInfo), timeEvent, comp.isNewEventIteration)
+        comp.isNewEventIteration = fmi2False
+
+        # copy internal eventInfo of component to output eventInfo
+        eventInfo.newDiscreteStatesNeeded = comp.eventInfo.newDiscreteStatesNeeded
+        eventInfo.terminateSimulation = comp.eventInfo.terminateSimulation
+        eventInfo.nominalsOfContinuousStatesChanged = comp.eventInfo.nominalsOfContinuousStatesChanged
+        eventInfo.valuesOfContinuousStatesChanged = comp.eventInfo.valuesOfContinuousStatesChanged
+        eventInfo.nextEventTimeDefined = comp.eventInfo.nextEventTimeDefined
+        eventInfo.nextEventTime = comp.eventInfo.nextEventTime
+
+        return fmi2OK
 
 {.push exportc:"$1", dynlib, cdecl.}
 ## ---------------------------------------------------------------------------
@@ -40,7 +84,7 @@ proc fmi2EnterEventMode*(comp: ModelInstanceRef): fmi2Status =
     comp.isNewEventIteration = fmi2True
     return fmi2OK
 
-
+#[
 proc fmi2NewDiscreteStates*(comp: ModelInstanceRef; 
                             eventInfo: ptr fmi2EventInfo): fmi2Status =
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
@@ -69,7 +113,7 @@ proc fmi2NewDiscreteStates*(comp: ModelInstanceRef;
     eventInfo.nextEventTime = comp.eventInfo.nextEventTime
 
     return fmi2OK
-
+]#
 
 proc fmi2EnterContinuousTimeMode*(comp: ModelInstanceRef): fmi2Status =
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
@@ -158,10 +202,11 @@ proc fmi2GetEventIndicators*(comp: ModelInstanceRef; eventIndicators: ptr fmi2Re
         return fmi2Error
     if invalidNumber(comp, "fmi2GetEventIndicators", "ni", ni, NUMBER_OF_EVENT_INDICATORS):
         return fmi2Error
-    when NUMBER_OF_EVENT_INDICATORS > 0:
-        for i in 0 ..< ni:
-            eventIndicators[i] = getEventIndicator(comp, i) # to be implemented by the includer of this file
-            filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2GetEventIndicators: z{i} = {eventIndicators[i]}")
+    # FIXME
+    #if NUMBER_OF_EVENT_INDICATORS > 0:
+    #    for i in 0 ..< ni:
+    #        eventIndicators[i] = getEventIndicator(comp, i) # to be implemented by the includer of this file
+    #        filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2GetEventIndicators: z{i} = {eventIndicators[i]}")
 
     return fmi2OK
 

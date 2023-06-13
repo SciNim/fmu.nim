@@ -4,8 +4,19 @@
 ## ---------------------------------------------------------------------------
 #import fmi2TypesPlatform, status, modelinstancetype, helpers, masks, logger
 #import model
-#import strformat
+import strformat
+import ../defs/[definitions,modelinstance, masks]
+import helpers
+import ../meta/filteredlog
 
+
+# FORWARD DECLARATION---
+proc calculateValues*(comp:ModelInstanceRef)
+
+var NUMBER_OF_REALS {.global.} = 0
+var NUMBER_OF_INTEGERS {.global.} = 0
+var NUMBER_OF_BOOLEANS {.global.} = 0
+#------------------------
 
 {.push exportc: "$1",dynlib,cdecl.}
 
@@ -24,14 +35,15 @@ proc fmi2GetReal*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize
         comp.isDirtyValues = fmi2False
 
     #---- Only compiled if NUMBER_OF_REALS is >0
-    when NUMBER_OF_REALS > 0:
-        for i in 0 ..< nvr:
-            if vrOutOfRange(comp, "fmi2GetReal", vr[i], NUMBER_OF_REALS):
-                return fmi2Error
-            value[i] = getReal(comp, val) # <--------to be implemented by the includer of this file
-            #value[i] = comp.r[vr[i]]            
-            #value[i] = r[val] #getReal(comp, val)
-            filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2GetReal: #r{vr[i]}# = {value[i]}" )
+    # FIXME
+    # if NUMBER_OF_REALS > 0:  # when
+    #     for i in 0 ..< nvr:
+    #         if vrOutOfRange(comp, "fmi2GetReal", vr[i], NUMBER_OF_REALS):
+    #             return fmi2Error
+    #         value[i] = getReal(comp, val) # <--------to be implemented by the includer of this file
+    #         #value[i] = comp.r[vr[i]]            
+    #         #value[i] = r[val] #getReal(comp, val)
+    #         filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2GetReal: #r{vr[i]}# = {value[i]}" )
     return fmi2OK
 
 

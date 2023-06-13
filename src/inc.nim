@@ -6,27 +6,34 @@
 #import fmuTemplate
 import strformat
 #---------------------------
-import lib/defs/[definitions, modelinstance, masks]
-export definitions, modelinstance, masks
-import lib/functions/[enquire]
-export enquire
+
+import lib/defs/[definitions, masks, modelinstance, parameters]
+export definitions, modelinstance, masks, parameters
+
+import lib/functions/[enquire, logger, helpers, getters]#, modelexchange]
+export enquire, logger, helpers, getters#, modelexchange
+
 #---------------------------
 
 # Porting inc.c (a particular model)
 {.push exportc, dynlib.}
 const
-   MODEL_IDENTIFIER* ="inc"
+   MODEL_IDENTIFIER* = "inc"
    MODEL_GUID* ="{8c4e810f-3df3-4a00-8276-176fa3c9f008}"
    
    #define model size
-   NUMBER_OF_REALS* = 0
+   
    NUMBER_OF_INTEGERS* = 1
    NUMBER_OF_BOOLEANS* = 0
    NUMBER_OF_STRINGS* = 0
-   NUMBER_OF_STATES* = 0
-   NUMBER_OF_EVENT_INDICATORS* = 0
+   
+   #NUMBER_OF_EVENT_INDICATORS* = 0
 
-
+# FIXME---
+NUMBER_OF_STATES = 0
+NUMBER_OF_EVENT_INDICATORS = 0
+NUMBER_OF_REALS = 0
+#----
 
 const
    counter = 0
@@ -55,26 +62,29 @@ proc eventUpdate*(comp:ModelInstanceRef,
         else:
             eventInfo.nextEventTimeDefined = fmi2True
             eventInfo.nextEventTime        = 1 + comp.time
+
+
+var fmi2NewDiscreteStates* = gen_fmi2NewDiscreteStates(eventUpdate)
 {.pop.}
 #------------------------
-{.passC: "-I./".}
-{.passC: "-Ifmusdk-master/fmu20/src/shared/include -w -fmax-errors=5".}
+#{.passC: "-I./".}
+#{.passC: "-Ifmusdk-master/fmu20/src/shared/include -w -fmax-errors=5".}
 
-{.passC: "-DMODEL_IDENTIFIER=\\\"" & MODEL_IDENTIFIER & "\\\"".}
-{.passC: "-DMODEL_GUID=\\\"" & MODEL_GUID & "\\\"".}
-{.passC: "-DNUMBER_OF_REALS=" & $NUMBER_OF_REALS .}
-{.passC: "-DNUMBER_OF_INTEGERS=" & $NUMBER_OF_INTEGERS .}
-{.passC: "-DNUMBER_OF_BOOLEANS=" & $NUMBER_OF_BOOLEANS .}
-{.passC: "-DNUMBER_OF_STRINGS=" & $NUMBER_OF_STRINGS .}
-{.passC: "-DNUMBER_OF_STATES=" & $NUMBER_OF_STATES .}
-{.passC: "-DNUMBER_OF_EVENT_INDICATORS=" & $NUMBER_OF_EVENT_INDICATORS .}
-{.passC: "-DDISABLE_PREFIX".}
+# {.passC: "-DMODEL_IDENTIFIER=\\\"" & MODEL_IDENTIFIER & "\\\"".}
+# {.passC: "-DMODEL_GUID=\\\"" & MODEL_GUID & "\\\"".}
+# {.passC: "-DNUMBER_OF_REALS=" & $NUMBER_OF_REALS .}
+# {.passC: "-DNUMBER_OF_INTEGERS=" & $NUMBER_OF_INTEGERS .}
+# {.passC: "-DNUMBER_OF_BOOLEANS=" & $NUMBER_OF_BOOLEANS .}
+# {.passC: "-DNUMBER_OF_STRINGS=" & $NUMBER_OF_STRINGS .}
+# {.passC: "-DNUMBER_OF_STATES=" & $NUMBER_OF_STATES .}
+# {.passC: "-DNUMBER_OF_EVENT_INDICATORS=" & $NUMBER_OF_EVENT_INDICATORS .}
+# {.passC: "-DDISABLE_PREFIX".}
 #{.compile: "fmuTemplate.c".}
 
 #import lib/functions/modelexchange
 
-import lib/defs/[definitions, masks, modelinstance, parameters]
-import lib/functions/[helpers, logger]
+
+#import lib/functions/[helpers]
 
 include lib/functions/modelexchange
 include lib/functions/cosimulation

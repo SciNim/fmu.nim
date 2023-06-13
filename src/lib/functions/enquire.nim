@@ -16,7 +16,7 @@ proc fmi2GetVersion():cstring =
   The standard header file as documented in this specification has version “2.0” (so this function
   usually returns “2.0”).
   ]##
-  return fmi2Version
+  return fmi2Version.cstring
 
 proc fmi2GetTypesPlatform():cstring = 
   ##[
@@ -26,6 +26,6 @@ proc fmi2GetTypesPlatform():cstring =
   in this specification, has fmi2TypesPlatform set to “default” (so this function usually returns
   “default”).
   ]##  
-  return fmi2TypesPlatform
+  return fmi2TypesPlatform.cstring
 
 {.pop.}
