@@ -8,6 +8,8 @@ import strformat
 #---------------------------
 import lib/defs/[definitions, modelinstance, masks]
 export definitions, modelinstance, masks
+import lib/functions/[enquire]
+export enquire
 #---------------------------
 
 # Porting inc.c (a particular model)

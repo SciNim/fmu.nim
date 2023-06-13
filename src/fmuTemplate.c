@@ -121,139 +121,26 @@ fmi2Boolean isCategoryLogged(ModelInstance *comp, int categoryIndex) {
 }
 
 
-// ---------------------------------------------------------------------------
-// FMI functions: class methods not depending of a specific model instance
-// ---------------------------------------------------------------------------
 
-const char* fmi2GetVersion() {
-    return fmi2Version;
-}
-
-const char* fmi2GetTypesPlatform() {
-    return fmi2TypesPlatform;
-}
-
-// ---------------------------------------------------------------------------
-// FMI functions: logging control, setters and getters for Real, Integer,
-// Boolean, String
-// ---------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-// fmi2Status fmi2GetFMUstate (fmi2Component c, fmi2FMUstate* FMUstate) {
-//     return unsupportedFunction(c, "fmi2GetFMUstate", MASK_fmi2GetFMUstate);
-// }
-// fmi2Status fmi2SetFMUstate (fmi2Component c, fmi2FMUstate FMUstate) {
-//     return unsupportedFunction(c, "fmi2SetFMUstate", MASK_fmi2SetFMUstate);
-// }
-// fmi2Status fmi2FreeFMUstate(fmi2Component c, fmi2FMUstate* FMUstate) {
-//     return unsupportedFunction(c, "fmi2FreeFMUstate", MASK_fmi2FreeFMUstate);
-// }
-// fmi2Status fmi2SerializedFMUstateSize(fmi2Component c, fmi2FMUstate FMUstate, size_t *size) {
-//     return unsupportedFunction(c, "fmi2SerializedFMUstateSize", MASK_fmi2SerializedFMUstateSize);
-// }
-// fmi2Status fmi2SerializeFMUstate (fmi2Component c, fmi2FMUstate FMUstate, fmi2Byte serializedState[], size_t size) {
-//     return unsupportedFunction(c, "fmi2SerializeFMUstate", MASK_fmi2SerializeFMUstate);
-// }
-// fmi2Status fmi2DeSerializeFMUstate (fmi2Component c, const fmi2Byte serializedState[], size_t size,
-//                                     fmi2FMUstate* FMUstate) {
-//     return unsupportedFunction(c, "fmi2DeSerializeFMUstate", MASK_fmi2DeSerializeFMUstate);
+// const char* fmi2GetVersion() {
+//     return fmi2Version;
 // }
 
-// fmi2Status fmi2GetDirectionalDerivative(fmi2Component c, const fmi2ValueReference vUnknown_ref[], size_t nUnknown,
-//                                         const fmi2ValueReference vKnown_ref[] , size_t nKnown,
-//                                         const fmi2Real dvKnown[], fmi2Real dvUnknown[]) {
-//     return unsupportedFunction(c, "fmi2GetDirectionalDerivative", MASK_fmi2GetDirectionalDerivative);
+// const char* fmi2GetTypesPlatform() {
+//     return fmi2TypesPlatform;
 // }
 
 
-//===========================
-// FIXME
-//===========================
-// fmi2Component fmi2Instantiate(fmi2String instanceName, fmi2Type fmuType, fmi2String fmuGUID,
-//                             fmi2String fmuResourceLocation, const fmi2CallbackFunctions *functions,
-//                             fmi2Boolean visible, fmi2Boolean loggingOn) {
-//     // ignoring arguments: fmuResourceLocation, visible
-//     ModelInstance *comp;
-//     printf("%p\n",(void*)functions->logger);
-//     if (!functions->logger) {
-//         return NULL;
-//     }
 
-//     if (!functions->allocateMemory || !functions->freeMemory) {
-//         functions->logger(functions->componentEnvironment, instanceName, fmi2Error, "error",
-//                 "fmi2Instantiate: Missing callback function.");
-//         return NULL;
-//     }
-//     if (!instanceName || strlen(instanceName) == 0) {
-//         functions->logger(functions->componentEnvironment, "?", fmi2Error, "error",
-//                 "fmi2Instantiate: Missing instance name.");
-//         return NULL;
-//     }
-//     if (!fmuGUID || strlen(fmuGUID) == 0) {
-//         functions->logger(functions->componentEnvironment, instanceName, fmi2Error, "error",
-//                 "fmi2Instantiate: Missing GUID.");
-//         return NULL;
-//     }
-//     if (strcmp(fmuGUID, MODEL_GUID)) {
-//         functions->logger(functions->componentEnvironment, instanceName, fmi2Error, "error",
-//                 "fmi2Instantiate: Wrong GUID %s. Expected %s.", fmuGUID, MODEL_GUID);
-//         return NULL;
-//     }
-//     comp = (ModelInstance *)functions->allocateMemory(1, sizeof(ModelInstance));
-//     if (comp) {
-//         int i;
-//         comp->r = (fmi2Real *)   functions->allocateMemory(NUMBER_OF_REALS,    sizeof(fmi2Real));
-//         comp->i = (fmi2Integer *)functions->allocateMemory(NUMBER_OF_INTEGERS, sizeof(fmi2Integer));
-//         comp->b = (fmi2Boolean *)functions->allocateMemory(NUMBER_OF_BOOLEANS, sizeof(fmi2Boolean));
-//         comp->s = (fmi2String *) functions->allocateMemory(NUMBER_OF_STRINGS,  sizeof(fmi2String));
-//         comp->isPositive = (fmi2Boolean *)functions->allocateMemory(NUMBER_OF_EVENT_INDICATORS,
-//             sizeof(fmi2Boolean));
-//         comp->instanceName = (char *)functions->allocateMemory(1 + strlen(instanceName), sizeof(char));
-//         comp->GUID = (char *)functions->allocateMemory(1 + strlen(fmuGUID), sizeof(char));
 
-//         // set all categories to on or off. fmi2SetDebugLogging should be called to choose specific categories.
-//         for (i = 0; i < NUMBER_OF_CATEGORIES; i++) {
-//             comp->logCategories[i] = loggingOn;
-//         }
-//     }
-//     if (!comp || !comp->r || !comp->i || !comp->b || !comp->s || !comp->isPositive
-//         || !comp->instanceName || !comp->GUID) {
 
-//         functions->logger(functions->componentEnvironment, instanceName, fmi2Error, "error",
-//             "fmi2Instantiate: Out of memory.");
-//         return NULL;
-//     }
-//     comp->time = 0; // overwrite in fmi2SetupExperiment, fmi2SetTime
-//     strcpy((char *)comp->instanceName, (char *)instanceName);
-//     comp->type = fmuType;
-//     strcpy((char *)comp->GUID, (char *)fmuGUID);
-//     comp->functions = functions;
-//     comp->componentEnvironment = functions->componentEnvironment;
-//     comp->loggingOn = loggingOn;
-//     comp->state = modelInstantiated;
-//     setStartValues(comp); // to be implemented by the includer of this file
-//     comp->isDirtyValues = fmi2True; // because we just called setStartValues
-//     comp->isNewEventIteration = fmi2False;
 
-//     comp->eventInfo.newDiscreteStatesNeeded = fmi2False;
-//     comp->eventInfo.terminateSimulation = fmi2False;
-//     comp->eventInfo.nominalsOfContinuousStatesChanged = fmi2False;
-//     comp->eventInfo.valuesOfContinuousStatesChanged = fmi2False;
-//     comp->eventInfo.nextEventTimeDefined = fmi2False;
-//     comp->eventInfo.nextEventTime = 0;
 
-//     FILTERED_LOG(comp, fmi2OK, LOG_FMI_CALL, "fmi2Instantiate: GUID=%s", fmuGUID)
 
-//     return comp;
-// }
+
+
+
+
 
 
 
