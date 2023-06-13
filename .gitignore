@@ -1,1 +1,3 @@
 src/cache/*
+src/fmuTmp*
+src/result.csv
