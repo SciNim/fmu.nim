@@ -17,8 +17,8 @@ proc compressInto*(folder, filename:string) =
   for path in walkDirRec(folder):# relative = true): #,
     #if path.startsWith("fmu/"):
       var dest = path.dup: removePrefix( folder )
-      #echo path
-      #echo dest
+      dest = dest[1 ..< dest.len]
+
       z.addFile(dest, path)
 
   z.close()

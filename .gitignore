@@ -1,3 +1,8 @@
 src/cache/*
 src/fmuTmp*
 src/result.csv
+src/tmpFmu
+src/inc.fmu
+src/inc2.fmu
+src/inc
+src/inc.so

@@ -1,11 +1,10 @@
 import fmu
 
 
-
 myCode:
   const
     MODEL_IDENTIFIER* = "inc"
-    MODEL_GUID* ="{8c4e810f-3df3-4a00-8276-176fa3c9f008}"
+    MODEL_GUID* = "{8c4e810f-3df3-4a00-8276-176fa3c9f008}"
     
     NUMBER_OF_INTEGERS* = 1
     NUMBER_OF_BOOLEANS* = 0
@@ -45,8 +44,16 @@ myCode:
 
 
 # ------- FMU BUILDER----------------------------------------
+
+
 # The following is only compiled if called as main module
-when isMainModule:
-  # Create the library: inc.so
-  import os,osproc
-  doAssert execCmdEx( fmt"nim c --app:lib -o:inc.so --mm:orc -f -d:release inc.nim" ).exitCode == QuitSuccess
+when isMainModule and not compileOption("app", "lib"):
+  import lib/fmubuilder
+
+  var myModel = FMU( id: "inc", guid: "{8c4e810f-3df3-4a00-8276-176fa3c9f008}")
+  myModel.genFmu("inc.fmu")
+
+
+  
+
+

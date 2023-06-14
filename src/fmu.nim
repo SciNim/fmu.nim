@@ -1,5 +1,7 @@
-import lib/fmu/[model, genfmu]
-export model, genfmu
+#import system, std/[os, osproc, strformat]
+
+import lib/fmu/[model, folder, compress]
+export model, folder, compress
 
 import lib/defs/[definitions, masks, modelinstance, parameters]
 export definitions, masks, modelinstance, parameters
@@ -16,3 +18,6 @@ template myCode*(body:untyped) {.dirty.} =
     include lib/functions/setters
     include lib/functions/others
     include lib/functions/getters
+    include lib/functions/enquire
+
+
