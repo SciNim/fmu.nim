@@ -2,11 +2,23 @@ import definitions
 import strformat
 {.push exportc, dynlib, cdecl.}
 
+#[
+  if status == fmi2Error or status == fmi2Fatal or isCategoryLogged(instance, categoryIndex).bool:
+    instance.functions.logger(instance.functions.componentEnvironment, # fmi2ComponentEnvironment
+                              instance.instanceName, # fmi2String
+                              status, # fmi2Status
+                              logCategoriesNames[categoryIndex].fmi2String, # fmi2String
+                              message.fmi2String, # fmi2String
+                              args ) # FIXME  # varargs[fmi2String]
+]#
+
 type
   fmi2CallbackLogger*  = proc( a1: fmi2ComponentEnvironment,
                                a2: fmi2String,
                                a3: fmi2Status,
-                               a4: fmi2String, a5: fmi2String) 
+                               a4: fmi2String, 
+                               a5: fmi2String,
+                               a6: varargs[fmi2String]) 
   fmi2CallbackAllocateMemory* = proc(a1: cuint, a2: cuint) #{.cdecl.}
   fmi2CallbackFreeMemory*  = proc(a1: pointer) #{.cdecl.}
   fmi2StepFinished*  = proc(a1: fmi2ComponentEnvironment, a2: fmi2Status) #{.cdecl.}

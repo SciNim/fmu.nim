@@ -158,8 +158,10 @@ proc fmi2Instantiate*( instanceName: fmi2String;
     comp.eventInfo.valuesOfContinuousStatesChanged = fmi2False
     comp.eventInfo.nextEventTimeDefined = fmi2False
     comp.eventInfo.nextEventTime = 0
+
+    # FILTERED_LOG(comp, fmi2OK, LOG_FMI_CALL, "fmi2Instantiate: GUID=%s", fmuGUID)
     echo "ok-4"     # FIXME-----
-    filteredLog( comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2Instantiate: GUID={$fmuGUID}".fmi2String)
+    filteredLog( comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2Instantiate: GUID={$fmuGUID}".fmi2String, fmuGUID)
     echo "ok-5"     # -----------
     echo comp
     echo "leaving fmi2Instantiate"
