@@ -1,33 +1,39 @@
-import zip/zipfiles
-import os, strutils, sugar
+import model
+import genlib
+import folder, compress
+import std/[os,osproc]
 
 
-proc compressFolder(filename, origin:string) =
-  var tmp:string
-  #if origin.endsWith("fmu/"):
-  #  tmp = origin.dup: removeSuffix("fmu/")
-  #echo tmp
+proc genFMU*( m: FMU; fname:string ) =
+  var tmpFolder = "tmpFmu"  # FIXME: create a temporal folder
+  
+  # 1. Create folder structure
+  createStructure(tmpFolder)
 
 
-  var z: ZipArchive
-  # add new file
-  discard z.open(filename, fmWrite)
-  #z.addFile("foo.bar")#, newStringStream("content"))
+  # 2. Create the library
+  echo genCode(m)
 
-  for path in walkDirRec(origin):# relative = true): #,
-    #if path.startsWith("fmu/"):
-      var dest = path.dup: removePrefix( origin )
-      #echo path
-      #echo dest
-      z.addFile(dest, path)
 
-  # read file to string stream
-  #z.open(filename, fmRead)
-  #let outStream = newStringStream("")
-  #z.extractFile("foo.bar", outStream)
-  z.close()
+  # 3. Populate folder content
+  # 3.1 Library into: binaries/linux64/
+  copyFileToDir( "inc.so", joinPath(tmpFolder, "binaries/linux64") )
 
-when isMainModule:
-  let filename = "prueba.fmu"
-  let path = "fmusdk-master/fmu20/src/models/inc/fmu/"
-  compressFolder(filename, path)
+  # 3.2 Documentation into: documentation/
+  copyFileToDir( "fmusdk-master/fmu20/src/models/inc/index.html", 
+                 joinPath(tmpFolder, "documentation") )
+  copyFileToDir( "fmusdk-master/fmu20/src/models/inc/model.png", 
+                 joinPath(tmpFolder, "documentation") )
+
+  # 3.3 Sources into: sources/
+  copyFileToDir( "fmusdk-master/fmu20/src/models/inc/inc.c", 
+                 joinPath(tmpFolder, "sources") )
+
+
+  # 4. Compress
+  tmpFolder.compressInto( fname )
+
+
+  # 5. Clean
+  removeDir(tmpFolder, checkDir = false )
+

@@ -13,17 +13,17 @@ proc logCategoriesNames*[I:SomeInteger](idx: I):fmi2String =
   let categoriesNames: seq[string] = @["logAll", "logError", "logFmiCall", "logEvent"]
   return categoriesNames[idx.int32].fmi2String
 
-proc filteredLog*( comp:ModelInstanceRef, 
-                   status:fmi2Status, 
-                   categoryIndex:cint, 
-                   message:cstring) =
-   #var i = cast[ModelInstanceRef](instance)
-   if status == fmi2Error or
-      status == fmi2Fatal or
-      isCategoryLogged(comp, categoryIndex):
-      #FIXME
-      discard
-      #let log = comp.functions.logger
+# proc filteredLog*( comp:ModelInstanceRef, 
+#                    status:fmi2Status, 
+#                    categoryIndex:cint, 
+#                    message:cstring) =
+#    #var i = cast[ModelInstanceRef](instance)
+#    if status == fmi2Error or
+#       status == fmi2Fatal or
+#       isCategoryLogged(comp, categoryIndex):
+#       #FIXME
+#       discard
+#       #let log = comp.functions.logger
 
-      #log( comp.functions.componentEnvironment, comp.instanceName,
-      #     status, logCategoriesNames(categoryIndex), message.fmi2String )
+#       #log( comp.functions.componentEnvironment, comp.instanceName,
+#       #     status, logCategoriesNames(categoryIndex), message.fmi2String )

@@ -1,5 +1,6 @@
+import std/[os,osproc, strformat]
 import ../defs/[definitions, modelinstance]
-import folder
+
 
 type
   FmuObj* = object
@@ -25,11 +26,18 @@ type
   FMU* = ref FmuObj
 
 
-
-proc genFMU*( m: FMU; fname:string ) =
-  var tmpFolder = "tmpFmu"  # FIXME: create a temporal folder
+# proc genCode*( m: FMU ) =
+#   echo "TODO. GENERATE"
+#   # Compilation
+#   let libDestination = "."
+#   let libName = fmt"{m.id}.so"
+#   let nimFile = "genlib.nim"
   
-  # 1. Create folder structure
-  createStructure(tmpFolder)
+#   import genlib
+#   prueba(m.id) 
+#   # --nimcache:.cache
+#   #doAssert execCmdEx( fmt"nim c --mm:orc --app:lib -o:{libDestination / libName} {nimFile}" ).exitCode == QuitSuccess
+#   #doAssert execCmdEx( fmt"nim c --mm:orc --app:lib -o:{libDestination / libName} {nimFile}" ).exitCode == QuitSuccess 
+#   doAssert execCmdEx( fmt"nim c --mm:orc lib/fmu/genlib.nim" ).exitCode == QuitSuccess 
 
-  echo fname
+

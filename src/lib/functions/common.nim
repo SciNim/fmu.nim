@@ -28,7 +28,7 @@ proc fmi2SetupExperiment*(comp: ModelInstanceRef; toleranceDefined: fmi2Boolean;
         echo "INVALID STATE!!!"
         return fmi2Error
     filteredLog( comp, fmi2OK, LOG_FMI_CALL,
-                 fmt"fmi2SetupExperiment: toleranceDefined={toleranceDefined} tolerance={tolerance}")
+                 fmt"fmi2SetupExperiment: toleranceDefined={toleranceDefined} tolerance={tolerance}".fmi2String)
 
     comp.time = startTime
     return fmi2OK
@@ -38,7 +38,7 @@ proc fmi2EnterInitializationMode*(comp: ModelInstanceRef): fmi2Status =
     ##var comp: ptr ModelInstanceRef = cast[ptr ModelInstanceRef](c)
     if invalidState(comp, "fmi2EnterInitializationMode", MASK_fmi2EnterInitializationMode):
         return fmi2Error
-    filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2EnterInitializationMode")
+    filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2EnterInitializationMode".fmi2String)
 
     comp.state = modelInitializationMode
     return fmi2OK
@@ -47,7 +47,7 @@ proc fmi2ExitInitializationMode*(comp: ModelInstanceRef): fmi2Status =
     #var comp: ptr ModelInstanceRef = cast[ptr ModelInstanceRef](c)
     if invalidState(comp, "fmi2ExitInitializationMode", MASK_fmi2ExitInitializationMode):
         return fmi2Error
-    filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2ExitInitializationMode")
+    filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2ExitInitializationMode".fmi2String)
 
     # if values were set and no fmi2GetXXX triggered update before,
     # ensure calculated values are updated now
@@ -68,7 +68,7 @@ proc fmi2Terminate*(comp: ModelInstanceRef): fmi2Status =
     #var comp: ptr ModelInstanceRef = cast[ptr ModelInstanceRef](c)
     if invalidState(comp, "fmi2Terminate", MASK_fmi2Terminate):
         return fmi2Error
-    filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2Terminate")
+    filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2Terminate".fmi2String)
 
     comp.state = modelTerminated
     return fmi2OK
@@ -81,7 +81,7 @@ proc fmi2Reset*(comp: ModelInstanceRef):fmi2Status =
     #echo type c
     if invalidState(comp, "fmi2Reset", MASK_fmi2Reset):
         return fmi2Error
-    filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2Reset")
+    filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2Reset".fmi2String)
 
     comp.state = modelInstantiated
     echo "INSTANTIATED IN RESET"

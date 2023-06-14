@@ -5,21 +5,21 @@ import strformat
 
 
 # Forward declarations------------
-type
-  eventUpdateTyp* = proc( comp:ModelInstanceRef;
-                                       eventInfo:ptr fmi2EventInfo; 
-                                       timeEvent:bool;  # cint
-                                       isNewEventIteration:fmi2Boolean)
+# type
+#   eventUpdateTyp* = proc( comp:ModelInstanceRef;
+#                                        eventInfo:ptr fmi2EventInfo; 
+#                                        timeEvent:bool;  # cint
+#                                        isNewEventIteration:fmi2Boolean)
 
-  fmi2NewDiscreteStatesTyp* = proc(comp: ModelInstanceRef; 
-                                   eventInfo: ptr fmi2EventInfo): fmi2Status
+#   fmi2NewDiscreteStatesTyp* = proc(comp: ModelInstanceRef; 
+#                                    eventInfo: ptr fmi2EventInfo): fmi2Status
 #proc getEventIndicator*(comp:ModelInstanceRef; i:uint64)
 
 #----------------------------------
 
 # FIXME -----------------
-var NUMBER_OF_STATES {.global.} = 0
-var NUMBER_OF_EVENT_INDICATORS {.global.} = 0
+#var NUMBER_OF_STATES {.global.} = 0
+#var NUMBER_OF_EVENT_INDICATORS {.global.} = 0
 #-----------------------
 # FIXME
 
@@ -39,59 +39,62 @@ var NUMBER_OF_EVENT_INDICATORS {.global.} = 0
 
 #var logger = newConsoleLogger()
 
-proc gen_fmi2NewDiscreteStates(eventUpdateFunc: eventUpdateTyp): fmi2NewDiscreteStatesTyp =
-    return proc (comp: ModelInstanceRef; 
-                            eventInfo: ptr fmi2EventInfo): fmi2Status =
-        #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
-        var timeEvent = false
-        if invalidState(comp, "fmi2NewDiscreteStates", MASK_fmi2NewDiscreteStates):
-            return fmi2Error
-        #filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2NewDiscreteStates")
+# proc gen_fmi2NewDiscreteStates(eventUpdateFunc: eventUpdateTyp): fmi2NewDiscreteStatesTyp =
+#     return proc (comp: ModelInstanceRef; 
+#                             eventInfo: ptr fmi2EventInfo): fmi2Status =
+#         #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
+#         var timeEvent = false
+#         if invalidState(comp, "fmi2NewDiscreteStates", MASK_fmi2NewDiscreteStates):
+#             return fmi2Error
+#         #filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2NewDiscreteStates")
 
-        comp.eventInfo.newDiscreteStatesNeeded = fmi2False
-        comp.eventInfo.terminateSimulation = fmi2False
-        comp.eventInfo.nominalsOfContinuousStatesChanged = fmi2False
-        comp.eventInfo.valuesOfContinuousStatesChanged = fmi2False
+#         comp.eventInfo.newDiscreteStatesNeeded = fmi2False
+#         comp.eventInfo.terminateSimulation = fmi2False
+#         comp.eventInfo.nominalsOfContinuousStatesChanged = fmi2False
+#         comp.eventInfo.valuesOfContinuousStatesChanged = fmi2False
 
-        if (comp.eventInfo.nextEventTimeDefined > 0 and comp.eventInfo.nextEventTime <= comp.time):
-            timeEvent = true
+#         if (comp.eventInfo.nextEventTimeDefined > 0 and comp.eventInfo.nextEventTime <= comp.time):
+#             timeEvent = true
 
-        eventUpdateFunc(comp, addr(comp.eventInfo), timeEvent, comp.isNewEventIteration)
-        comp.isNewEventIteration = fmi2False
+#         eventUpdateFunc(comp, addr(comp.eventInfo), timeEvent, comp.isNewEventIteration)
+#         comp.isNewEventIteration = fmi2False
 
-        # copy internal eventInfo of component to output eventInfo
-        eventInfo.newDiscreteStatesNeeded = comp.eventInfo.newDiscreteStatesNeeded
-        eventInfo.terminateSimulation = comp.eventInfo.terminateSimulation
-        eventInfo.nominalsOfContinuousStatesChanged = comp.eventInfo.nominalsOfContinuousStatesChanged
-        eventInfo.valuesOfContinuousStatesChanged = comp.eventInfo.valuesOfContinuousStatesChanged
-        eventInfo.nextEventTimeDefined = comp.eventInfo.nextEventTimeDefined
-        eventInfo.nextEventTime = comp.eventInfo.nextEventTime
+#         # copy internal eventInfo of component to output eventInfo
+#         eventInfo.newDiscreteStatesNeeded = comp.eventInfo.newDiscreteStatesNeeded
+#         eventInfo.terminateSimulation = comp.eventInfo.terminateSimulation
+#         eventInfo.nominalsOfContinuousStatesChanged = comp.eventInfo.nominalsOfContinuousStatesChanged
+#         eventInfo.valuesOfContinuousStatesChanged = comp.eventInfo.valuesOfContinuousStatesChanged
+#         eventInfo.nextEventTimeDefined = comp.eventInfo.nextEventTimeDefined
+#         eventInfo.nextEventTime = comp.eventInfo.nextEventTime
 
-        return fmi2OK
+#         return fmi2OK
 
-{.push exportc:"$1", dynlib, cdecl.}
+
 ## ---------------------------------------------------------------------------
 ## Functions for FMI2 for Model Exchange
 ## ---------------------------------------------------------------------------
 # Enter and exit the different modes
+
+
+{.push exportc:"$1", dynlib, cdecl.}
 proc fmi2EnterEventMode*(comp: ModelInstanceRef): fmi2Status =
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     if invalidState(comp, "fmi2EnterEventMode", MASK_fmi2EnterEventMode):
         return fmi2Error
-    filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2EnterEventMode")
+    filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2EnterEventMode".fmi2String)
 
     comp.state = modelEventMode
     comp.isNewEventIteration = fmi2True
     return fmi2OK
 
-#[
+
 proc fmi2NewDiscreteStates*(comp: ModelInstanceRef; 
                             eventInfo: ptr fmi2EventInfo): fmi2Status =
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     var timeEvent = false
     if invalidState(comp, "fmi2NewDiscreteStates", MASK_fmi2NewDiscreteStates):
         return fmi2Error
-    #filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2NewDiscreteStates")
+    filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2NewDiscreteStates".fmi2String)
 
     comp.eventInfo.newDiscreteStatesNeeded = fmi2False
     comp.eventInfo.terminateSimulation = fmi2False
@@ -113,13 +116,13 @@ proc fmi2NewDiscreteStates*(comp: ModelInstanceRef;
     eventInfo.nextEventTime = comp.eventInfo.nextEventTime
 
     return fmi2OK
-]#
+
 
 proc fmi2EnterContinuousTimeMode*(comp: ModelInstanceRef): fmi2Status =
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     if invalidState(comp, "fmi2EnterContinuousTimeMode", MASK_fmi2EnterContinuousTimeMode):
         return fmi2Error
-    filteredLog(comp, fmi2OK, LOG_FMI_CALL,"fmi2EnterContinuousTimeMode")
+    filteredLog(comp, fmi2OK, LOG_FMI_CALL,"fmi2EnterContinuousTimeMode".fmi2String)
 
     comp.state = modelContinuousTimeMode
     return fmi2OK
@@ -136,7 +139,7 @@ proc fmi2CompletedIntegratorStep*(comp: ModelInstanceRef;
         return fmi2Error
     if nullPointer(comp, "fmi2CompletedIntegratorStep", "terminateSimulation", terminateSimulation):
         return fmi2Error
-    filteredLog(comp, fmi2OK, LOG_FMI_CALL,"fmi2CompletedIntegratorStep")
+    filteredLog(comp, fmi2OK, LOG_FMI_CALL,"fmi2CompletedIntegratorStep".fmi2String)
 
     enterEventMode[] = fmi2False
     terminateSimulation[] = fmi2False
@@ -148,7 +151,7 @@ proc fmi2SetTime*(comp: ModelInstanceRef; time: fmi2Real): fmi2Status = # {.expo
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     if invalidState(comp, "fmi2SetTime", MASK_fmi2SetTime):
         return fmi2Error
-    filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2SetTime: time={time:%.16g}")
+    filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2SetTime: time={time:%.16g}".fmi2String)
     comp.time = time
     return fmi2OK
 
@@ -277,7 +280,7 @@ proc fmi2GetNominalsOfContinuousStates*(comp: ModelInstanceRef; # ¿Susituir por
     return fmi2Error
 
   #FILTERED_LOG(comp, fmi2OK, LOG_FMI_CALL, "fmi2GetNominalContinuousStates: x_nominal[0..%d] = 1.0", nx-1)
-  filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2GetNominalContinuousStates: x_nominal[0..{nx-1}] = 1.0")
+  filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2GetNominalContinuousStates: x_nominal[0..{nx-1}] = 1.0".fmi2String)
   for i in 0 ..< nx: #(i = 0; i < nx; i++)
     x_nominal[i] = 1
   return fmi2OK

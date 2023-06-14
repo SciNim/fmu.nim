@@ -77,135 +77,9 @@ import strformat
     logging is disabled. [The FMU enable/disables LogCategories which are useful for
     debugging according to this argument. Which LogCategories the FMU sets is unspecified.]
     ]##
-    #var comp = ptr ModelInstance
-    #var comp:ptr ModelInstance
-    #echo repr functions
-    #GC_fullcollect()
-    #let f = cast[fmi2CallbackFunctions](functions)   # let f = functions[]   #
-    echo "========================================"
-    echo "             FUNCTIONS "
-    echo "========================================"
-    #echo $functions.logger
-    echo functions.logger.isNil
-    #echo "logger:", #repr functions.logger
-
-    #let f = functions
-    # Case: we don't even have a logger
-    #[
-    # ignoring arguments: fmuResourceLocation, visible
-    if f.logger.isNil:
-        return nil
-
-    if f.allocateMemory.isNil or f.freeMemory.isNil:
-        f.logger( functions.componentEnvironment, instanceName, fmi2Error, "error".fmi2String,
-                "fmi2Instantiate: Missing callback function.".fmi2String)
-        return nil
-
-    if instanceName.isNil or instanceName.len == 0:
-        f.logger( functions.componentEnvironment, "?", fmi2Error, "error",
-                "fmi2Instantiate: Missing instance name.")
-        return nil
-
-    if fmuGUID.isNil or fmuGUID.len == 0:
-        f.logger( functions.componentEnvironment, instanceName, fmi2Error, "error",
-                  "fmi2Instantiate: Missing GUID.")
-        return nil
-    ]#
-    #let fmuGUID = $(fmuGUID)
-    #[
-    if not ($(fmuGUID) == MODEL_GUID): #strcmp(fmuGUID, MODEL_GUID)) {
-        f.logger( functions.componentEnvironment, instanceName, fmi2Error, "error",
-                  fmt"fmi2Instantiate: Wrong GUID {$(fmuGUID)}. Expected {MODEL_GUID}.")
-        return nil
-    ]#
-    #comp = (ModelInstance *)functions.allocateMemory(1, sizeof(ModelInstance));
-    # var comp = ModelInstance( time:0, 
-    #                           instanceName:instanceName, 
-    #                           `type`:fmuType, 
-    #                           GUID: fmuGUID )
-    echo "------------"
-    var comp:ModelInstance 
-    comp.time = 0
-    comp.instanceName = instanceName
-    comp.`type` = fmuType
-    comp.GUID = fmuGUID
-    #echo repr c
-    #c.GUID = "hola"
-    #echo repr c
-    #var comp:ModelInstance
-
-    comp.r = cast[typeof(comp.r)](realloc(comp.r, NUMBER_OF_REALS    * sizeof(fmi2Real)))
-    comp.i = cast[typeof(comp.i)](realloc(comp.i, NUMBER_OF_INTEGERS * sizeof(fmi2Integer)))
-    comp.b = cast[typeof(comp.b)](realloc(comp.b, NUMBER_OF_BOOLEANS * sizeof(fmi2Boolean)))
-    comp.s = cast[typeof(comp.s)](realloc(comp.s, NUMBER_OF_STRINGS  * sizeof(fmi2String)))
-    comp.isPositive = cast[typeof(comp.isPositive)](realloc(comp.isPositive, NUMBER_OF_EVENT_INDICATORS * sizeof(fmi2Boolean)))
 
 
-    for i in 0 ..< NUMBER_OF_CATEGORIES:
-        comp.logCategories[i] = loggingOn
-    #[  
-    if not comp.isNil:
-        #[
-        comp.r = cast[typeof(comp.r)](realloc(comp.r, NUMBER_OF_REALS    * sizeof(fmi2Real)))
-        comp.i = cast[typeof(comp.i)](realloc(comp.i, NUMBER_OF_INTEGERS * sizeof(fmi2Integer)))
-        comp.b = cast[typeof(comp.b)](realloc(comp.b, NUMBER_OF_BOOLEANS * sizeof(fmi2Boolean)))
-        comp.s = cast[typeof(comp.s)](realloc(comp.s, NUMBER_OF_STRINGS  * sizeof(fmi2String)))
-        comp.isPositive = cast[typeof(comp.isPositive)](realloc(comp.isPositive, NUMBER_OF_EVENT_INDICATORS * sizeof(fmi2Boolean)))
-        ]#
-        #comp.instanceName = (char *)functions.allocateMemory(1 + strlen(instanceName), sizeof(char));
-        #comp.GUID = (char *)functions.allocateMemory(1 + strlen(fmuGUID), sizeof(char));
-
-        # set all categories to on or off. fmi2SetDebugLogging should be called to choose specific categories.
-        for i in 0 ..< NUMBER_OF_CATEGORIES:
-            comp.logCategories[i] = loggingOn
-    ]#
-
-    #[
-    if comp.isNil or comp.r.isNil or comp.i.isNil or comp.b.isNil or comp.s.isNil or comp.isPositive.isNil or
-       comp.instanceName.isNil or comp.GUID.isNil:
-        functions.logger(functions.componentEnvironment, instanceName, fmi2Error, "error",
-            "fmi2Instantiate: Out of memory.")
-        return nil
-    ]#
-    
-
-
-
-    #echo fmt"{cast[int](addr(functions)):#x}"
-
-    comp.functions = functions
-
-    comp.componentEnvironment = functions.componentEnvironment
-
-    comp.loggingOn = loggingOn
-
-    comp.state = modelInstantiated   # State changed
-    #echo "GUID: ", comp.GUID
-    #echo "Instance Name: ", comp.instanceName
-    #------
-    #var tmp = comp.i
-    #tmp[]
-    #tmp[0] = 2.fmi2Integer
-    setStartValues( comp )    # <-------- to be implemented by the includer of this file
-    #comp.i = cast[ptr UncheckedArray[fmi2Integer]](alloc(int.sizeof*1))
-    #comp.i[0] = 1
-    #-----
-    comp.isDirtyValues = fmi2True # because we just called setStartValues
-    comp.isNewEventIteration = fmi2False
-
-
-    comp.eventInfo.newDiscreteStatesNeeded = fmi2False
-    comp.eventInfo.terminateSimulation = fmi2False
-    comp.eventInfo.nominalsOfContinuousStatesChanged = fmi2False
-    comp.eventInfo.valuesOfContinuousStatesChanged = fmi2False
-    comp.eventInfo.nextEventTimeDefined = fmi2False
-    comp.eventInfo.nextEventTime = 0
-    
-    #echo "GUID: ", comp.GUID
-    #echo "Instance Name: ", comp.instanceName
-    filteredLog( comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2Instantiate: GUID={$fmuGUID}")
-
-    return comp ]#
+ ]#
 
 
 
@@ -244,12 +118,13 @@ proc fmi2Instantiate*( instanceName: fmi2String;
         functions.logger( functions.componentEnvironment, instanceName, fmi2Error, "error".fmi2String,
                   fmt"fmi2Instantiate: Wrong GUID {$(fmuGUID)}. Expected {MODEL_GUID}.".fmi2String)
         return nil
-    
+   
     # Start creating the instance
     var comp = ModelInstanceRef( time: 0, 
                               instanceName: instanceName, 
                               `type`: fmuType, 
                               GUID: fmuGUID )
+                             
     if not comp.isNil:
         # set all categories to on or off. fmi2SetDebugLogging should be called to choose specific categories.
         for i in 0 ..< NUMBER_OF_CATEGORIES:
@@ -273,6 +148,7 @@ proc fmi2Instantiate*( instanceName: fmi2String;
     comp.state = modelInstantiated   # State changed
 
     setStartValues( comp )    # <------ to be implemented by the includer of this file
+    
     comp.isDirtyValues = fmi2True # because we just called setStartValues
     comp.isNewEventIteration = fmi2False
 
@@ -282,8 +158,9 @@ proc fmi2Instantiate*( instanceName: fmi2String;
     comp.eventInfo.valuesOfContinuousStatesChanged = fmi2False
     comp.eventInfo.nextEventTimeDefined = fmi2False
     comp.eventInfo.nextEventTime = 0
-    
-    filteredLog( comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2Instantiate: GUID={$fmuGUID}")
+    echo "ok-4"     # FIXME-----
+    filteredLog( comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2Instantiate: GUID={$fmuGUID}".fmi2String)
+    echo "ok-5"     # -----------
     echo comp
     echo "leaving fmi2Instantiate"
     return comp  
@@ -416,7 +293,7 @@ proc fmi2SetDebugLogging*( comp:ModelInstanceRef, loggingOn: fmi2Boolean,
     if invalidState(comp, "fmi2SetDebugLogging", MASK_fmi2SetDebugLogging):
         return fmi2Error
     comp.loggingOn = loggingOn
-    filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2SetDebugLogging")
+    filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2SetDebugLogging".fmi2String)
 
     # reset all categories
     for j in 0 ..< nCategories:

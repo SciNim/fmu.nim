@@ -29,8 +29,8 @@ let # :seq[fmi2String]
 template filteredLog*( instance: ModelInstanceRef, 
                         status: fmi2Status, 
                         categoryIndex: int, 
-                        message: string, 
-                        args: varargs[string]): untyped =
+                        message: fmi2String, 
+                        args: varargs[fmi2String]) =
   var newArgs:seq[fmi2String]
   for i in args:
     newArgs &= i.fmi2String

@@ -1,6 +1,6 @@
 # Creates the folder structure
 import std/os
-import strutils
+#import strutils
 
 proc createStructure*(folder:string = "fmu"; checkDir = false) =
   removeDir(folder, checkDir = checkDir)

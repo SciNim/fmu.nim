@@ -11,11 +11,11 @@ import ../meta/filteredlog
 
 
 # FORWARD DECLARATION---
-proc calculateValues*(comp:ModelInstanceRef)
+#proc calculateValues*(comp:ModelInstanceRef)
 
-var NUMBER_OF_REALS {.global.} = 0
-var NUMBER_OF_INTEGERS {.global.} = 0
-var NUMBER_OF_BOOLEANS {.global.} = 0
+# var NUMBER_OF_REALS {.global.} = 0
+# var NUMBER_OF_INTEGERS {.global.} = 0
+# var NUMBER_OF_BOOLEANS {.global.} = 0
 #------------------------
 
 {.push exportc: "$1",dynlib,cdecl.}
@@ -66,7 +66,7 @@ proc fmi2GetInteger*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: cs
             return fmi2Error
 
         value[i] = comp.i[vr[i]]
-        filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2GetInteger: #i{vr[i]}# = {value[i]}" )
+        filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2GetInteger: #i{vr[i]}# = {value[i]}".fmi2String )
     
     return fmi2OK
 
@@ -93,7 +93,7 @@ proc fmi2GetBoolean*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: cs
         else:
            tmp = "false"
 
-        filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2GetBoolean: #b{vr[i]}# = {tmp}")
+        filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2GetBoolean: #b{vr[i]}# = {tmp}".fmi2String)
     
     return fmi2OK
 
