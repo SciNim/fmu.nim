@@ -35,14 +35,20 @@ template filteredLog*( instance: ModelInstanceRef,
   #for i in args:
   #  newArgs &= i.fmi2String
   if status == fmi2Error or status == fmi2Fatal or isCategoryLogged(instance, categoryIndex).bool:
-    instance.functions.logger(instance.functions.componentEnvironment, 
-                              instance.instanceName, 
-                              status,
-                              logCategoriesNames[categoryIndex].fmi2String, 
-                              message.fmi2String, args ) # FIXME
+    instance.functions.logger(instance.functions.componentEnvironment, # fmi2ComponentEnvironment
+                              instance.instanceName, # fmi2String
+                              status, # fmi2Status
+                              logCategoriesNames[categoryIndex].fmi2String, # fmi2String
+                              message.fmi2String, # fmi2String
+                              args ) # FIXME  # varargs[fmi2String]
 
 #[
-#define FILTERED_LOG(instance, status, categoryIndex, message, ...) if (status == fmi2Error || status == fmi2Fatal || isCategoryLogged(instance, categoryIndex)) \
-        instance->functions->logger(instance->functions->componentEnvironment, instance->instanceName, status, \
-        logCategoriesNames[categoryIndex], message, ##__VA_ARGS__);
+#define FILTERED_LOG(instance, status, categoryIndex, message, ...) 
+if (status == fmi2Error || status == fmi2Fatal || isCategoryLogged(instance, categoryIndex)) \
+        instance->functions->logger(instance->functions->componentEnvironment, 
+                                    instance->instanceName,
+                                    status, \
+                                    logCategoriesNames[categoryIndex], 
+                                    message, 
+                                    ##__VA_ARGS__);
 ]#

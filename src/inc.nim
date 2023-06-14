@@ -1,11 +1,11 @@
 import fmu
 
+const
+  guid = "{8c4e810f-3df3-4a00-8276-176fa3c9f008}"
 
-myCode:
+
+model(guid):
   const
-    MODEL_IDENTIFIER* = "inc"
-    MODEL_GUID* = "{8c4e810f-3df3-4a00-8276-176fa3c9f008}"
-    
     NUMBER_OF_INTEGERS* = 1
     NUMBER_OF_BOOLEANS* = 0
     NUMBER_OF_STRINGS* = 0
@@ -17,13 +17,10 @@ myCode:
   const
     counter = 0
 
-
-  proc setStartValues*(comp: ModelInstanceRef) =  # Con ref object, no es necesario usar "var"
+  proc setStartValues*(comp: ModelInstanceRef) =
       comp.i &= 1.fmi2Integer
 
-  # El código generado es: (*comp).i[((NI) 0)] = ((NI32) 1);
-
-  proc calculateValues*(comp:ModelInstanceRef) =
+  proc calculateValues*(comp: ModelInstanceRef) =
       if comp.state == modelInitializationMode:
           # set first time event
           comp.eventInfo.nextEventTimeDefined = fmi2True
@@ -50,7 +47,7 @@ myCode:
 when isMainModule and not compileOption("app", "lib"):
   import lib/fmubuilder
 
-  var myModel = FMU( id: "inc", guid: "{8c4e810f-3df3-4a00-8276-176fa3c9f008}")
+  var myModel = FMU( id: "inc", guid: guid)
   myModel.genFmu("inc.fmu")
 
 

@@ -81,17 +81,18 @@ import strformat
 
  ]#
 
+  
 
 
 # https://forum.nim-lang.org/t/7496
-# NOTA: otra opción sería usar alloc y dealloc.
+
 proc fmi2Instantiate*( instanceName: fmi2String;
                        fmuType: fmi2Type;
                        fmuGUID: fmi2String;
                        fmuResourceLocation: fmi2String;
                        functions: fmi2CallbackFunctions;
                        visible: fmi2Boolean;
-                       loggingOn: fmi2Boolean): ModelInstanceRef = #ptr ModelInstance =
+                       loggingOn: fmi2Boolean): ModelInstanceRef = 
 
     # ignoring arguments: fmuResourceLocation, visible
     echo "Entering fmi2Instantiate"
@@ -114,16 +115,13 @@ proc fmi2Instantiate*( instanceName: fmi2String;
                   "fmi2Instantiate: Missing GUID.".fmi2String)
         return nil
 
-    if not ($(fmuGUID) == MODEL_GUID): #strcmp(fmuGUID, MODEL_GUID)) {
-        functions.logger( functions.componentEnvironment, instanceName, fmi2Error, "error".fmi2String,
-                  fmt"fmi2Instantiate: Wrong GUID {$(fmuGUID)}. Expected {MODEL_GUID}.".fmi2String)
-        return nil
+    testGUID()
    
     # Start creating the instance
     var comp = ModelInstanceRef( time: 0, 
-                              instanceName: instanceName, 
-                              `type`: fmuType, 
-                              GUID: fmuGUID )
+                                 instanceName: instanceName, 
+                                 `type`: fmuType, 
+                                 GUID: fmuGUID )
                              
     if not comp.isNil:
         # set all categories to on or off. fmi2SetDebugLogging should be called to choose specific categories.
@@ -161,7 +159,8 @@ proc fmi2Instantiate*( instanceName: fmi2String;
 
     # FILTERED_LOG(comp, fmi2OK, LOG_FMI_CALL, "fmi2Instantiate: GUID=%s", fmuGUID)
     echo "ok-4"     # FIXME-----
-    filteredLog( comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2Instantiate: GUID={$fmuGUID}".fmi2String, fmuGUID)
+    filteredLog( comp, fmi2OK, LOG_FMI_CALL, 
+                 fmt"fmi2Instantiate: GUID={$fmuGUID}".fmi2String, fmuGUID)
     echo "ok-5"     # -----------
     echo comp
     echo "leaving fmi2Instantiate"
@@ -199,30 +198,7 @@ if (!comp || !comp->r || !comp->i || !comp->b || !comp->s || !comp->isPositive
 proc setString*(comp:ModelInstanceRef, vr:fmi2ValueReference, value:fmi2String):fmi2Status =
     return fmi2SetString(comp, unsafeAddr(vr), 1, unsafeAddr(value))
 #-----------
-#[
-void fmi2FreeInstance(fmi2Component c) {
-    ModelInstance *comp = (ModelInstance *)c;
-    if (!comp) return;
-    if (invalidState(comp, "fmi2FreeInstance", MASK_fmi2FreeInstance))
-        return;
-    FILTERED_LOG(comp, fmi2OK, LOG_FMI_CALL, "fmi2FreeInstance")
 
-    if (comp->r) comp->functions->freeMemory(comp->r);
-    if (comp->i) comp->functions->freeMemory(comp->i);
-    if (comp->b) comp->functions->freeMemory(comp->b);
-    if (comp->s) {
-        int i;
-        for (i = 0; i < NUMBER_OF_STRINGS; i++){
-            if (comp->s[i]) comp->functions->freeMemory((void *)comp->s[i]);
-        }
-        comp->functions->freeMemory((void *)comp->s);
-    }
-    if (comp->isPositive) comp->functions->freeMemory(comp->isPositive);
-    if (comp->instanceName) comp->functions->freeMemory((void *)comp->instanceName);
-    if (comp->GUID) comp->functions->freeMemory((void *)comp->GUID);
-    comp->functions->freeMemory(comp);
-}
-]#
 
 # https://nim-lang.org/docs/destructors.html
 proc fmi2FreeInstance*(comp: ModelInstanceRef) =
@@ -232,49 +208,12 @@ proc fmi2FreeInstance*(comp: ModelInstanceRef) =
     pointer is provided for “c”, the function call is ignored (does not have an effect).
     ]##
     echo "ENTERING: fmi2FreeInstance"
-    #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
-    #if comp.isNil:
-    #    return
-    #comp = nil
-
-    #echo comp.GUID
-    #echo comp[].GUID
     `=destroy`(comp[])
     GC_fullCollect()
 
 
-    #if (invalidState(comp, "fmi2FreeInstance", MASK_fmi2FreeInstance)):
-    #    return
-    #filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2FreeInstance")
-    #echo "OKK"
-    #comp = nil
-    #[
-    if not (comp.r.isNil):
-       comp.functions.freeMemory(comp.r)
-    #if not (comp.i.isNil):
-    #   comp.functions.freeMemory(comp.i)
-    if not (comp.b.isNil):
-       comp.functions.freeMemory(comp.b)
-    if not (comp.s.isNil):
-        #var i:int
-        #for i in 0 ..< NUMBER_OF_STRINGS:
-        #    if (comp.s[i]):
-        #        comp.functions.freeMemory( comp.s[i] )
 
-        comp.functions.freeMemory( comp.s )
-    ]#
-    #[
-    if (comp.isPositive):
-       comp.functions.freeMemory(comp.isPositive)
 
-    if (comp.instanceName):
-       comp.functions.freeMemory(comp.instanceName)
-
-    if (comp.GUID):
-       comp.functions.freeMemory( comp.GUID )
-    ]#
-    #comp.functions.freeMemory(unsafeAddr(comp))
-    #GC_fullcollect()
 
 proc fmi2SetDebugLogging*( comp:ModelInstanceRef, loggingOn: fmi2Boolean,
                            nCategories: csize_t, categories: pointer):fmi2Status =  #categories: ptr fmi2String
