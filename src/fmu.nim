@@ -1,7 +1,8 @@
 #import system, std/[os, osproc, strformat]
 import std/strformat
-import lib/fmu/[model, folder, compress]
-export model, folder, compress
+import lib/fmu/[model, folder, compress, xml]
+export model
+#export model, folder, compress, xml
 
 import lib/defs/[definitions, masks, modelinstance, parameters]
 export definitions, masks, modelinstance, parameters

@@ -1,3 +1,6 @@
+#[
+Increase a counter every second.
+]#
 import fmu
 
 const

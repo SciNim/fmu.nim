@@ -42,7 +42,7 @@
 import xmltree
 import strformat
 
-proc createXml(modelName, guid: string, numberOfEventIndicators:int) =
+proc createXml*(modelName, guid: string, numberOfEventIndicators:int):string =
   #var fmiModelDescription = newElement("fmiModelDescription")
   #fmiModelDescription.add newText("some text")
   #fmiModelDescription.add newComment("this is comment")
@@ -60,7 +60,7 @@ proc createXml(modelName, guid: string, numberOfEventIndicators:int) =
   let meAtt = { "modelIdentifier" : fmt"{modelName}" }.toXmlAttributes
   var modelExchange = newXmlTree("ModelExchange", [sourceFiles], meAtt)
 
-  var categories = @["logAll", "logError", "logFmiCall", "logEvent"]
+  var categories = @["logAll", "logError", "logFmiCall", "logEvent"]  # FIXME
   var catChildren:seq[XmlNode] = @[]
   for category in categories:
     var cat = newElement("Category")
@@ -96,7 +96,35 @@ proc createXml(modelName, guid: string, numberOfEventIndicators:int) =
               "guid": fmt"{guid}",
               "numberOfEventIndicators" : fmt"{numberOfEventIndicators}"}.toXmlAttributes
   let k = newXmlTree("fmiModelDescription", [modelExchange, logCategories, modelVariables, modelStructure], att)
-  echo xmlHeader & $k
+  return xmlHeader & $k
 
 when isMainModule:
-  createXml("inc", "{8c4e810f-3df3-4a00-8276-176fa3c9f008}", 0)
+  echo createXml("inc", "{8c4e810f-3df3-4a00-8276-176fa3c9f008}", 0)
+
+#[
+<?xml version="1.0" encoding="UTF-8" ?>
+<fmiModelDescription guid="{8c4e810f-3df3-4a00-8276-176fa3c9f008}" numberOfEventIndicators="0" modelName="inc" fmiVersion="2.0">
+  <ModelExchange modelIdentifier="inc">
+    <SourceFiles>
+      <File name="inc.c" />
+    </SourceFiles>
+  </ModelExchange>
+  <LogCategories>
+    <Category name="logAll" />
+    <Category name="logError" />
+    <Category name="logFmiCall" />
+    <Category name="logEvent" />
+  </LogCategories>
+  <ModelVariables>
+    <ScalarVariable variability="discrete" valueReference="0" description="counts the seconds" causality="output" initial="exact" name="counter">
+      <Integer start="1" />
+    </ScalarVariable>
+  </ModelVariables>
+  <ModelStructure>
+    <Outputs>
+      <Unknown index="1" />
+    </Outputs>
+  </ModelStructure>
+</fmiModelDescription>
+
+]#

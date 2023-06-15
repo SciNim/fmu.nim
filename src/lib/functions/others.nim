@@ -212,9 +212,6 @@ proc fmi2FreeInstance*(comp: ModelInstanceRef) =
     GC_fullCollect()
 
 
-
-
-
 proc fmi2SetDebugLogging*( comp:ModelInstanceRef, loggingOn: fmi2Boolean,
                            nCategories: csize_t, categories: pointer):fmi2Status =  #categories: ptr fmi2String
     ##[

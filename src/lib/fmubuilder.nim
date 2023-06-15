@@ -1,5 +1,8 @@
-import system, std/[os, osproc, strformat]
+import system
+import std/[os, osproc, strformat]
+import fmu/[model, folder, compress, xml]
 import ../fmu
+
 # FMU BUILDER
 proc genFmu2*(myModel: FMU; fname:string; callingFile: string) =
   # 1. Create folder structure
@@ -26,9 +29,9 @@ proc genFmu2*(myModel: FMU; fname:string; callingFile: string) =
   copyFileToDir( "fmusdk-master/fmu20/src/models/inc/inc.c", 
                  joinPath(tmpFolder, "sources") )
 
-  # 2.4 XML  FIXME
-  copyFile( "fmusdk-master/fmu20/src/models/inc/modelDescription_me.xml", 
-            joinPath(tmpFolder, "modelDescription.xml") )
+  # 2.4 XML
+  var xmlData = createXml(myModel.id, myModel.guid, myModel.nEventIndicators)
+  writeFile(joinPath(tmpFolder, "modelDescription.xml"), xmlData)
 
   # 3. Compress
   tmpFolder.compressInto( fname )
