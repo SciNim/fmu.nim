@@ -1,29 +1,19 @@
 import std/[os,osproc, strformat]
-import ../defs/[definitions, modelinstance]
+import ../defs/[definitions, modelinstance, parameters]
 
 
-type
-  FmuObj* = object
-    id*: string
-    guid*: string
 
-    nIntegers*: int
-    nBooleans*: int
-    nStrings*: int
-    nReals*: int
-    nEventIndicators*: int
-    nStates*: int
+# type
+#   FmuObj* = object
+#     id*: string
+#     guid*: string
+#     params*:seq[Param]
 
-    counter*: int   # FIXME: needed? 
+#     nEventIndicators*: int
+#     nStates*: int
 
-    # setStartValues*:  proc( comp: ModelInstanceRef )
-    # calculateValues*: proc( comp: ModelInstanceRef )
-    # eventUpdate*:     proc( comp:ModelInstanceRef, 
-    #                         eventInfo:ptr fmi2EventInfo, 
-    #                         timeEvent:bool,  # cint
-    #                         isNewEventIteration:fmi2Boolean )
 
-  FMU* = ref FmuObj
+#   FMU* = ref FmuObj
 
 
 # proc genCode*( m: FMU ) =

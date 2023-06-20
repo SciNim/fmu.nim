@@ -83,14 +83,8 @@ type
   fmi2Byte*  = char
 
 proc `$`*(a:fmi2String): string {.borrow.}   # https://forum.nim-lang.org/t/7502
-  #$(a.cstring)
-  #a
 
 
-#[
-
-
-]#
 
 
 
@@ -257,24 +251,6 @@ New in FMI 2.0.2: It is discouraged to use the memory callback functions.]
 
 #⨪--------------------------------------
 
-#[
-template register*( val: int,
-                    caus:Causality,
-                    varia:Variability,
-                    ini:Initial,
-                    desc:string) =
-  var tmp = ParamI( name: val.astToStr,
-                    typ: tInt,
-                    idx: paramsI.len,
-                    causality:caus,
-                    variability:varia,
-                    initial:ini,
-                    description:desc,
-                    initVal: val,
-                    address: addr(val) ) #fmt"{typ}"   )   
-  paramsI.add(tmp)
-  static: nParamsI += 1
-]#
 
 
 {.pop.}

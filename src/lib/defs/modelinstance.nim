@@ -1,5 +1,6 @@
-import definitions
-import strformat
+import definitions, parameters
+import std/[strformat, options]
+import std/macros
 {.push exportc, dynlib, cdecl.}
 
 #[
@@ -35,15 +36,18 @@ type
 
 type
   ModelInstance* = object
-    r*: seq[fmi2Real] #ptr UncheckedArray[fmi2Real]
-    i*: seq[fmi2Integer]  #ptr UncheckedArray[fmi2Integer] 
-    b*: seq[fmi2Boolean] #ptr UncheckedArray[fmi2Boolean]
-    s*: seq[fmi2String] #ptr UncheckedArray[fmi2String]
-    isPositive*: seq[fmi2Boolean]  #ptr UncheckedArray[fmi2Boolean]
+    id*: string         # <-- NEW
+    params*:seq[Param]  # <--- TODO: esto debería reemplazar a los siguientes.
+    integerAddr*: seq[ptr int]
+    r*: seq[fmi2Real]
+    i*: seq[fmi2Integer]
+    b*: seq[fmi2Boolean]
+    s*: seq[fmi2String]
+    isPositive*: seq[fmi2Boolean]
     time*: fmi2Real
     instanceName*: fmi2String
     `type`*: fmi2Type
-    GUID*: fmi2String
+    guid*: string   # <-- Modified
     functions*: fmi2CallbackFunctions
     loggingOn*: fmi2Boolean
     logCategories*: array[4, fmi2Boolean]  # FIXME: NUMBER_OF_CATEGORIES
@@ -52,6 +56,9 @@ type
     eventInfo*: fmi2EventInfo
     isDirtyValues*: fmi2Boolean
     isNewEventIteration*: fmi2Boolean
+
+    nEventIndicators*:int # <-- NEW
+
 
 
 
@@ -71,3 +78,252 @@ proc `$`*(o: ModelInstanceRef):string =
   result &= &"\n- isPositive: {o.isPositive}"
   result &= &"\n- time: {o.time}"
   result &= "\n"
+
+
+ 
+
+template add*(comp: ModelInstanceRef; value:int) {.dirty.} =
+  #proc setStartValues*(comp: ModelInstanceRef) =    
+  #  ## used to initialize the variables (integers are stored in the seq `comp.i`)
+    #comp.i &= 1.fmi2Integer
+    `value` = value
+    #echo value.astToStr, ": ", value
+    #if typeof(value) is int:
+    comp.integerAddr.add( addr(value) )
+    #comp.params &= Param(name:value.astToStr, kind: tInteger)
+
+template add2*(value:int) {.dirty.} =
+  #proc setStartValues*(comp: ModelInstanceRef) =    
+  #  ## used to initialize the variables (integers are stored in the seq `comp.i`)
+    #comp.i &= 1.fmi2Integer
+    #`value` = value
+    #echo value.astToStr, ": ", value
+    #if typeof(value) is int:
+    #comp.integerAddr.add( addr(value) )
+    #comp.params &= Param(name:value.astToStr, kind: tInteger)
+    #mixin myModel
+    #echo typeof(`value`)
+    echo value.astToStr, " ------> ", value
+    myModel.params &= Param(name:value.astToStr, kind: tInteger, startI: some(value)) 
+
+
+
+#template init2*() {.dirty.} =
+
+# template setInit*(name:untyped; value: int) {.dirty.} =
+#   echo "SETTING INITIAL VALUES"
+#   `name`  = value
+#   #echo "PRUBEA: ", name
+#   #comp.integerAddr.add( addr(name) ) 
+
+#macro setInit*() =
+# macro setInit*(comp: ModelInstanceRef; 
+#                name: static[string];
+#                value: static[int] ):untyped =
+#   result = nnkStmtList.newTree()
+#   let tmp = newIdentNode(name)  #name.strVal ) 
+#   echo "---", name, "---"
+#   result = quote do:
+#     var `name` {. inject.} = `value`
+#     comp.integerAddr.add( addr(`tmp`) )
+
+# template init*(body: untyped) {.dirty.} =
+#   proc setStartValues*(comp: ModelInstanceRef) =    
+#     ## used to initialize the variables (integers are stored in the seq `comp.i`)
+#     body 
+
+# template add4(id) {.dirty.} =
+#   comp.integerAddr.add( addr(`id`) )
+
+# macro init*(args: varargs[typed]) = 
+#   var body = nnkStmtList.newTree()
+#   var comp: ModelInstanceRef
+
+#   var names:seq[string]
+#   for arg in args:
+#     names &= arg.strVal
+#     var id = newIdentNode(arg.strVal)
+
+#     # int case
+#     if arg.getType.typeKind == ntyInt:
+#       let argVal = arg.getImpl[2].intVal.int
+#       body.add quote do:
+#         `id` = `argVal`
+#         comp.integerAddr.add( addr(`id`) )
+
+#   var id = newIdentNode("comp")
+#   result = quote do:
+#     proc setStartValues*(`id`: ModelInstanceRef)  {.cdecl.} = 
+#       `body`
+
+# https://github.com/mantielero/VapourSynth.nim/blob/b8ae20dadf9c5e3a2c98f3f556cb4cbdba959b63/src/vsmacros/filter.nim#L10
+# macro init2*(args: varargs[typed]) = 
+#   var body = nnkStmtList.newTree()
+
+#   #var names:seq[string]
+#   for arg in args:
+#     #names &= arg.strVal
+#     var id = newIdentNode(arg.strVal)
+
+#     # int case
+#     if arg.getType.typeKind == ntyInt:
+#       let argVal = arg.getImpl[2].intVal.int
+#       body.add quote do:
+#         `id` = `argVal`
+#         comp.integerAddr.add( addr(`id`) )
+
+#   # var newFunc = nnkProcDef.newTree()
+#   # newFunc.add(  nnkPostfix.newTree(
+#   #     newIdentNode("*"),
+#   #     newIdentNode("setStartValues")
+#   #   ),
+#   #   newEmptyNode(),
+#   #   newEmptyNode()
+#   # )
+#   result = quote do:
+#     proc setStartValues*(comp: ModelInstanceRef)  {.cdecl.} = 
+#       `body`
+
+#   for arg in args:
+#     #names &= arg.strVal
+#     var id = newIdentNode(arg.strVal)
+
+#     # int case
+#     if arg.getType.typeKind == ntyInt:
+#       let argVal = arg.getImpl[2].intVal.int
+#       result.body.add quote do:
+#         `id` = `argVal`
+#         #`comp`.integerAddr.add( addr(`id`) )      
+
+
+macro init*(args: varargs[typed]) =
+  var nIntegers = 0 
+  result = nnkStmtList.newTree()
+
+  # 1. Function name
+  var newFunc = nnkProcDef.newTree()
+  newFunc.add(  nnkPostfix.newTree(
+      newIdentNode("*"),
+      newIdentNode("setStartValues")
+    ),
+    newEmptyNode(),
+    newEmptyNode()
+  )
+
+  # 2. Function arguments
+  var formalParams = nnkFormalParams.newTree()
+  formalParams.add newEmptyNode()
+
+  formalParams.add nnkIdentDefs.newTree(
+        newIdentNode("comp"),
+        newIdentNode("ModelInstanceRef"),
+        newEmptyNode()
+      )  
+
+  newFunc.add( formalParams, newEmptyNode(), newEmptyNode() )
+
+  # 3. Function body
+  var funcBody = nnkStmtList.newTree()
+  #funcBody.add quote do:
+  #  echo "hola"
+  #newFunc.add funcBody
+  funcBody.add newEmptyNode()
+  funcBody.add newEmptyNode()
+
+  var body =  nnkStmtList.newTree()
+
+  for arg in args:
+    #names &= arg.strVal
+    let id = newIdentNode(arg.strVal)
+
+    # 3.1 Assignment
+
+    if arg.getType.typeKind == ntyInt:
+      nIntegers += 1
+      let argVal = arg.getImpl[2].intVal.int
+      body.add nnkAsgn.newTree(
+                #newIdentNode("counter"),
+                id,
+                #newLit(1)
+                newLit(argVal)
+              )
+
+      # 3.2 Add adress
+      body.add   nnkInfix.newTree(
+                  newIdentNode("&="),
+                  nnkDotExpr.newTree(
+                      newIdentNode("myModel"),
+                      newIdentNode("integerAddr") 
+                  ),
+                  nnkCall.newTree(
+                    newIdentNode("addr"),
+                    id 
+                  )
+                )    
+      body.add   nnkInfix.newTree(
+                  newIdentNode("&="),
+                  nnkDotExpr.newTree(
+                      newIdentNode("comp"),
+                      newIdentNode("integerAddr") 
+                  ),
+                  nnkCall.newTree(
+                    newIdentNode("addr"),
+                    id 
+                  )
+                )  
+      #body.add quote do:
+      #  echo "setInitialValues: comp.integerAddr[0][]: ", comp.integerAddr[0][]
+      #  echo "myModel.integerAddr[0][]: ", myModel.integerAddr[0][]
+#[
+nnkStmtList.newTree(
+
+  nnkInfix.newTree(
+    newIdentNode("&="),
+    nnkDotExpr.newTree(
+      newIdentNode("comp"),
+      newIdentNode("integerAddr")
+    ),
+    nnkCall.newTree(
+      newIdentNode("addr"),
+      newIdentNode("id")
+    )
+  )
+)
+]#                
+
+      # body.add   nnkCall.newTree(
+      #             nnkDotExpr.newTree(
+      #               nnkDotExpr.newTree(
+      #                 newIdentNode("comp"),
+      #                 newIdentNode("integerAddr")
+      #               ),
+      #               newIdentNode("add")
+      #             ),
+      #             nnkCall.newTree(
+      #               newIdentNode("addr"),
+      #               id
+      #               #newIdentNode("counter")
+      #             )
+      #           )
+
+
+
+
+
+
+  newFunc.add body
+
+  result.add quote do:
+    NUMBER_OF_INTEGERS = `nIntegers`
+
+  result.add  newFunc
+
+#[
+Direcciones futuras:
+
+macro vras(arglist: varargs[untyped]) =
+  echo argList.lispRepr()
+  
+vras(positional, test = 123):
+  echo "ACtual body"
+]#

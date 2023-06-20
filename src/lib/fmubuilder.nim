@@ -2,10 +2,12 @@ import system
 import std/[os, osproc, strformat]
 import fmu/[model, folder, compress, xml]
 import ../fmu
+#import tempfile
 
 # FMU BUILDER
-proc genFmu2*(myModel: FMU; fname:string; callingFile: string) =
+proc genFmu2*(myModel: ModelInstanceRef; fname:string; callingFile: string) =
   # 1. Create folder structure
+  #var dir = mkdtemp()
   var tmpFolder = "tmpFmu"  # FIXME: create a temporal folder
   createStructure(tmpFolder)
 
@@ -40,7 +42,8 @@ proc genFmu2*(myModel: FMU; fname:string; callingFile: string) =
   #removeDir(tmpFolder, checkDir = false )
 
 
-template genFmu*(myModel: FMU; fname:string) =
+template genFmu*(myModel: ModelInstanceRef; fname:string) =
   # needed in order to know the filename calling `genFmu`
   let pos = instantiationInfo()
   genFmu2(myModel, fname, pos.filename)
+

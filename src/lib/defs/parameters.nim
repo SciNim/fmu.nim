@@ -111,8 +111,7 @@ type
   #ParamKind* = enum
   #  pkReal, pkInteger, pkBoolean, pkString
 
-  Param* = object
-    #kind*: ParamType
+  ParamObj* = object
     name*: string
     idx*: int
     causality*: Option[Causality]
@@ -127,6 +126,7 @@ type
       derivative*: Option[uint]
       reinit*: Option[bool]
     of tInteger:
+      valI*: int
       addressI*: ptr int
       startI*: Option[int]
     of tBoolean:
@@ -136,6 +136,7 @@ type
       addressS*: ptr string
       startS*: Option[string]
 
+  Param* = ref ParamObj
 
   #[
   Param* = ref object of RootObj
@@ -239,3 +240,4 @@ var nParamsR{.compileTime.}: int = 0
 var nParamsB{.compileTime.}: int = 0
 var nParamsS{.compileTime.}: int = 0
 #var numStates* {.compileTime.}:int = 0
+

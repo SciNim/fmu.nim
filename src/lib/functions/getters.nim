@@ -50,22 +50,37 @@ proc fmi2GetReal*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize
 
 proc fmi2GetInteger*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize_t;
                     value: ptr fmi2Integer): fmi2Status  =
-    #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
+    ## returns an integer value
+    ## `vr` is a vector and `nvr` its size.
+    ## `value` is another vector with the results (same `nvr` size)
+    #echo "Entering fmi2GetInteger"
+    #echo "getter: comp.integerAddr[0][]: ", comp.integerAddr[0][]
     if invalidState(comp, "fmi2GetInteger", MASK_fmi2GetInteger):
+        #echo "bad1"
         return fmi2Error
     if nvr > 0 and nullPointer(comp, "fmi2GetInteger", "vr[]", vr):
+            #echo "bad2"
             return fmi2Error
     if nvr > 0 and nullPointer(comp, "fmi2GetInteger", "value[]", value):
+            #echo "bad3"        
             return fmi2Error
     if nvr > 0 and comp.isDirtyValues > 0:
+        #echo "bad4"        
         calculateValues(comp)
         comp.isDirtyValues = fmi2False
-    
-    for i in 0 ..< nvr:
+    #echo "no error"
+    # iterate over all the values required by `vr`
+    for i in 0 ..< nvr: 
+        #echo "  >> ",i, " --> ", vr[i], " - ", NUMBER_OF_INTEGERS
         if vrOutOfRange(comp, "fmi2GetInteger", vr[i], NUMBER_OF_INTEGERS):
+            #echo "bad5"
             return fmi2Error
 
-        value[i] = comp.i[vr[i]]
+        #value[i] = comp.i[vr[i]]  # returns the value
+        #echo "  >> OK"
+        #echo "--> ", comp.integerAddr[vr[i]][]
+
+        value[i] = comp.integerAddr[vr[i]][].fmi2Integer
         filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2GetInteger: #i{vr[i]}# = {value[i]}".fmi2String )
     
     return fmi2OK

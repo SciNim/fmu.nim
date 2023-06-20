@@ -2,12 +2,12 @@ import options
 
 
 template register*( val: float;
-                    caus:Option[Causality] = none(Causality); #cLocal;
-                    varia:Option[Variability] = none(Variability); #vContinuous;
-                    ini:Option[Initial] = none(Initial); #iUnset;
-                    desc:Option[string] = none(string);
-                    deriva:Option[uint] = none( uint );
-                    strt: Option[float] = none(float) ) {.dirty.} =           
+                    caus:  Option[Causality]   = none(Causality); #cLocal;
+                    varia: Option[Variability] = none(Variability); #vContinuous;
+                    ini:   Option[Initial]     = none(Initial); #iUnset;
+                    desc:  Option[string]      = none(string);
+                    deriva:Option[uint]        = none( uint );
+                    strt:  Option[float]       = none(float) ) {.dirty.} =           
   if val.type.name == "float":
     var p = Param(kind: tReal)
     p.name = val.astToStr
@@ -24,8 +24,25 @@ template register*( val: float;
     static: nParamsR += 1
                 
     params.add p
-  #echo params
 
+#[
+template register*( val: int,
+                    caus:Causality,
+                    varia:Variability,
+                    ini:Initial,
+                    desc:string) =
+  var tmp = ParamI( name: val.astToStr,
+                    typ: tInt,
+                    idx: paramsI.len,
+                    causality:caus,
+                    variability:varia,
+                    initial:ini,
+                    description:desc,
+                    initVal: val,
+                    address: addr(val) ) #fmt"{typ}"   )   
+  paramsI.add(tmp)
+  static: nParamsI += 1
+]#
 
 
 template register*( val: float;

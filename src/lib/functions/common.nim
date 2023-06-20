@@ -12,7 +12,7 @@ proc fmi2SetupExperiment*(comp: ModelInstanceRef; toleranceDefined: fmi2Boolean;
 
     # ignore arguments: stopTimeDefined, stopTime
     echo "ENTERING: fmi2SetupExperiment"
-    echo ">> fmi2SetupExperiment: ", $comp.GUID
+    echo ">> fmi2SetupExperiment: ", $comp.guid
     #var c = cast[ptr ModelInstanceRef](comp)
     #echo $c.GUID
     #-echo comp.isNil

@@ -44,7 +44,8 @@ proc fmi2SetInteger*( comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: c
             return fmi2Error
         filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2SetInteger: #i{vr[i]}# = {value[i]}".fmi2String )
         #comp.i[vr[i]][] = value[i].int32
-        comp.i[vr[i]] = value[i]
+        #comp.i[vr[i]] = value[i]
+        comp.integerAddr[vr[i]][] = value[i].int
 
     if nvr > 0:
        comp.isDirtyValues = fmi2True
