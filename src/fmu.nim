@@ -31,6 +31,9 @@ template model2*(id,guid, outFile, callingFile: string;
     # FIXME---
     #var NUMBER_OF_INTEGERS*, NUMBER_OF_REALS*, NUMBER_OF_BOOLEANS*, NUMBER_OF_STRINGS*:int = 0
     var NUMBER_OF_REALS*, NUMBER_OF_BOOLEANS*, NUMBER_OF_STRINGS*:int = 0
+    var NUMBER_OF_STATES* {.compileTime.}:int = 0
+    var NUMBER_OF_EVENT_INDICATORS*{.compileTime.}:int = 0
+
     for p in myModel.params:
       var nReals, nBooleans, nStrings: int
       case p.kind

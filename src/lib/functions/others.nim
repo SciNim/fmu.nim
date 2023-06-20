@@ -93,9 +93,13 @@ proc fmi2Instantiate*( instanceName: fmi2String;
                        functions: fmi2CallbackFunctions;
                        visible: fmi2Boolean;
                        loggingOn: fmi2Boolean): ModelInstanceRef = 
-
+    ## instantiates a ModelInstance. This is a black box for the simulation
+    ## tool; just a pointer will be shared.
+    
     # ignoring arguments: fmuResourceLocation, visible
     echo "Entering fmi2Instantiate"
+    echo repr functions
+    echo repr functions.componentEnvironment
     if functions.logger.isNil:
         return nil
 
@@ -116,12 +120,12 @@ proc fmi2Instantiate*( instanceName: fmi2String;
         return nil
 
     testGUID()
-   
+     
     # Start creating the instance
     var comp = ModelInstanceRef( time: 0, 
                                  instanceName: instanceName, 
                                  `type`: fmuType, 
-                                 GUID: fmuGUID )
+                                 guid: $fmuGUID )
                              
     if not comp.isNil:
         # set all categories to on or off. fmi2SetDebugLogging should be called to choose specific categories.
@@ -160,9 +164,8 @@ proc fmi2Instantiate*( instanceName: fmi2String;
     # FILTERED_LOG(comp, fmi2OK, LOG_FMI_CALL, "fmi2Instantiate: GUID=%s", fmuGUID)
     echo "ok-4"     # FIXME-----
     filteredLog( comp, fmi2OK, LOG_FMI_CALL, 
-                 fmt"fmi2Instantiate: GUID={$fmuGUID}".fmi2String, fmuGUID)
+                 fmt"fmi2Instantiate: GUID={$fmuGUID}".fmi2String)#, fmuGUID)
     echo "ok-5"     # -----------
-    echo comp
     echo "leaving fmi2Instantiate"
     return comp  
 
