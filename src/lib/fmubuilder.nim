@@ -6,6 +6,7 @@ import ../fmu
 
 # FMU BUILDER
 proc genFmu2*(myModel: ModelInstanceRef; fname:string; callingFile: string) =
+  echo repr myModel.params
   # 1. Create folder structure
   #var dir = mkdtemp()
   var tmpFolder = "tmpFmu"  # FIXME: create a temporal folder
@@ -32,7 +33,7 @@ proc genFmu2*(myModel: ModelInstanceRef; fname:string; callingFile: string) =
                  joinPath(tmpFolder, "sources") )
 
   # 2.4 XML
-  var xmlData = createXml(myModel.id, myModel.guid, myModel.nEventIndicators)
+  var xmlData = createXml(myModel, myModel.nEventIndicators)
   writeFile(joinPath(tmpFolder, "modelDescription.xml"), xmlData)
 
   # 3. Compress

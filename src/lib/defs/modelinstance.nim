@@ -106,9 +106,8 @@ template add2*(value:int) {.dirty.} =
     echo value.astToStr, " ------> ", value
     myModel.params &= Param(name:value.astToStr, kind: tInteger, startI: some(value)) 
 
-
-
-macro init*(args: varargs[typed]) =
+#[
+macro addParam*(arg: typed) =
   #[
     This macro converts things like:
       
@@ -136,6 +135,53 @@ macro init*(args: varargs[typed]) =
       nIntegers += 1
       let argVal = arg.getImpl[2].intVal.int
       #var comp: ModelInstanceRef
+      body.add quote do:
+        `id` = `argVal`
+        comp.integerAddr.add( addr(`id`) )
+
+  result = quote do:
+    NUMBER_OF_INTEGERS = `nIntegers`    
+    proc setStartValues*(comp {.inject.}: ModelInstanceRef) = 
+      `body`
+]#
+
+# macro addParam*(arg:typed) =
+#   var id = newIdentNode(arg.strVal)
+#   if arg.getType.typeKind == ntyInt:
+#     let implementation = arg.getImpl
+#     #if len
+#     let argVal = 
+    
+
+#     result = quote do:
+#       myModel.params &= Param(`id`, tInteger)
+#     if arg
+
+macro init*(args: varargs[typed]) =
+  #[
+    This macro converts things like:
+
+      var counter:int = 1
+      init(counter)
+    
+    into:
+
+      var counter:int = 1
+      NUMBER_OF_INTEGERS = 1
+      proc setStartValues(comp: ModelInstanceRef) {.exportc, dynlib.} =
+        counter = 1
+        add(comp.integerAddr, addr(counter))      
+  ]#
+  var body = nnkStmtList.newTree()
+
+  var nIntegers: int
+  for arg in args:
+    var id = newIdentNode(arg.strVal)
+
+    # int case
+    if arg.getType.typeKind == ntyInt:
+      nIntegers += 1
+      let argVal = arg.getImpl[2].intVal.int
       body.add quote do:
         `id` = `argVal`
         comp.integerAddr.add( addr(`id`) )
@@ -225,3 +271,42 @@ macro vras(arglist: varargs[untyped]) =
 vras(positional, test = 123):
   echo "ACtual body"
 ]#
+
+#[
+nnkStmtList.newTree(
+  nnkVarSection.newTree(
+    nnkIdentDefs.newTree(
+      nnkPostfix.newTree(
+        newIdentNode("*"),
+        newIdentNode("counter")
+      ),
+      newIdentNode("int"),
+      newLit(0)
+    )
+  )
+)
+
+]#
+
+# macro param(name:string;typ:typedesc) =
+#   echo name
+#   echo repr typ
+
+#[
+
+param("counter", int, 
+      output,
+      exact,
+      discrete,
+      start = 1 )
+  
+
+  
+
+]#
+
+  # addParam(counter,
+  #          variability = "discrete",
+  #          causality = "output",
+  #          initial   = "exact")
+  #addParam( counter, output, exact )

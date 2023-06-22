@@ -41,23 +41,17 @@
 
 import xmltree
 import strformat
+import std/strtabs
+import options
+import ../defs/[modelinstance, parameters]
 
-proc createXml*(modelName, guid: string, numberOfEventIndicators:int):string =
-  #var fmiModelDescription = newElement("fmiModelDescription")
-  #fmiModelDescription.add newText("some text")
-  #fmiModelDescription.add newComment("this is comment")
-
-  #var h = newElement("secondTag")
-  #h.add newEntity("some entity")
-
-
-
+proc createXml*(myModel: ModelInstanceRef; numberOfEventIndicators:int):string =
   var file = newElement("File")
   file.attrs  = {"name" : "inc.c"}.toXmlAttributes
   #let fileFinal = newXmlTree( file, @[], fileAtt)
   let sourceFiles = newXmlTree("SourceFiles", [file])
 
-  let meAtt = { "modelIdentifier" : fmt"{modelName}" }.toXmlAttributes
+  let meAtt = { "modelIdentifier" : fmt"{myModel.id}" }.toXmlAttributes
   var modelExchange = newXmlTree("ModelExchange", [sourceFiles], meAtt)
 
   var categories = @["logAll", "logError", "logFmiCall", "logEvent"]  # FIXME
@@ -68,21 +62,47 @@ proc createXml*(modelName, guid: string, numberOfEventIndicators:int):string =
     catChildren.add(cat)
   let logCategories = newXmlTree("LogCategories", catChildren)  
 
-
-
-  #var scalarVariable = newElement("ScalarVariable")
-  let scalarVariableAttrs = { "name" : "counter",
-                           "valueReference" : "0",
-                           "description" : "counts the seconds",
-                           "causality" : "output",
-                           "variability" : "discrete",
-                           "initial" : "exact" }.toXmlAttributes
-  let initial = newElement("Integer")
-  initial.attrs = { "start" : "1"}.toXmlAttributes
-  let scalarVariable = newXmlTree("ScalarVariable", [initial], scalarVariableAttrs)  
-
   var modelVariables = newElement("ModelVariables")
-  modelVariables.add scalarVariable
+  for param in myModel.params:
+    var scalarVariableAttrs = { "name" : "counter" }.toXmlAttributes
+
+    scalarVariableAttrs["causality"] = case param.causality
+      of cParameter:           "parameter"
+      of cCalculatedParameter: "calculatedParameter"
+      of cInput:               "input"
+      of cOutput:              "output"
+      of cLocal:               "local"
+      of cIndependent:         "independent"
+    
+    scalarVariableAttrs["variability"] = case param.variability
+      of vConstant:   "constant"
+      of vFixed:      "fixed"
+      of vTunable:    "tunable"
+      of vDiscrete:   "discrete"
+      of vContinuous: "continuous"
+
+    scalarVariableAttrs["initial"] = case param.initial
+      of iExact:      "exact"
+      of iApprox:     "approx"
+      of iCalculated: "calculated"
+      else: ""
+
+    scalarVariableAttrs["valueReference"] = $param.idx    
+    scalarVariableAttrs["description"] = param.description
+    var scalarVariable:XmlNode
+    if param.kind == tInteger:
+      if param.startI.isSome:
+        let initial = newElement("Integer")
+        initial.attrs = { "start" : $param.startI.get}.toXmlAttributes
+        scalarVariable = newXmlTree("ScalarVariable", [initial], scalarVariableAttrs)  
+      else:
+        let initial = newElement("Integer")
+        #initial.attrs = { "start" : $param.startI.get}.toXmlAttributes
+        scalarVariable = newXmlTree("ScalarVariable", [], scalarVariableAttrs)          
+
+    modelVariables = newElement("ModelVariables")
+
+    modelVariables.add scalarVariable
 
   var modelStructure = newElement("ModelStructure")
   var outputs = newElement("Outputs")
@@ -92,14 +112,12 @@ proc createXml*(modelName, guid: string, numberOfEventIndicators:int):string =
   modelStructure.add outputs
 
   let att = { "fmiVersion": "2.0", 
-              "modelName": fmt"{modelName}",
-              "guid": fmt"{guid}",
+              "modelName": fmt"{myModel.id}",
+              "guid": fmt"{myModel.guid}",
               "numberOfEventIndicators" : fmt"{numberOfEventIndicators}"}.toXmlAttributes
   let k = newXmlTree("fmiModelDescription", [modelExchange, logCategories, modelVariables, modelStructure], att)
   return xmlHeader & $k
 
-when isMainModule:
-  echo createXml("inc", "{8c4e810f-3df3-4a00-8276-176fa3c9f008}", 0)
 
 #[
 <?xml version="1.0" encoding="UTF-8" ?>

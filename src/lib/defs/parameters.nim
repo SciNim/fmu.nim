@@ -1,3 +1,4 @@
+import std/macros
 import options#, xmltree, strformat
 
 type
@@ -7,8 +8,8 @@ type
   Causality* = enum
     cParameter,
       ##[
-      Independentparameter(a data value that is constant during the simulationand
-      is provided by the environmentand cannot be used in connections).
+      Independent parameter(a data value that is constant during the simulation and
+      is provided by the environment and cannot be used in connections).
 
       variability must be "fixed"or "tunable". initial must be exactor not present
       (meaning exact).
@@ -33,7 +34,7 @@ type
       ]##
     cLocal,
       ##[
-      Local variable that is calculated from other variablesor is a
+      Local variable that is calculated from other variables or is a
       continuous-time state(see section2.2.8). It is not allowed to use the
       variable value in another modelor slave.
       ]##
@@ -90,10 +91,10 @@ type
       ]##
 
   Initial* = enum
-    #iUnset, # I have invented this as default
+    iUnset, # I have invented this as default
     iExact,
       ##[
-      The variable is initialized with the startvalue(provided under Real,
+      The variable is initialized with the start value(provided under Real,
       Integer, Boolean, Stringor Enumeration)
       ]##
     iApprox,
@@ -104,7 +105,7 @@ type
     iCalculated
       ##[
       The variable is calculated from other variables during initialization.
-      It is not allowed to provide a “start” value.
+      It is not allowed to provide a "start" value.
       ]##
 
 
@@ -114,26 +115,26 @@ type
   ParamObj* = object
     name*: string
     idx*: int
-    causality*: Option[Causality]
-    variability*: Option[Variability]
-    initial*: Option[Initial]
-    description*: Option[string]
+    causality*: Causality
+    variability*: Variability
+    initial*: Initial
+    description*: string
     canHandleMultipleSetPerTimeInstant*: Option[string]    
     case kind*:ParamType
     of tReal:
-      addressR*: ptr float
+      #addressR*: ptr float
       startR*: Option[float]
       derivative*: Option[uint]
       reinit*: Option[bool]
     of tInteger:
       valI*: int
-      addressI*: ptr int
-      startI*: Option[int]
+      #addressI*: ptr int
+      startI*: Option[int]  # Initial value
     of tBoolean:
-      addressB*: ptr bool
+      #addressB*: ptr bool
       startB*: Option[bool]
     of tString:
-      addressS*: ptr string
+      #addressS*: ptr string
       startS*: Option[string]
 
   Param* = ref ParamObj
@@ -241,3 +242,83 @@ var nParamsB{.compileTime.}: int = 0
 var nParamsS{.compileTime.}: int = 0
 #var numStates* {.compileTime.}:int = 0
 
+macro param*( arg:typed; 
+              causality: static[Causality]     = cLocal; 
+              variability: static[Variability] = vContinuous;
+              initial: static[Initial]         = iUnset ;
+              description: static[string]      = "") =
+  ## tracks the characteristics of all the arguments
+  result = nnkStmtList.newTree()
+  # 1. Check that the first argument is a variable
+  var impl = arg.getImpl
+
+  # 1.1 check it is an identifier definition
+  if impl.kind != nnkIdentDefs:
+    raise newException(ValueError, "the first argument should be a variable defined like: var name:int = 1")
+
+  # 1.2 the first element should be a symbol
+  if impl[0].kind != nnkSym:
+    raise newException(ValueError, "the first argument is a variable defined like: var name:int = 1")
+
+
+  # 1.3 the second element should be the type; we want the type to be explicit
+  if impl[1].kind == nnkEmpty:
+    raise newException(ValueError, "it is mandatory to define the variable with its type: int, float, boolean or string")
+  if impl[1].kind != nnkSym:
+    raise newException(ValueError, "the first argument is variable defined like: var name:int = 1")
+  
+
+  # 3. Causality
+  #param.causality = causality
+
+
+  # 4. Variability
+  #param.variability = variability
+
+  # 5. Initial
+  if causality in @[cInput, cIndependent] and initial != iUnset:
+    raise newException(ValueError, """it is not allowed to provide a value for initial if causality = "input" or "independent"""")
+  
+  #if initial != iUnset:
+  #  param.initial = initial
+  #echo initial
+  if initial == iExact and impl[2].kind == nnkEmpty:
+    raise newException(ValueError, """= "exact": The variable is initialized with the start value (provided under Real, Integer, Boolean, String or Enumeration).""")
+
+  if initial == iApprox and impl[2].kind == nnkEmpty:
+    raise newException(ValueError, """= "approx": The variable is an iteration variable of an algebraic loop and the iteration at initialization starts with the start value.""")
+
+  if initial == iCalculated and impl[2].kind != nnkEmpty:
+    raise newException(ValueError, """= "calculated": The variable is calculated from other variables during initialization. It is not allowed to provide a “start” value.""")
+  
+
+  # 2. Processing depending on the type  # FIXME
+  var name = impl[0].strVal
+  #var param = Param(name: name)  
+
+  result.add quote do:
+    myModel.params.add Param( name: `name`, #kind: tInteger,
+                              #startI: some(`value`),
+                              causality: `causality`.Causality,
+                              variability: `variability`.Variability,
+                              initial: `initial`.Initial,
+                              description: `description` )
+
+  case impl[1].getType.typeKind 
+  of ntyInt:  # 2.1 integer case
+    result.add quote do:
+      myModel.params[^1].kind = tInteger
+
+    if impl[2].kind == nnkIntLit:
+      var value = impl[2].intVal.int
+      result.add quote do:
+        myModel.params[^1].startI = some(`value`)
+
+    else:
+      result.add quote do:
+        myModel.params[^1].startI = none()
+        #echo repr myModel.params[^1]
+   
+
+  else:
+    raise newException(ValueError, "only variables typed: `int`, `float`, `bool` and `string` are supported")
