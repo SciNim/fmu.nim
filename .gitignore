@@ -6,3 +6,6 @@ src/inc.fmu
 src/inc2.fmu
 src/inc
 src/inc.so
+examples/*
+!examples/*.nim
+
