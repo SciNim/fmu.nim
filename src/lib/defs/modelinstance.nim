@@ -157,6 +157,42 @@ macro addParam*(arg: typed) =
 #       myModel.params &= Param(`id`, tInteger)
 #     if arg
 
+
+# macro init*() = #myModel:ModelInstanceRef ) =
+#   #[
+#     This macro converts things like:
+
+#       var counter:int = 1
+#       init(counter)
+    
+#     into:
+
+#       var counter:int = 1
+#       NUMBER_OF_INTEGERS = 1
+#       proc setStartValues(comp: ModelInstanceRef) {.exportc, dynlib.} =
+#         counter = 1
+#         add(comp.integerAddr, addr(counter))      
+#   ]#
+#   #mixin myModel
+#   var body = nnkStmtList.newTree()
+
+#   var nIntegers: int
+#   for param in myModel.params:
+#     # integer case
+#     if param.kind == tInteger:
+#       nIntegers += 1
+#       if param.startI.isSome:
+#         var id = newIdentNode(param.name)
+#         var argVal = startI.get
+#         body.add quote do:
+#           `id` = `argVal`
+#           comp.integerAddr.add( addr(`id`) )
+
+#   result = quote do:
+#     NUMBER_OF_INTEGERS = `nIntegers`    
+#     proc setStartValues*(comp {.inject.}: ModelInstanceRef) = 
+#       `body`
+
 macro init*(args: varargs[typed]) =
   #[
     This macro converts things like:

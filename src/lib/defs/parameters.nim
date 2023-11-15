@@ -109,9 +109,6 @@ type
       ]##
 
 
-  #ParamKind* = enum
-  #  pkReal, pkInteger, pkBoolean, pkString
-
   ParamObj* = object
     name*: string
     idx*: int
@@ -139,54 +136,6 @@ type
 
   Param* = ref ParamObj
 
-  #[
-  Param* = ref object of RootObj
-    name*: string
-    typ*: ParamType
-    idx*: int
-    causality*: Causality
-    variability*: Variability
-    initial*: Initial
-    description*: string
-  ]#
-
-  #[
-  ParamI* = ref object of Param
-    initVal*: int
-    address*: ptr int
-  ]#
-  #[
-  ParamR* = ref object of Param
-    start*: float
-    derivative*: uint
-    reinit*: bool
-    address*: ptr float
-
-
-  ParamB* = ref object of Param
-    initVal*: bool
-    address*: ptr bool
-
-  ParamS* = ref object of Param
-    initVal*: string
-    address*: ptr string
-  ]#
-  #ParamsI* = seq[ParamI]
-  #ParamsR* = seq[ParamR]
-
-  #[
-  ParamI* = ref object
-    name*: string
-    idx*: int
-    causality*: Causality
-    variability*: Variability
-    initial*: Initial
-    description*: string
-    initValI*: int
-    addrI*: ptr int
-    initValR*: int
-    addrR*: ptr int
-  ]#
 
 #[
 proc get*(r:Param):XmlNode =
@@ -228,7 +177,7 @@ proc get*(r:Param):XmlNode =
   return newXmlTree("ScalarVariable",children, attributes)
 ]#
 
-var params*:seq[Param]
+#var params*:seq[Param]
 #[
 var paramsI*:seq[ParamI]
 var paramsR*:seq[ParamR]
@@ -247,6 +196,11 @@ macro param*( arg:typed;
               variability: static[Variability] = vContinuous;
               initial: static[Initial]         = iUnset ;
               description: static[string]      = "") =
+  var nIntegers = 0
+  var nReals    = 0
+  var nBooleans = 0
+  var nStrings  = 0
+
   ## tracks the characteristics of all the arguments
   result = nnkStmtList.newTree()
   # 1. Check that the first argument is a variable
@@ -307,8 +261,11 @@ macro param*( arg:typed;
   case impl[1].getType.typeKind 
   of ntyInt:  # 2.1 integer case
     result.add quote do:
+      myModel.params[^1].idx = `nIntegers`
       myModel.params[^1].kind = tInteger
 
+    nIntegers += 1
+    
     if impl[2].kind == nnkIntLit:
       var value = impl[2].intVal.int
       result.add quote do:
