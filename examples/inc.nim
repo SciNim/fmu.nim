@@ -17,6 +17,7 @@ model(id, guid, outFile):
 
   init(counter)  # This macro creates setStartValues() among other things
 
+
   proc calculateValues*(comp: ModelInstanceRef) =
     ## calculate the values of the FMU (Functional Mock-up Unit) variables 
     ## at a specific time step during simulation.
