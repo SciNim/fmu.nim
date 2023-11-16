@@ -1,28 +1,14 @@
-#import fmi2TypesPlatform, status, modelinstance,
-#       modelstate, fmi2type, modelinstancetype, helpers, masks, logger
-#import model
 import strformat
 
 {.push exportc:"$1",cdecl,dynlib.}
 
-#comp:ModelInstanceRef
-proc fmi2SetupExperiment*(comp: ModelInstanceRef; toleranceDefined: fmi2Boolean;
-                         tolerance: fmi2Real; startTime: fmi2Real;
-                         stopTimeDefined: fmi2Boolean; stopTime: fmi2Real): fmi2Status =
-
+proc fmi2SetupExperiment*( comp: ModelInstanceRef; 
+                           toleranceDefined: fmi2Boolean;
+                           tolerance: fmi2Real; 
+                           startTime: fmi2Real;
+                           stopTimeDefined: fmi2Boolean; 
+                           stopTime: fmi2Real): fmi2Status =
     # ignore arguments: stopTimeDefined, stopTime
-    echo "ENTERING: fmi2SetupExperiment"
-    echo ">> fmi2SetupExperiment: ", $comp.guid
-    #var c = cast[ptr ModelInstanceRef](comp)
-    #echo $c.GUID
-    #-echo comp.isNil
-    echo "ok"
-
-    #echo c.GUID
-    #echo repr c
-    #var comp = cast[ref ModelInstanceRef](c)
-    #echo comp.GUID
-    #echo comp.isNil
     if invalidState(comp, "fmi2SetupExperiment", MASK_fmi2SetupExperiment):
     #if invalidState(cast[ptr ModelInstanceRef](c), "fmi2SetupExperiment", MASK_fmi2SetupExperiment):
         echo "INVALID STATE!!!"

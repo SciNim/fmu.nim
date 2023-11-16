@@ -1,7 +1,4 @@
 {.push exportc,dynlib,cdecl.}
-
-#import fmi2TypesPlatform, status, modelinstancetype, helpers, masks, logger
-#import model
 import strformat
 
 proc fmi2SetReal*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize_t;
