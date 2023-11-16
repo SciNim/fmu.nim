@@ -69,6 +69,6 @@ template model2*(id,guid, outFile, callingFile: string;
 template model*(id,guid, outFile: string; body:untyped) {.dirty.} =
   var NUMBER_OF_INTEGERS*:int
   # needed in order to know the filename calling `genFmu`
-  let pos = instantiationInfo()
+  let pos = instantiationInfo() # https://nim-lang.org/docs/system.html#instantiationInfo%2Cint
   var myModel* = ModelInstanceRef(id: `id`, guid: `guid`)  
   model2(id, guid, outFile, pos.filename, myModel, body)
