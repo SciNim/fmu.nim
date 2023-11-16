@@ -1,9 +1,4 @@
-#import typetraits, strformat, parameters, options
 {.push exportc:"$1",dynlib, cdecl.}
-
-const
-  fmi2Version*       = "2.0"  # pag. 19
-  fmi2TypesPlatform* = "default"
 
 const
   LOG_ALL* = 0

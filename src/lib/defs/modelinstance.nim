@@ -25,14 +25,12 @@ type
   fmi2StepFinished*  = proc(a1: fmi2ComponentEnvironment, a2: fmi2Status) #{.cdecl.}
 
 
-  fmi2CallbackFunctions* = ref object #{.impfmuTemplate, bycopy.} = object
+  fmi2CallbackFunctions* = ref object 
     logger*: fmi2CallbackLogger
     allocateMemory*: fmi2CallbackAllocateMemory
     freeMemory*: fmi2CallbackFreeMemory
     stepFinished*: fmi2StepFinished
     componentEnvironment*: fmi2ComponentEnvironment
-
-  #fmi2CallbackFunctions* = pointer
 
 type
   ModelInstance* = object

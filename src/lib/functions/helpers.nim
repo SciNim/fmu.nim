@@ -2,14 +2,14 @@
 ## ---------------------------------------------------------------------------
 ## Private helpers used below to validate function arguments
 ## ---------------------------------------------------------------------------
-#import modelinstancetype, modelstate, logger, status, fmi2TypesPlatform, fmi2callbackfunctions
 import strformat
 import ../defs/[definitions, modelinstance]
 import ../meta/filteredlog
 
 proc invalidNumber*( comp:ModelInstanceRef; 
                      f, arg:string;
-                     n:csize_t; nExpected:int):bool  =
+                     n:csize_t; 
+                     nExpected:int):bool  =
     if n.int != nExpected:
         comp.state = modelError
         filteredLog(comp, fmi2Error, LOG_ERROR, 
