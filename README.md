@@ -58,6 +58,40 @@ All this will create two modes of operations for the code:
 At the end of `model2` there are plenty of includes. They implement the interface required by FMU. They depend on the functions that will go within `body`.
 
 
+# Simulation sequence for a Model Exchange
+## Instantiation
+The first step is to instantiate the FMU within the simulation environment. This involves loading the FMU file and initializing its internal data structures.
+
+## Initialization
+After instantiation, the FMU needs to be initialized before the simulation begins. The simulation environment calls the FMU's initialization function, passing the necessary inputs, such as start time, stop time, and initial values for the model variables. The FMU sets up its internal state and prepares for simulation.
+
+- `fmi2Instantiate`: This function creates an instance of the FMU and returns a handle that can be used to access the FMU's functions and data.
+- `fmi2SetupExperiment`: This function sets up the initial experiment conditions, such as the start time and stop time of the simulation.
+- `fmi2EnterInitializationMode`: This function puts the FMU into initialization mode, allowing it to perform any necessary initialization tasks.
+- `fmi2ExitInitializationMode``: This function takes the FMU out of initialization mode and puts it into continuous-time mode, allowing it to start the simulation.
+
+## Simulation Loop
+The simulation loop is the core part of the calling sequences. It typically involves the following steps:
+
+a. Set Inputs: The simulation environment sets the input values for the FMU. These inputs can include control signals, parameters, or any other data required by the model.
+
+b. Communication Step: The simulation environment calls the FMU's communication step function. This function typically performs any necessary pre-processing steps, such as updating internal states, performing calculations, or applying inputs.
+
+c. Solve Step: The simulation environment calls the FMU's solve step function. This function performs the actual simulation step, where the model equations are solved and the outputs are computed based on the current inputs and internal states. The solve step function may use numerical integration techniques or other algorithms to advance the simulation time.
+
+d. Get Outputs: After the solve step, the simulation environment retrieves the output values from the FMU. These outputs represent the computed results of the simulation step.
+
+e. Time Advancement: The simulation environment updates the simulation time based on the desired time step and proceeds to the next iteration of the simulation loop.
+
+- `fmi2DoStep`: This function performs a single step of the simulation. It takes the current simulation time and step size as input, and returns the next simulation time and a status flag indicating whether the simulation should continue or stop.
+
+## Termination
+The simulation loop continues until the stop time is reached or a termination condition is met. At this point, the simulation is complete, and the FMU can be terminated.
+
+- `fmi2Terminate`: This function terminates the simulation and cleans up any resources used by the FMU.
+
+
+
 # Interesting projects
 - [Awesome FMI](https://github.com/traversaro/awesome-fmi)
  
