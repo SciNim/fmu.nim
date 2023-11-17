@@ -6,13 +6,15 @@ import strformat
 import ../defs/[definitions, modelinstance]
 import ../meta/filteredlog
 
+
+
 proc invalidNumber*( comp:ModelInstanceRef; 
                      f, arg:string;
                      n:csize_t; 
                      nExpected:int):bool  =
     if n.int != nExpected:
         comp.state = modelError
-        filteredLog(comp, fmi2Error, LOG_ERROR, 
+        filteredLog(comp, fmi2Error, error, 
                     fmt"{f}: Invalid argument {arg} = {n}. Expected {nExpected}.".fmi2String)
         return true
     return false
@@ -27,7 +29,7 @@ proc invalidState*( comp:ModelInstanceRef, f:string,
     if not (comp.state.int > 0 and  statesExpected.int > 0):
         comp.state = modelError
         #echo $f
-        filteredLog(comp, fmi2Error, LOG_ERROR, fmt"{$f}: Illegal call sequence.".fmi2String )
+        filteredLog(comp, fmi2Error, error, fmt"{$f}: Illegal call sequence.".fmi2String )
         return true
 
     return false
@@ -35,14 +37,14 @@ proc invalidState*( comp:ModelInstanceRef, f:string,
 proc nullPointer*(comp:ModelInstanceRef, f:string, arg:string, p:pointer):bool =
     if p.isNil:
         comp.state = modelError
-        filteredLog(comp, fmi2Error, LOG_ERROR, fmt"{f}: Invalid argument {arg} = NULL.".fmi2String)
+        filteredLog(comp, fmi2Error, error, fmt"{f}: Invalid argument {arg} = NULL.".fmi2String)
         return true
 
     return false
 
 proc vrOutOfRange*(comp:ModelInstanceRef, f:string,  vr:fmi2ValueReference, `end`:int):bool =
     if vr.int >= `end`:
-        filteredLog(comp, fmi2Error, LOG_ERROR, fmt"{f}: Illegal value reference {vr}.".fmi2String)
+        filteredLog(comp, fmi2Error, error, fmt"{f}: Illegal value reference {vr}.".fmi2String)
         comp.state = modelError
         return true
 
@@ -53,8 +55,8 @@ proc unsupportedFunction*(comp:ModelInstanceRef; fName: string; statesExpected: 
     #var log:fmi2CallbackLogger = comp.functions.logger
     if invalidState(comp, fName, statesExpected):
         return fmi2Error
-    filteredLog(comp, fmi2OK, LOG_FMI_CALL, fName.fmi2String)
-    filteredLog(comp, fmi2Error, LOG_ERROR, fmt"{fName}: Function not implemented.".fmi2String)
+    filteredLog(comp, fmi2OK, fmiCall, fName.fmi2String)
+    filteredLog(comp, fmi2Error, error, fmt"{fName}: Function not implemented.".fmi2String)
     return fmi2Error
 
 

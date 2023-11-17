@@ -11,12 +11,12 @@ proc fmi2SetReal*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize
         return fmi2Error
     if nvr > 0 and nullPointer(comp, "fmi2SetReal", "value[]", value):
         return fmi2Error
-    filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2SetReal: nvr = {nvr}".fmi2String )
+    filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2SetReal: nvr = {nvr}".fmi2String )
     # no check whether setting the value is allowed in the current state
     for i in 0 ..< nvr:
         if vrOutOfRange(comp, "fmi2SetReal", vr[i], NUMBER_OF_REALS):
             return fmi2Error
-        filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2SetReal: #r{vr[i]}# = {value[i]}".fmi2String)
+        filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2SetReal: #r{vr[i]}# = {value[i]}".fmi2String)
         comp.r[vr[i]] = value[i]#.float
 
     if nvr > 0:
@@ -34,12 +34,12 @@ proc fmi2SetInteger*( comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: c
         return fmi2Error
     if nvr > 0 and nullPointer(comp, "fmi2SetInteger", "value[]", value) :
         return fmi2Error
-    filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2SetInteger: nvr = {nvr}".fmi2String)
+    filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2SetInteger: nvr = {nvr}".fmi2String)
 
     for i in 0 ..< nvr:
         if vrOutOfRange(comp, "fmi2SetInteger", vr[i], NUMBER_OF_INTEGERS):
             return fmi2Error
-        filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2SetInteger: #i{vr[i]}# = {value[i]}".fmi2String )
+        filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2SetInteger: #i{vr[i]}# = {value[i]}".fmi2String )
         #comp.i[vr[i]][] = value[i].int32
         #comp.i[vr[i]] = value[i]
         comp.integerAddr[vr[i]][] = value[i].int
@@ -59,7 +59,7 @@ proc fmi2SetBoolean*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: cs
         return fmi2Error
     if nvr > 0 and nullPointer(comp, "fmi2SetBoolean", "value[]", value):
         return fmi2Error
-    filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2SetBoolean: nvr = {nvr}".fmi2String)
+    filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2SetBoolean: nvr = {nvr}".fmi2String)
 
     for i in 0 ..< nvr:
         if vrOutOfRange(comp, "fmi2SetBoolean", vr[i], NUMBER_OF_BOOLEANS):
@@ -70,7 +70,7 @@ proc fmi2SetBoolean*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: cs
             tmp = "true"
         else:
             tmp = "false"
-        filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2SetBoolean: #b{vr[i]}# = {tmp}".fmi2String)
+        filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2SetBoolean: #b{vr[i]}# = {tmp}".fmi2String)
         comp.b[vr[i]] = value[i]
 
     if nvr > 0:
@@ -88,7 +88,7 @@ proc fmi2SetString*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csi
         return fmi2Error
     if nvr > 0 and nullPointer(comp, "fmi2SetString", "value[]", value):
         return fmi2Error
-    filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2SetString: nvr = {nvr}".fmi2String)
+    filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2SetString: nvr = {nvr}".fmi2String)
 
     #for i in 0 ..< nvr:
         #char *string = (char *)comp->s[vr[i]];
@@ -98,7 +98,7 @@ proc fmi2SetString*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csi
         var str* = comp.s[vr[i]]
         if vrOutOfRange(comp, "fmi2SetString", vr[i], NUMBER_OF_STRINGS):
             return fmi2Error
-        filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2SetString: #s{vr[i]}# = '{value[i]}'")
+        filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2SetString: #s{vr[i]}# = '{value[i]}'")
         ]#
         #[
         if value[i].isNil:

@@ -48,7 +48,7 @@ type
     guid*: string   # <-- Modified
     functions*: fmi2CallbackFunctions
     loggingOn*: fmi2Boolean
-    logCategories*: array[4, fmi2Boolean]  # FIXME: NUMBER_OF_CATEGORIES
+    logCategories*: set[LoggingCategories] # bit fields
     componentEnvironment*: fmi2ComponentEnvironment
     state*: ModelState
     eventInfo*: fmi2EventInfo

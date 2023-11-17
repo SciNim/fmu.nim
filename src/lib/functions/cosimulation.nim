@@ -7,8 +7,8 @@ proc fmi2SetRealInputDerivatives*(comp: ModelInstanceRef; vr: ptr fmi2ValueRefer
     if invalidState(comp, "fmi2SetRealInputDerivatives", MASK_fmi2SetRealInputDerivatives):
         return fmi2Error
 
-    filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2SetRealInputDerivatives: nvr= {nvr}".fmi2String)
-    filteredLog(comp, fmi2Error, LOG_ERROR, fmt"fmi2SetRealInputDerivatives: ignoring function call.\nThis model cannot interpolate inputs: canInterpolateInputs='{fmi2False}'".fmi2String)
+    filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2SetRealInputDerivatives: nvr= {nvr}".fmi2String)
+    filteredLog(comp, fmi2Error, error, fmt"fmi2SetRealInputDerivatives: ignoring function call.\nThis model cannot interpolate inputs: canInterpolateInputs='{fmi2False}'".fmi2String)
     return fmi2Error
 
 proc fmi2GetRealOutputDerivatives*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference;
@@ -17,8 +17,8 @@ proc fmi2GetRealOutputDerivatives*(comp: ModelInstanceRef; vr: ptr fmi2ValueRefe
     ##var comp: ptr ModelInstanceRef = cast[ptr ModelInstanceRef](c)
     if invalidState(comp, "fmi2GetRealOutputDerivatives", MASK_fmi2GetRealOutputDerivatives):
         return fmi2Error
-    filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2GetRealOutputDerivatives: nvr= {nvr}".fmi2String)
-    filteredLog(comp, fmi2Error, LOG_ERROR, fmt"fmi2GetRealOutputDerivatives: ignoring function call.\nThis model cannot compute derivatives of outputs: MaxOutputDerivativeOrder='0'".fmi2String)
+    filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetRealOutputDerivatives: nvr= {nvr}".fmi2String)
+    filteredLog(comp, fmi2Error, error, fmt"fmi2GetRealOutputDerivatives: ignoring function call.\nThis model cannot compute derivatives of outputs: MaxOutputDerivativeOrder='0'".fmi2String)
     for i in 0 ..< nvr:
         value[i] = 0
     return fmi2Error
@@ -30,8 +30,8 @@ proc fmi2CancelStep*(comp: ModelInstanceRef):fmi2Status =
         # always fmi2CancelStep is invalid, because model is never in modelStepInProgress state.
         return fmi2Error
 
-    filteredLog(comp, fmi2OK, LOG_FMI_CALL, "fmi2CancelStep".fmi2String)
-    filteredLog(comp, fmi2Error, LOG_ERROR,fmt"fmi2CancelStep: Can be called when fmi2DoStep returned fmi2Pending.\n This is not the case.".fmi2String)
+    filteredLog(comp, fmi2OK, fmiCall, "fmi2CancelStep".fmi2String)
+    filteredLog(comp, fmi2Error, error,fmt"fmi2CancelStep: Can be called when fmi2DoStep returned fmi2Pending.\n This is not the case.".fmi2String)
     # comp.state = modelStepCanceled;
     return fmi2Error
 
@@ -58,10 +58,10 @@ proc fmi2DoStep*(comp: ModelInstanceRef; currentCommunicationPoint: fmi2Real;
         tmp = "True"
     else:
         tmp = "False"
-    filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2DoStep: \ncurrentCommunicationPoint = {currentCommunicationPoint}, communicationStepSize = {communicationStepSize}, noSetFMUStatePriorToCurrentPoint = fmi2{tmp}".fmi2String )
+    filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2DoStep: \ncurrentCommunicationPoint = {currentCommunicationPoint}, communicationStepSize = {communicationStepSize}, noSetFMUStatePriorToCurrentPoint = fmi2{tmp}".fmi2String )
 
     if (communicationStepSize <= 0):
-        filteredLog(comp, fmi2Error, LOG_ERROR,
+        filteredLog(comp, fmi2Error, error,
             fmt"fmi2DoStep: communication step size must be > 0. Fount {communicationStepSize}.".fmi2String )
         comp.state = modelError
         return fmi2Error

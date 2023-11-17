@@ -13,15 +13,6 @@ template model2*(id,guid, outFile, callingFile: string;
                  body:untyped) {.dirty.} =
     ## organize the code, keeping the required includes at the end
 
-    template testGUID* {.dirty.} =
-      # this template avoids the need of having `guid` in the global space (former MODEL_GUID)
-      if not ($fmuGUID == guid ): #strcmp(fmuGUID, MODEL_GUID)) {
-          functions.logger( functions.componentEnvironment, 
-                            instanceName, fmi2Error, "error".fmi2String,
-                            fmt"fmi2Instantiate: Wrong GUID {$fmuGUID}. Expected {guid}.".fmi2String)
-          return nil
-
-
     {.push exportc, dynlib.}
 
     body
@@ -54,7 +45,8 @@ template model2*(id,guid, outFile, callingFile: string;
     include lib/functions/cosimulation
     include lib/functions/common
     include lib/functions/setters
-    include lib/functions/others
+    include lib/functions/instantiate    
+    include lib/functions/freeinstance
     include lib/functions/getters
     include lib/functions/enquire
 

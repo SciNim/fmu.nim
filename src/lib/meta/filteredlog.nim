@@ -3,32 +3,35 @@ import ../defs/[definitions, modelinstance]
 
 
 
-# return fmi2True if logging category is on. Else return fmi2False.
-
-proc isCategoryLogged*(comp: ModelInstanceRef; categoryIndex: cint): fmi2Boolean =
-  if (categoryIndex < NUMBER_OF_CATEGORIES) and
-      (comp.logCategories[categoryIndex].bool or comp.logCategories[LOG_ALL].bool):
-    return fmi2True
-  return fmi2False
 
 
-#static fmi2String logCategoriesNames[] = {"logAll", "logError", "logFmiCall", "logEvent"};
-let # :seq[fmi2String]
-  logCategoriesNames* = @["logAll", "logError", "logFmiCall", "logEvent"]
+proc isCategoryLogged*(comp: ModelInstanceRef; categoryIndex: LoggingCategories): bool =
+  # return fmi2True if logging category is on. Else return fmi2False.
+  # if categoryIndex > LoggingCategories.high.int:
+  #   return false
+  if all in comp.logCategories:
+    return true
+  elif categoryIndex.LoggingCategories in comp.logCategories:
+    return true
+  return false
+
 
 template filteredLog*(  instance: ModelInstanceRef, 
                         status: fmi2Status, 
-                        categoryIndex: int, 
+                        categoryIndex: LoggingCategories, 
                         message: fmi2String, 
                         args: varargs[fmi2String]) =
+  # not part of the standard
   var newArgs:seq[fmi2String]
-  #for i in args:
-  #  newArgs &= i.fmi2String
-  echo "Entering: filteredLog"
+  #echo "Entering: filteredLog"
+
+  # error and fatal is always logged
+  # then it depends on the categories to be logged
   if status == fmi2Error or status == fmi2Fatal or isCategoryLogged(instance, categoryIndex).bool:
     instance.functions.logger(instance.functions.componentEnvironment, # fmi2ComponentEnvironment
                               instance.instanceName, # fmi2String
                               status, # fmi2Status
-                              logCategoriesNames[categoryIndex].fmi2String, # fmi2String
+                              #logCategoriesNames[categoryIndex].fmi2String, # fmi2String
+                              ($categoryIndex).fmi2String,
                               message.fmi2String, # fmi2String
                               args ) # FIXME  # varargs[fmi2String]

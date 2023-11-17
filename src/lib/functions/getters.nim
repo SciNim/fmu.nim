@@ -2,21 +2,10 @@
 ## FMI functions: logging control, setters and getters for Real, Integer,
 ## Boolean, String
 ## ---------------------------------------------------------------------------
-#import fmi2TypesPlatform, status, modelinstancetype, helpers, masks, logger
-#import model
 import strformat
 import ../defs/[definitions,modelinstance, masks]
 import helpers
 import ../meta/filteredlog
-
-
-# FORWARD DECLARATION---
-#proc calculateValues*(comp:ModelInstanceRef)
-
-# var NUMBER_OF_REALS {.global.} = 0
-# var NUMBER_OF_INTEGERS {.global.} = 0
-# var NUMBER_OF_BOOLEANS {.global.} = 0
-#------------------------
 
 {.push exportc: "$1",dynlib,cdecl.}
 
@@ -43,7 +32,7 @@ proc fmi2GetReal*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize
     #         value[i] = getReal(comp, val) # <--------to be implemented by the includer of this file
     #         #value[i] = comp.r[vr[i]]            
     #         #value[i] = r[val] #getReal(comp, val)
-    #         filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2GetReal: #r{vr[i]}# = {value[i]}" )
+    #         filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetReal: #r{vr[i]}# = {value[i]}" )
     return fmi2OK
 
 
@@ -81,7 +70,7 @@ proc fmi2GetInteger*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: cs
         #echo "--> ", comp.integerAddr[vr[i]][]
 
         value[i] = comp.integerAddr[vr[i]][].fmi2Integer
-        filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2GetInteger: #i{vr[i]}# = {value[i]}".fmi2String )
+        filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetInteger: #i{vr[i]}# = {value[i]}".fmi2String )
     
     return fmi2OK
 
@@ -108,7 +97,7 @@ proc fmi2GetBoolean*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: cs
         else:
            tmp = "false"
 
-        filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2GetBoolean: #b{vr[i]}# = {tmp}".fmi2String)
+        filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetBoolean: #b{vr[i]}# = {tmp}".fmi2String)
     
     return fmi2OK
 
@@ -134,7 +123,7 @@ proc fmi2GetString*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csi
 
     #     # WARNING: to be tested the following
     #     val[i] = unsafeAddr( s[v[i]] )
-    #     filteredLog(comp, fmi2OK, LOG_FMI_CALL, fmt"fmi2GetString: #s{vr[i]}# = '{value[i]}'")
+    #     filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetString: #s{vr[i]}# = '{value[i]}'")
     #-------------------
     return fmi2OK
 

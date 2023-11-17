@@ -1,12 +1,29 @@
-{.push exportc:"$1",dynlib, cdecl.}
 
-const
-  LOG_ALL* = 0
-  LOG_ERROR* = 1
-  LOG_FMI_CALL* = 2
-  LOG_EVENT* = 3
-  nCategories* = 4   # Number of logging categorias
-  NUMBER_OF_CATEGORIES* = 4
+{.push exportc:"$1",dynlib, cdecl.}
+# Logging categories
+type
+  LoggingCategories* = enum
+    all     = "logAll",
+    error   = "logError",
+    fmiCall = "logFmiCall",
+    event   = "logEvent"
+
+# let # :seq[fmi2String]
+#   logCategoriesNames* = @["logAll", "logError", "logFmiCall", "logEvent"]
+
+
+#proc `[]`*(data:openarray[string]; n:LoggingCategories):string =
+#  data[n.int]
+
+# const
+#   #LOGGING_CATEGORIES* = @[]
+
+#   LOG_ALL* = 0
+#   LOG_ERROR* = 1
+#   fmiCall* = 2
+#   LOG_EVENT* = 3
+#   nCategories* = 4   # Number of logging categorias
+#   NUMBER_OF_CATEGORIES* = 4
 
 const
   DT_EVENT_DETECT* = 1e-10  # It could be modified
