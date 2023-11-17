@@ -9,6 +9,10 @@ import ../meta/filteredlog
 
 {.push exportc: "$1",dynlib,cdecl.}
 
+
+# forward declaration (this needs to be override by the user)
+proc getReal(comp: ModelInstanceRef; val: float)
+
 proc fmi2GetReal*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize_t;
                  value: ptr fmi2Real): fmi2Status =
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
@@ -20,19 +24,19 @@ proc fmi2GetReal*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize
     if nvr > 0 and nullPointer(comp, "fmi2GetReal", "value[]", value):
         return fmi2Error
     if nvr > 0 and comp.isDirtyValues > 0:
-        calculateValues(comp)
+        calculateValues(comp)   # <---------------
         comp.isDirtyValues = fmi2False
 
     #---- Only compiled if NUMBER_OF_REALS is >0
     # FIXME
-    # if NUMBER_OF_REALS > 0:  # when
-    #     for i in 0 ..< nvr:
-    #         if vrOutOfRange(comp, "fmi2GetReal", vr[i], NUMBER_OF_REALS):
-    #             return fmi2Error
-    #         value[i] = getReal(comp, val) # <--------to be implemented by the includer of this file
-    #         #value[i] = comp.r[vr[i]]            
-    #         #value[i] = r[val] #getReal(comp, val)
-    #         filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetReal: #r{vr[i]}# = {value[i]}" )
+    if comp.realAddr.len > 0:  # when
+     for i in 0 ..< nvr:
+         if vrOutOfRange(comp, "fmi2GetReal", vr[i], comp.realAddr.len): #NUMBER_OF_REALS):
+             return fmi2Error
+         value[i] = getReal(comp, val) # <--------to be implemented by the includer of this file
+         #value[i] = comp.r[vr[i]]            
+         #value[i] = r[val] #getReal(comp, val)
+         filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetReal: #r{vr[i]}# = {value[i]}" )
     return fmi2OK
 
 
@@ -59,10 +63,9 @@ proc fmi2GetInteger*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: cs
         comp.isDirtyValues = fmi2False
     #echo "no error"
     # iterate over all the values required by `vr`
+    echo "---> ", comp.i
     for i in 0 ..< nvr: 
-        #echo "  >> ",i, " --> ", vr[i], " - ", NUMBER_OF_INTEGERS
-        if vrOutOfRange(comp, "fmi2GetInteger", vr[i], NUMBER_OF_INTEGERS):
-            #echo "bad5"
+        if vrOutOfRange(comp, "fmi2GetInteger", vr[i], comp.integerAddr.len):#NUMBER_OF_INTEGERS):
             return fmi2Error
 
         #value[i] = comp.i[vr[i]]  # returns the value
@@ -88,7 +91,7 @@ proc fmi2GetBoolean*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: cs
         comp.isDirtyValues = fmi2False
     
     for i in 0 ..< nvr:
-        if vrOutOfRange(comp, "fmi2GetBoolean", vr[i], NUMBER_OF_BOOLEANS):
+        if vrOutOfRange(comp, "fmi2GetBoolean", vr[i], comp.boolAddr.len):#NUMBER_OF_BOOLEANS):
             return fmi2Error
         value[i] = comp.b[vr[i]]
         var tmp:string

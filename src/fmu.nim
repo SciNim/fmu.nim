@@ -21,7 +21,8 @@ template model2*(id,guid, outFile, callingFile: string;
 
     # FIXME---
     #var NUMBER_OF_INTEGERS*, NUMBER_OF_REALS*, NUMBER_OF_BOOLEANS*, NUMBER_OF_STRINGS*:int = 0
-    var NUMBER_OF_REALS*, NUMBER_OF_BOOLEANS*, NUMBER_OF_STRINGS*:int = 0
+    #var NUMBER_OF_REALS*, NUMBER_OF_BOOLEANS*, NUMBER_OF_STRINGS*:int = 0
+    var NUMBER_OF_REALS*, NUMBER_OF_STRINGS*:int = 0    
     var NUMBER_OF_STATES* {.compileTime.}:int = 0
     var NUMBER_OF_EVENT_INDICATORS*{.compileTime.}:int = 0
 
@@ -34,7 +35,8 @@ template model2*(id,guid, outFile, callingFile: string;
       of tReal:
         nReals += 1
       of tBoolean:
-        nBooleans += 1
+        #nBooleans += 1
+        discard
       of tString:
         nStrings += 1
     # ----
@@ -47,6 +49,7 @@ template model2*(id,guid, outFile, callingFile: string;
     include lib/functions/setters
     include lib/functions/instantiate    
     include lib/functions/freeinstance
+    include lib/functions/debuglogging    
     include lib/functions/getters
     include lib/functions/enquire
 
@@ -59,7 +62,7 @@ template model2*(id,guid, outFile, callingFile: string;
       myModel.genFmu2(outFile, callingFile)
 
 template model*(id,guid, outFile: string; body:untyped) {.dirty.} =
-  var NUMBER_OF_INTEGERS*:int
+  #var NUMBER_OF_INTEGERS*:int
   # needed in order to know the filename calling `genFmu`
   let pos = instantiationInfo() # https://nim-lang.org/docs/system.html#instantiationInfo%2Cint
   var myModel* = ModelInstanceRef(id: `id`, guid: `guid`)  
