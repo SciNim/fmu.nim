@@ -19,20 +19,21 @@ proc invalidNumber*( comp:ModelInstanceRef;
         return true
     return false
 
-proc invalidState*( comp:ModelInstanceRef, f:string,
+proc invalidState*( comp:ModelInstanceRef, 
+                    f:string,  # This is the name of the function calling asking for the check
                     statesExpected:ModelState):bool  =
-    # FIXME
-    #if comp.isNil:
-    #    return true
+    ## checks if model.state is in a valid state
+    if comp.isNil:
+      return true
     
-    #echo "invalidState: ", repr comp
-    if not (comp.state.int > 0 and  statesExpected.int > 0):
+    if not (comp.state and statesExpected):
         comp.state = modelError
         #echo $f
         filteredLog(comp, fmi2Error, error, fmt"{$f}: Illegal call sequence.".fmi2String )
         return true
 
     return false
+
 
 proc nullPointer*(comp:ModelInstanceRef, f:string, arg:string, p:pointer):bool =
     if p.isNil:
