@@ -19,11 +19,14 @@ proc fmi2GetReal*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize
     
     if invalidState(comp, "fmi2GetReal", MASK_fmi2GetReal):
         return fmi2Error
+    
     if nvr > 0 and nullPointer(comp, "fmi2GetReal", "vr[]", vr):
         return fmi2Error
+    
     if nvr > 0 and nullPointer(comp, "fmi2GetReal", "value[]", value):
         return fmi2Error
-    if nvr > 0 and comp.isDirtyValues > 0:
+
+    if nvr > 0 and comp.isDirtyValues == fmi2True:
         calculateValues(comp)   # <---------------
         comp.isDirtyValues = fmi2False
 
@@ -41,38 +44,41 @@ proc fmi2GetReal*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize
 
 
 
-proc fmi2GetInteger*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize_t;
+proc fmi2GetInteger*(comp: ModelInstanceRef; 
+                    vr: ptr fmi2ValueReference; 
+                    nvr: csize_t;
                     value: ptr fmi2Integer): fmi2Status  =
     ## returns an integer value
     ## `vr` is a vector and `nvr` its size.
     ## `value` is another vector with the results (same `nvr` size)
-    #echo "Entering fmi2GetInteger"
-    #echo "getter: comp.integerAddr[0][]: ", comp.integerAddr[0][]
+
+    # Perform a number of checks
+    # - check if the model is in an invalid state
     if invalidState(comp, "fmi2GetInteger", MASK_fmi2GetInteger):
-        #echo "bad1"
         return fmi2Error
+    
+    # - checks that vector `vr` is not null when `nvr > 0`.
     if nvr > 0 and nullPointer(comp, "fmi2GetInteger", "vr[]", vr):
-            #echo "bad2"
-            return fmi2Error
-    if nvr > 0 and nullPointer(comp, "fmi2GetInteger", "value[]", value):
-            #echo "bad3"        
-            return fmi2Error
-    if nvr > 0 and comp.isDirtyValues > 0:
-        #echo "bad4"        
+        return fmi2Error
+
+    # - checks that vector `value` is not null when `nvr > 0`.    
+    if nvr > 0 and nullPointer(comp, "fmi2GetInteger", "value[]", value):      
+        return fmi2Error
+    
+    # - if isDirtyValues recalculate the values. It seems this is done in a lazy way (by updating
+    #   the time; the values are only calculate after a time event -I think-)
+    if nvr > 0 and comp.isDirtyValues == fmi2True:       
         calculateValues(comp)
         comp.isDirtyValues = fmi2False
-    #echo "no error"
+
+
     # iterate over all the values required by `vr`
-    echo "---> ", comp.i
     for i in 0 ..< nvr: 
         if vrOutOfRange(comp, "fmi2GetInteger", vr[i], comp.integerAddr.len):#NUMBER_OF_INTEGERS):
             return fmi2Error
 
-        #value[i] = comp.i[vr[i]]  # returns the value
-        #echo "  >> OK"
-        #echo "--> ", comp.integerAddr[vr[i]][]
-
-        value[i] = comp.integerAddr[vr[i]][].fmi2Integer
+        # read the value from memory address (vr[i] is the position; `[]`: memory content)
+        value[i] = comp.integerAddr[vr[i]][].fmi2Integer 
         filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetInteger: #i{vr[i]}# = {value[i]}".fmi2String )
     
     return fmi2OK
@@ -86,7 +92,7 @@ proc fmi2GetBoolean*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: cs
             return fmi2Error
     if nvr > 0 and nullPointer(comp, "fmi2GetBoolean", "value[]", value):
             return fmi2Error
-    if nvr > 0 and comp.isDirtyValues > 0:
+    if nvr > 0 and comp.isDirtyValues == fmi2True:
         calculateValues(comp)
         comp.isDirtyValues = fmi2False
     
@@ -113,7 +119,7 @@ proc fmi2GetString*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csi
             return fmi2Error
     if nvr > 0 and nullPointer(comp, "fmi2GetString", "value[]", value):
             return fmi2Error
-    if nvr > 0 and comp.isDirtyValues > 0:
+    if nvr > 0 and comp.isDirtyValues == fmi2True:
         calculateValues(comp)
         comp.isDirtyValues = fmi2False
     #FIXME---------------------
