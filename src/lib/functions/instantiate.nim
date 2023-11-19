@@ -86,7 +86,7 @@ proc fmi2Instantiate*( instanceName: fmi2String;
 
   comp.state = modelInstantiated   # State changed
 
-  setStartValues( comp )    # <------ to be implemented by the includer of this file
+  #setStartValues( comp )    # <------ to be implemented by the includer of this file
   
   comp.isDirtyValues = fmi2True # because we just called setStartValues
   comp.isNewEventIteration = fmi2False
