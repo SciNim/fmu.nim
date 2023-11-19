@@ -170,6 +170,18 @@ proc calculateValues*(comp: ModelInstanceRef) =
       comp.eventInfo.nextEventTime        = 1 + comp.time
 ```
 
+Parece que siempre se usa el mismo contenido en todos los casos (aunque no se use siempre). Por ejemplo, `inc.c` y `values.c` lo usan.
+
+
+Yo diría que `calculateValues` es un generador de eventos temporales:
+
+- En el caso de `inc.c` los genera cada segundo. `eventUpdate` reacciona a cada evento temporal aumentando en 1 el contador.
+- En el caso de `values.c` también genera eventos temporales cada segundo. En este caso actualiza también otros valores cada segundo.
+
+
+
+
+
 ## MASKS
 To make it more like Nim:
 - `masks.nim`
