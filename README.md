@@ -104,3 +104,117 @@ The simulation loop continues until the stop time is reached or a termination co
 - Importing FMUs:
   
   - [FMI4cpp](https://github.com/NTNU-IHB/FMI4cpp): in order to simulate with FMI.
+
+
+# Future
+I would like being able of reducing the boilerplate. Something like:
+```nim
+var counter:int = 1
+
+proc update(counter: var int) = 
+  ## counter: counts the seconds [exact, discrete, output]
+  counter += 1
+
+when isMainModule:
+  var counter = 1
+  update(counter)
+  update.toFmu( id: "inc",
+              guid: "{8c4e810f-3df3-4a00-8276-176fa3c9f008}"
+              outFile: "inc.fmu")
+```
+
+## TODO
+### `setStartValues`
+Called by `fmi2Instantiate`.
+
+This is a user defined function. It is responsible for setting the initial value when required during instantiation of the module. This reminds me `__init__` in python.
+
+Do we need this? The answer is NO. If I comment the line `setStartValues( comp )` in `instantiate.nim`, the model keeps on working.
+
+In `inc.nim` we are already doing:
+```nim
+var counter*:int = 1
+```
+
+`modelInstance` is referencing the memory address, this is why it is not needed.
+
+> WARNING: settings used unless changed by `fmi2SetX` before `fmi2EnterInitializationMode`
+> TODO: to check if `fmi2SetX` and `fmi2EnterInitializationMode` work with current approach.
+
+```c
+void setStartValues(ModelInstance *comp) {
+    i(counter_) = 1;
+}
+```
+
+
+### `calculateValues`
+Calculate the values of the FMU (Functional Mock-up Unit) variables at a specific time step during simulation 
+
+Called by fmi2GetReal, fmi2GetInteger, fmi2GetBoolean, fmi2GetString, fmi2ExitInitialization if setStartValues or environment set new values through fmi2SetXXX.
+
+Lazy set values for all variable that are computed from other variables.
+
+Permite avanzar en el tiempo y obtener los valores actualizados de las variables en cada paso de la simulación.
+
+La función calculateValues es llamada en cada paso de la simulación y su propósito principal es realizar los cálculos necesarios para actualizar los valores de las variables del modelo. Esto implica aplicar ecuaciones matemáticas, resolver sistemas de ecuaciones, simular fenómenos físicos, entre otros.
+
+This function is defined by the user and called from `getters.nim` (`fmi2GetReal`, `fmi2GetInteger`, `fmi2GetBoolean`, `fmi2GetString`) and `common.nim` (`fmi2ExitInitializationMode`).
+
+In the case of `inc.nim`:
+```nim
+proc calculateValues*(comp: ModelInstanceRef) =
+  if comp.state == modelInitializationMode:
+      # set first time event
+      comp.eventInfo.nextEventTimeDefined = fmi2True
+      comp.eventInfo.nextEventTime        = 1 + comp.time
+```
+
+## MASKS
+To make it more like Nim:
+- `masks.nim`
+- `helpers.nim`
+
+https://nim-lang.org/docs/manual.html#set-type-bit-fields
+
+
+Something like:
+```nim
+type
+  ModelState* {.size: sizeof(cint).}  = enum
+    modelStartAndEnd        ,  ##  ME state
+    modelInstantiated       ,  ##  ME states
+    modelInitializationMode ,  ##  ME states
+    modelEventMode          ,  ##  CS states
+    modelContinuousTimeMode ,  ##  CS states
+    modelStepComplete       ,
+    modelStepInProgress     ,
+    modelStepFailed         ,
+    modelStepCanceled       ,
+    modelTerminated         ,
+    modelError              ,
+    modelFatal              
+
+
+type
+  Mask = set[ModelState]
+
+const
+  MASK_fmi2GetReal* = { modelInitializationMode, modelEventMode,
+                        modelContinuousTimeMode, modelStepComplete, 
+                        modelStepFailed, modelStepCanceled, 
+                        modelTerminated, modelError}
+
+  MASK_fmi2GetInteger*:Mask  = MASK_fmi2GetReal
+  MASK_fmi2GetBoolean*:Mask  = MASK_fmi2GetReal
+  MASK_fmi2GetString*:Mask   = MASK_fmi2GetReal
+  tmp:Mask = {}
+echo repr MASK_fmi2GetInteger
+
+if modelEventMode in MASK_fmi2GetInteger:
+  echo "ok"
+
+if tmp == {}:
+  echo "nok"
+echo tmp
+```
