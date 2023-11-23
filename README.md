@@ -31,6 +31,14 @@ $ ./fmusim_me inc.fmu 5 0.1
 ```
 > this will simulate during 5seconds using 0.1 second steps. it will create the file `results.csv`.
 
+# TODO
+- [ ] To provide: index.html as an input
+- [ ] To provide: model.png as an input
+- [ ] To provide: mode.c as a an input
+- [ ] To create: modelDescription.xml as an input
+- [ ] To compile using zigcc providing both linux and windows libraries
+
+
 # Details
 ## Intro
 In general terms, we are making Nim to export C functions fulfilling the naming conventions of the FMU standard.
@@ -230,3 +238,25 @@ if tmp == {}:
   echo "nok"
 echo tmp
 ```
+## TODO: triggers
+Una idea (incorrecta):
+```c
+void calculateValues(ModelInstance *comp) {
+    // Get the current simulation time
+    double currentTime = comp->time;
+
+    // Define the delay after which the output variable should change
+    double delay = 5.0; // Change the delay value as per your requirement
+
+    // Check if the current time is greater than the delay
+    if (currentTime > delay) {
+        // Change the value of the output variable
+        comp->pout = 10.0; // Change the output variable value as per your requirement
+    }
+}
+```
+
+Supongo que es necesaria tener otra variable local que almacene el instante de activación. Después el trigger, podría ser un time event generado por `calculateValues`.
+
+## Componentes
+Quizá sería interesante pensar en componentes o algo así, algo tipo simulink.
