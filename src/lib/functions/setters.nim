@@ -17,7 +17,7 @@ proc fmi2SetReal*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize
         if vrOutOfRange(comp, "fmi2SetReal", vr[i], comp.realAddr.len): #NUMBER_OF_REALS):
             return fmi2Error
         filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2SetReal: #r{vr[i]}# = {value[i]}".fmi2String)
-        comp.r[vr[i]] = value[i]#.float
+        comp.realAddr[vr[i]][] = value[i]#.float  # set the value
 
     if nvr > 0:
        comp.isDirtyValues = fmi2True
@@ -71,7 +71,7 @@ proc fmi2SetBoolean*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: cs
         else:
             tmp = "false"
         filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2SetBoolean: #b{vr[i]}# = {tmp}".fmi2String)
-        comp.b[vr[i]] = value[i]
+        comp.boolAddr[vr[i]][] = value[i].bool  # set the value
 
     if nvr > 0:
         comp.isDirtyValues = fmi2True

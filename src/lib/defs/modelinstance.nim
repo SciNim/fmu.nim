@@ -71,10 +71,10 @@ type
 
 proc `$`*(o: ModelInstanceRef):string =
   result = "ref ModelInstance:"
-  result &= &"\n- r: {o.r}"
-  result &= &"\n- i: {o.i}"
-  result &= &"\n- b: {o.b}"
-  result &= &"\n- s: {o.s}"
+  #result &= &"\n- r: {o.r}"
+  #result &= &"\n- i: {o.i}"
+  #result &= &"\n- b: {o.b}"
+  #result &= &"\n- s: {o.s}"
   result &= &"\n- isPositive: {o.isPositive}"
   result &= &"\n- time: {o.time}"
   result &= "\n"

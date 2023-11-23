@@ -95,7 +95,7 @@ type
     iExact,
       ##[
       The variable is initialized with the start value(provided under Real,
-      Integer, Boolean, Stringor Enumeration)
+      Integer, Boolean, String or Enumeration)
       ]##
     iApprox,
       ##[
@@ -137,58 +137,10 @@ type
   Param* = ref ParamObj
 
 
-#[
-proc get*(r:Param):XmlNode =
-  var att:seq[(string,string)]
-  if r.name == "":
-    quit("`name` needs to contain a string", QuitFailure)
-  att.add ("name", r.name)
-
-  #if r.valueReference == 0.uint:
-  #  quit("`valueReference` needs to be >0", QuitFailure)
-  att.add ("valueReference", fmt"{r.idx}")
-
-  if r.description.isSome:
-    att.add ("description", r.description.get)
-  if r.causality.isSome:
-    att.add ("causality", $r.causality.get)
-  if r.variability.isSome:
-    att.add ("variability", $r.variability.get)
-  if r.initial.isSome:
-    att.add ("initial", $r.initial.get)
-  if r.canHandleMultipleSetPerTimeInstant.isSome:
-    att.add ("canHandleMultipleSetPerTimeInstant", r.canHandleMultipleSetPerTimeInstant.get) 
-
-  let attributes = att.toXmlAttributes
-
-  var children:seq[XmlNode]
-  case r.kind
-  of tReal:
-    children.add get(r.childReal)
-  of tInteger:
-    children.add get(r.childInteger)
-  of tBoolean:
-    children.add get(r.childBoolean)
-  of tString:
-    children.add get(r.childString)
-  of tEnumeration:
-    children.add get(r.childEnumeration)
-  
-  return newXmlTree("ScalarVariable",children, attributes)
-]#
-
-#var params*:seq[Param]
-#[
-var paramsI*:seq[ParamI]
-var paramsR*:seq[ParamR]
-var paramsB*:seq[ParamB]
-var paramsS*:seq[ParamS]
-]#
-
-var nParamsI{.compileTime.}: int = 0
-var nParamsR{.compileTime.}: int = 0
-var nParamsB{.compileTime.}: int = 0
-var nParamsS{.compileTime.}: int = 0
+var nIntegers {.compileTime.}: int = 0
+var nReals    {.compileTime.}: int = 0
+var nBooleans {.compileTime.}: int = 0
+var nStrings  {.compileTime.}: int = 0
 #var numStates* {.compileTime.}:int = 0
 
 macro param*( arg:typed; 
@@ -196,10 +148,6 @@ macro param*( arg:typed;
               variability: static[Variability] = vContinuous;
               initial: static[Initial]         = iUnset ;
               description: static[string]      = "") =
-  var nIntegers = 0
-  var nReals    = 0
-  var nBooleans = 0
-  var nStrings  = 0
 
   ## tracks the characteristics of all the arguments
   result = nnkStmtList.newTree()
@@ -250,19 +198,28 @@ macro param*( arg:typed;
   var name = impl[0].strVal
   #var param = Param(name: name)  
 
-  result.add quote do:
-    myModel.params.add Param( name: `name`, #kind: tInteger,
+  #result.add quote do:
+    # myModel.params.add Param( name: `name`, #kind: tInteger,
+    #                           #startI: some(`value`),
+    #                           causality: `causality`.Causality,
+    #                           variability: `variability`.Variability,
+    #                           initial: `initial`.Initial,
+    #                           description: `description` )
+
+  case impl[1].getType.typeKind 
+  of ntyInt:  # 2.1 integer case
+    result.add quote do:
+      myModel.params.add Param( name: `name`, 
+                                kind: tInteger,
+                                idx: `nIntegers`,
+
                               #startI: some(`value`),
                               causality: `causality`.Causality,
                               variability: `variability`.Variability,
                               initial: `initial`.Initial,
                               description: `description` )
-
-  case impl[1].getType.typeKind 
-  of ntyInt:  # 2.1 integer case
-    result.add quote do:
-      myModel.params[^1].idx = `nIntegers`
-      myModel.params[^1].kind = tInteger
+      #myModel.params[^1].idx = `nIntegers`
+      #myModel.params[^1].kind = tInteger
 
     nIntegers += 1
     
@@ -276,6 +233,78 @@ macro param*( arg:typed;
         myModel.params[^1].startI = none()
         #echo repr myModel.params[^1]
    
+  of ntyFloat:  # 2.2 float case
+    result.add quote do:
+      myModel.params.add Param( name: `name`, 
+                                idx: `nReals`,
+
+                                causality: `causality`.Causality,
+                                variability: `variability`.Variability,
+                                initial: `initial`.Initial,
+                                description: `description`,
+                                kind: tReal )
+
+    nReals += 1
+    
+    if impl[2].kind == nnkFloatLit:
+      var value = impl[2].floatVal.float
+      result.add quote do:
+        #echo repr `value`
+        myModel.params[^1].startR = some(`value`)
+
+    else:
+      result.add quote do:
+        myModel.params[^1].startR = none()
+        #echo repr myModel.params[^1]
+
+  of ntyBool:  # 2.3 bool case 
+    result.add quote do:
+      myModel.params.add Param( name: `name`, 
+                                idx: `nBooleans`,
+
+                                causality: `causality`.Causality,
+                                variability: `variability`.Variability,
+                                initial: `initial`.Initial,
+                                description: `description`,
+                                kind: tBoolean )
+
+    nBooleans += 1
+
+
+    if impl[2].kind == nnkSym:
+      var value = impl[2].boolVal.bool
+      result.add quote do:
+        myModel.params[^1].startB = some(`value`)
+
+    else:
+      result.add quote do:
+        myModel.params[^1].startB = none(bool)
+        #echo repr myModel.params[^1]
+
+  of ntyString:  # 2.4 float case
+    result.add quote do:
+      myModel.params.add Param( name: `name`, 
+                                idx: `nStrings`,
+
+                                causality: `causality`.Causality,
+                                variability: `variability`.Variability,
+                                initial: `initial`.Initial,
+                                description: `description`,
+                                kind: tString )
+
+    nStrings += 1
+    
+    if impl[2].kind == nnkStrLit:  #nnkStringLit:
+      var value = impl[2].strVal.string
+      result.add quote do:
+        #echo repr `value`
+        myModel.params[^1].startS = some(`value`)
+
+    else:
+      echo "nok"
+      result.add quote do:
+        myModel.params[^1].startS = none(string)
+        #echo repr myModel.params[^1]
 
   else:
     raise newException(ValueError, "only variables typed: `int`, `float`, `bool` and `string` are supported")

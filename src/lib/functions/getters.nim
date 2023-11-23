@@ -7,14 +7,30 @@ import ../defs/[definitions,modelinstance, masks]
 import helpers
 import ../meta/filteredlog
 
+template useGetReal():untyped =
+    mixin getReal
+    if comp.realAddr.len > 0:  # when: no puede evaluar en tiempo de compilación
+     for i in 0 ..< nvr:
+         if vrOutOfRange(comp, "fmi2GetReal", vr[i], comp.realAddr.len): #NUMBER_OF_REALS):
+             return fmi2Error
+         value[i] = getReal(comp, i.fmi2ValueReference) # <--------to be implemented by the includer of this file
+         #value[i] = comp.r[vr[i]]            
+         #value[i] = r[val] #getReal(comp, val)
+         filteredLog(comp, fmi2OK, fmiCall, ("fmi2GetReal: #r" & $vr[i] & "# = " & $value[i]).fmi2String )    
+
 {.push exportc: "$1",dynlib,cdecl.}
 
 
 # forward declaration (this needs to be override by the user)
-proc getReal(comp: ModelInstanceRef; val: float)
+#proc getReal(comp: ModelInstanceRef; vr:ptr fmi2ValueReference):fmi2Real 
 
-proc fmi2GetReal*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize_t;
-                 value: ptr fmi2Real): fmi2Status =
+# https://forum.nim-lang.org/t/10272#68206
+#var getReal*: proc(comp: ModelInstanceRef; vr:ptr fmi2ValueReference):fmi2Real 
+
+proc fmi2GetReal*(comp: ModelInstanceRef; 
+                  vr: ptr fmi2ValueReference; 
+                  nvr: csize_t;
+                  value: ptr fmi2Real): fmi2Status =
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     
     if invalidState(comp, "fmi2GetReal", MASK_fmi2GetReal):
@@ -31,15 +47,23 @@ proc fmi2GetReal*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize
         comp.isDirtyValues = fmi2False
 
     #---- Only compiled if NUMBER_OF_REALS is >0
-    # FIXME
-    if comp.realAddr.len > 0:  # when
-     for i in 0 ..< nvr:
-         if vrOutOfRange(comp, "fmi2GetReal", vr[i], comp.realAddr.len): #NUMBER_OF_REALS):
-             return fmi2Error
-         value[i] = getReal(comp, val) # <--------to be implemented by the includer of this file
-         #value[i] = comp.r[vr[i]]            
-         #value[i] = r[val] #getReal(comp, val)
-         filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetReal: #r{vr[i]}# = {value[i]}" )
+    # inspired by: 
+    # https://forum.nim-lang.org/t/10272
+    # https://forum.nim-lang.org/t/9070
+    when compiles(useGetReal): # Checks if the template compiles
+        echo "------------> COMPILED"
+        useGetReal()
+    else:
+        echo "============> SHIIIT"
+    # mixin getReal
+    # if comp.realAddr.len > 0:  # when: no puede evaluar en tiempo de compilación
+    #  for i in 0 ..< nvr:
+    #      if vrOutOfRange(comp, "fmi2GetReal", vr[i], comp.realAddr.len): #NUMBER_OF_REALS):
+    #          return fmi2Error
+    #      value[i] = getReal(comp, i.fmi2ValueReference) # <--------to be implemented by the includer of this file
+    #      #value[i] = comp.r[vr[i]]            
+    #      #value[i] = r[val] #getReal(comp, val)
+    #      filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetReal: #r{vr[i]}# = {value[i]}".fmi2String )
     return fmi2OK
 
 
@@ -99,7 +123,7 @@ proc fmi2GetBoolean*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: cs
     for i in 0 ..< nvr:
         if vrOutOfRange(comp, "fmi2GetBoolean", vr[i], comp.boolAddr.len):#NUMBER_OF_BOOLEANS):
             return fmi2Error
-        value[i] = comp.b[vr[i]]
+        value[i] = comp.boolAddr[vr[i]][].fmi2Boolean
         var tmp:string
         if value[i] > 0:
            tmp = "true"

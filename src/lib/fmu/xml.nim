@@ -63,8 +63,14 @@ proc createXml*(myModel: ModelInstanceRef; numberOfEventIndicators:int):string =
   let logCategories = newXmlTree("LogCategories", catChildren)  
 
   var modelVariables = newElement("ModelVariables")
+  # var 
+  #   nR = 0
+  #   nI = 0
+  #   nB = 0
+  #   nS = 0
+  
   for param in myModel.params:
-    var scalarVariableAttrs = { "name" : "counter" }.toXmlAttributes
+    var scalarVariableAttrs = { "name" : param.name }.toXmlAttributes
 
     scalarVariableAttrs["causality"] = case param.causality
       of cParameter:           "parameter"
@@ -81,14 +87,16 @@ proc createXml*(myModel: ModelInstanceRef; numberOfEventIndicators:int):string =
       of vDiscrete:   "discrete"
       of vContinuous: "continuous"
 
-    scalarVariableAttrs["initial"] = case param.initial
-      of iExact:      "exact"
-      of iApprox:     "approx"
-      of iCalculated: "calculated"
-      else: ""
+    if param.initial != iUnset:
+      scalarVariableAttrs["initial"] = case param.initial
+        of iExact:      "exact"
+        of iApprox:     "approx"
+        of iCalculated: "calculated"
+        else: ""
 
     scalarVariableAttrs["valueReference"] = $param.idx    
     scalarVariableAttrs["description"] = param.description
+
     var scalarVariable:XmlNode
     if param.kind == tInteger:
       if param.startI.isSome:
@@ -100,7 +108,35 @@ proc createXml*(myModel: ModelInstanceRef; numberOfEventIndicators:int):string =
         #initial.attrs = { "start" : $param.startI.get}.toXmlAttributes
         scalarVariable = newXmlTree("ScalarVariable", [], scalarVariableAttrs)          
 
-    modelVariables = newElement("ModelVariables")
+    elif param.kind == tReal:
+      if param.startR.isSome:
+        let initial = newElement("Real")
+        initial.attrs = { "start" : $param.startR.get}.toXmlAttributes
+        scalarVariable = newXmlTree("ScalarVariable", [initial], scalarVariableAttrs)  
+      else:
+        let initial = newElement("Real")
+        #initial.attrs = { "start" : $param.startI.get}.toXmlAttributes
+        scalarVariable = newXmlTree("ScalarVariable", [], scalarVariableAttrs)     
+
+    elif param.kind == tBoolean:
+      if param.startB.isSome:
+        let initial = newElement("Boolean")
+        initial.attrs = { "start" : $param.startB.get}.toXmlAttributes
+        scalarVariable = newXmlTree("ScalarVariable", [initial], scalarVariableAttrs)  
+      else:
+        let initial = newElement("Boolean")
+        #initial.attrs = { "start" : $param.startI.get}.toXmlAttributes
+        scalarVariable = newXmlTree("ScalarVariable", [], scalarVariableAttrs)   
+
+    elif param.kind == tString:
+      if param.startS.isSome:
+        let initial = newElement("String")
+        initial.attrs = { "start" : $param.startS.get}.toXmlAttributes
+        scalarVariable = newXmlTree("ScalarVariable", [initial], scalarVariableAttrs)  
+      else:
+        let initial = newElement("String")
+        #initial.attrs = { "start" : $param.startI.get}.toXmlAttributes
+        scalarVariable = newXmlTree("ScalarVariable", [], scalarVariableAttrs) 
 
     modelVariables.add scalarVariable
 
@@ -116,6 +152,8 @@ proc createXml*(myModel: ModelInstanceRef; numberOfEventIndicators:int):string =
               "guid": fmt"{myModel.guid}",
               "numberOfEventIndicators" : fmt"{numberOfEventIndicators}"}.toXmlAttributes
   let k = newXmlTree("fmiModelDescription", [modelExchange, logCategories, modelVariables, modelStructure], att)
+  #let k = newXmlTree("fmiModelDescription", [modelExchange, logCategories, modelVariables, modelStructure], att)
+  #echo repr modelVariables
   return xmlHeader & $k
 
 

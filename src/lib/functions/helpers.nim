@@ -3,6 +3,7 @@
 ## Private helpers used below to validate function arguments
 ## ---------------------------------------------------------------------------
 import strformat
+import std/[sets]
 import ../defs/[definitions, modelinstance]
 import ../meta/filteredlog
 
@@ -21,12 +22,12 @@ proc invalidNumber*( comp:ModelInstanceRef;
 
 proc invalidState*( comp:ModelInstanceRef, 
                     f:string,  # This is the name of the function calling asking for the check
-                    statesExpected:ModelState):bool  =
+                    statesExpected:set[ModelState]):bool  =
     ## checks if model.state is in a valid state
     if comp.isNil:
       return true
     
-    if not (comp.state and statesExpected):
+    if comp.state in statesExpected:
         comp.state = modelError
         #echo $f
         filteredLog(comp, fmi2Error, error, fmt"{$f}: Illegal call sequence.".fmi2String )
@@ -51,7 +52,7 @@ proc vrOutOfRange*(comp:ModelInstanceRef, f:string,  vr:fmi2ValueReference, `end
 
     return false
 
-proc unsupportedFunction*(comp:ModelInstanceRef; fName: string; statesExpected: ModelState): fmi2Status =
+proc unsupportedFunction*(comp:ModelInstanceRef; fName: string; statesExpected: set[ModelState]): fmi2Status =
     #var comp: ptr ModelInstanceRef = cast[ptr ModelInstanceRef](c)
     #var log:fmi2CallbackLogger = comp.functions.logger
     if invalidState(comp, fName, statesExpected):
