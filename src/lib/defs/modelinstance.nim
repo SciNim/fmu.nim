@@ -1,6 +1,6 @@
 import definitions, parameters
-import std/[strformat, options]
-import std/macros
+import std/[strformat]
+#import std/macros
 {.push exportc, dynlib, cdecl.}
 
 #[
@@ -93,7 +93,7 @@ template add*(comp: ModelInstanceRef; value:int) {.dirty.} =
     #comp.params &= Param(name:value.astToStr, kind: tInteger)
 
 
-macro init*(args: varargs[typed]) =
+#[ macro init*(args: varargs[typed]) =
   #[
     This macro converts things like:
 
@@ -142,3 +142,4 @@ macro init*(args: varargs[typed]) =
     proc setStartValues*(comp {.inject.}: ModelInstanceRef) = 
       `body`
 
+ ]#

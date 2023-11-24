@@ -116,7 +116,7 @@ type
     variability*: Variability
     initial*: Initial
     description*: string
-    canHandleMultipleSetPerTimeInstant*: Option[string]    
+    canHandleMultipleSetPerTimeInstant*: Option[string] 
     case kind*:ParamType
     of tReal:
       #addressR*: ptr float
@@ -147,7 +147,8 @@ macro param*( arg:typed;
               causality: static[Causality]     = cLocal; 
               variability: static[Variability] = vContinuous;
               initial: static[Initial]         = iUnset ;
-              description: static[string]      = "") =
+              description: static[string]      = "",
+              derivative: static[int]         = 0 ) =
 
   ## tracks the characteristics of all the arguments
   result = nnkStmtList.newTree()
@@ -224,6 +225,7 @@ macro param*( arg:typed;
     nIntegers += 1
     
     if impl[2].kind == nnkIntLit:
+      echo "ok1"
       var value = impl[2].intVal.int
       result.add quote do:
         myModel.params[^1].startI = some(`value`)
@@ -243,7 +245,9 @@ macro param*( arg:typed;
                                 initial: `initial`.Initial,
                                 description: `description`,
                                 kind: tReal )
-
+    if derivative > 0:
+      result.add quote do:
+        myModel.params[^1].derivative = some(`derivative`.uint)
     nReals += 1
     
     if impl[2].kind == nnkFloatLit:
@@ -254,7 +258,7 @@ macro param*( arg:typed;
 
     else:
       result.add quote do:
-        myModel.params[^1].startR = none()
+        myModel.params[^1].startR = none(float)
         #echo repr myModel.params[^1]
 
   of ntyBool:  # 2.3 bool case 
@@ -295,7 +299,7 @@ macro param*( arg:typed;
     nStrings += 1
     
     if impl[2].kind == nnkStrLit:  #nnkStringLit:
-      var value = impl[2].strVal.string
+      var value = impl[2].strVal#.string
       result.add quote do:
         #echo repr `value`
         myModel.params[^1].startS = some(`value`)

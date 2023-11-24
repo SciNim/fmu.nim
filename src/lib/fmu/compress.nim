@@ -3,7 +3,7 @@ import os, strutils, sugar
 
 
 proc compressInto*(folder, filename:string) =
-  var tmp:string
+  #var tmp:string
   #if origin.endsWith("fmu/"):
   #  tmp = origin.dup: removeSuffix("fmu/")
   #echo tmp
