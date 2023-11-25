@@ -27,7 +27,7 @@ proc invalidState*( comp:ModelInstanceRef,
     if comp.isNil:
       return true
     
-    if comp.state in statesExpected:
+    if not (comp.state in statesExpected):
         comp.state = modelError
         #echo $f
         filteredLog(comp, fmi2Error, error, fmt"{$f}: Illegal call sequence.".fmi2String )
@@ -45,6 +45,8 @@ proc nullPointer*(comp:ModelInstanceRef, f:string, arg:string, p:pointer):bool =
     return false
 
 proc vrOutOfRange*(comp:ModelInstanceRef, f:string,  vr:fmi2ValueReference, `end`:int):bool =
+    #echo "---Entering vrOutOfRange----------"
+    #echo "VR: ", vr.int, "     END: ", `end`
     if vr.int >= `end`:
         filteredLog(comp, fmi2Error, error, fmt"{f}: Illegal value reference {vr}.".fmi2String)
         comp.state = modelError

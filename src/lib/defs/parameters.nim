@@ -148,7 +148,8 @@ macro param*( arg:typed;
               variability: static[Variability] = vContinuous;
               initial: static[Initial]         = iUnset ;
               description: static[string]      = "",
-              derivative: static[int]         = 0 ) =
+              derivative: static[int]          = 0,
+              isState: static[bool]            = false ) =
 
   ## tracks the characteristics of all the arguments
   result = nnkStmtList.newTree()
@@ -221,17 +222,18 @@ macro param*( arg:typed;
                               description: `description` )
       #myModel.params[^1].idx = `nIntegers`
       #myModel.params[^1].kind = tInteger
-
+      #myModel.add `name`
+      #myModel.integerAddr.add( addr(`name`) )
+      #echo "--------------------> ", myModel.integerAddr.len
     nIntegers += 1
     
     if impl[2].kind == nnkIntLit:
-      echo "ok1"
       var value = impl[2].intVal.int
       result.add quote do:
         myModel.params[^1].startI = some(`value`)
 
     else:
-      result.add quote do:
+      result.add quote do:         
         myModel.params[^1].startI = none()
         #echo repr myModel.params[^1]
    
@@ -248,6 +250,11 @@ macro param*( arg:typed;
     if derivative > 0:
       result.add quote do:
         myModel.params[^1].derivative = some(`derivative`.uint)
+
+    if isState:
+      result.add quote do:
+        myModel.states &= `nReals`
+
     nReals += 1
     
     if impl[2].kind == nnkFloatLit:
@@ -260,6 +267,8 @@ macro param*( arg:typed;
       result.add quote do:
         myModel.params[^1].startR = none(float)
         #echo repr myModel.params[^1]
+
+
 
   of ntyBool:  # 2.3 bool case 
     result.add quote do:

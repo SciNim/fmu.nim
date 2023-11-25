@@ -96,7 +96,7 @@ proc fmi2SetContinuousStates*(comp: ModelInstanceRef;
     #var i:int
     if invalidState(comp, "fmi2SetContinuousStates", MASK_fmi2SetContinuousStates):
         return fmi2Error
-    if invalidNumber(comp, "fmi2SetContinuousStates", "nx", nx, NUMBER_OF_STATES):
+    if invalidNumber(comp, "fmi2SetContinuousStates", "nx", nx, comp.states.len):
         return fmi2Error
     if nullPointer(comp, "fmi2SetContinuousStates", "x[]", x):
         return fmi2Error
@@ -117,7 +117,7 @@ proc fmi2GetDerivatives*(comp: ModelInstanceRef;
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     if invalidState(comp, "fmi2GetDerivatives", MASK_fmi2GetDerivatives):
         return fmi2Error
-    if invalidNumber(comp, "fmi2GetDerivatives", "nx", nx, NUMBER_OF_STATES):
+    if invalidNumber(comp, "fmi2GetDerivatives", "nx", nx, comp.states.len):
         return fmi2Error
     if nullPointer(comp, "fmi2GetDerivatives", "derivatives[]", derivatives):
         return fmi2Error
@@ -165,8 +165,7 @@ proc fmi2GetContinuousStates*(comp: ModelInstanceRef;
     #echo "getReal: ", getReal(comp, vrStates[0])#vrStates[0]
     if invalidState(comp, "fmi2GetContinuousStates", MASK_fmi2GetContinuousStates):
         return fmi2Error
-    if invalidNumber(comp, "fmi2GetContinuousStates", "nx", nx, NUMBER_OF_STATES):
-        echo "allo2"
+    if invalidNumber(comp, "fmi2GetContinuousStates", "nx", nx, comp.states.len):      
         return fmi2Error
     if nullPointer(comp, "fmi2GetContinuousStates", "states[]", states):
         return fmi2Error
@@ -206,7 +205,7 @@ proc fmi2GetNominalsOfContinuousStates*(comp: ModelInstanceRef; # ¿Susituir por
   if invalidState(comp, "fmi2GetNominalsOfContinuousStates",
                  MASK_fmi2GetNominalsOfContinuousStates):
     return fmi2Error
-  if invalidNumber(comp, "fmi2GetNominalContinuousStates", "nx", nx, NUMBER_OF_STATES):
+  if invalidNumber(comp, "fmi2GetNominalContinuousStates", "nx", nx, comp.states.len):
     return fmi2Error
   if nx > 0 and
       nullPointer(comp, "fmi2GetNominalContinuousStates", "x_nominal[]", x_nominal):

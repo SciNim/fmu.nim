@@ -20,29 +20,25 @@ template model2*(id,guid, outFile, callingFile: string;
     {.pop.}
 
     # FIXME---
-    #var NUMBER_OF_INTEGERS*, NUMBER_OF_REALS*, NUMBER_OF_BOOLEANS*, NUMBER_OF_STRINGS*:int = 0
-    #var NUMBER_OF_REALS*, NUMBER_OF_BOOLEANS*, NUMBER_OF_STRINGS*:int = 0
-    var NUMBER_OF_STRINGS*:int = 0    
-    var NUMBER_OF_STATES* {.compileTime.}:int = 0
+    var NUMBER_OF_STRINGS*:int = 2 # <-- FIXME    
+    #var NUMBER_OF_STATES* {.compileTime.}:int = 1 # <-- FIXME
     var NUMBER_OF_EVENT_INDICATORS*{.compileTime.}:int = 0
 
-    for p in myModel.params:
-      var nReals, nBooleans, nStrings: int
-      case p.kind
-      of tInteger:
-        #NUMBER_OF_INTEGERS += 1
-        discard
-      of tReal:
-        #nReals += 1
-        discard
-      of tBoolean:
-        #nBooleans += 1
-        discard
-      of tString:
-        nStrings += 1
-    # ----
-    #NUMBER_OF_INTEGERS = myModel.integerAddr.len
-
+    # for p in myModel.params:
+    #   var nReals, nBooleans, nStrings: int
+    #   case p.kind
+    #   of tInteger:
+    #     #NUMBER_OF_INTEGERS += 1
+    #     discard
+    #   of tReal:
+    #     #nReals += 1
+    #     discard
+    #   of tBoolean:
+    #     #nBooleans += 1
+    #     discard
+    #   of tString:
+    #     discard
+    #     #nStrings += 1
 
     include lib/functions/modelexchange
     include lib/functions/cosimulation
@@ -66,5 +62,8 @@ template model*(id,guid, outFile: string; body:untyped) {.dirty.} =
   #var NUMBER_OF_INTEGERS*:int
   # needed in order to know the filename calling `genFmu`
   let pos = instantiationInfo() # https://nim-lang.org/docs/system.html#instantiationInfo%2Cint
+  # FIXME - No es el lugar adecuado para crear la instancia.
+  # La instancia se crea en `instantiate.nim`.
+  # Hay que crear un modelo diferente que el usado para 
   var myModel* = ModelInstanceRef(id: `id`, guid: `guid`)  
   model2(id, guid, outFile, pos.filename, myModel, body)

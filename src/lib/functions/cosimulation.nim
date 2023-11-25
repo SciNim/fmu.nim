@@ -1,3 +1,16 @@
+template useGetReal():untyped =
+    mixin getReal
+
+    if comp.states.len > 0:  # NUMBER_OF_STATES > 0:
+        for i in 0 ..< comp.states.len: #NUMBER_OF_STATES:
+            prevState[i] = comp.realAddr[comp.states[i]][]
+
+        for i in 0 ..< comp.states.len: #NUMBER_OF_STATES:
+            var vr:fmi2ValueReference = comp.states[i].fmi2ValueReference #vrStates[i]
+            echo i, "-->"
+            comp.realAddr[comp.states[i]][] += h * getReal(comp, vr + 1)  # forward Euler step
+            echo "ok"
+
 {.push exportc,cdecl,dynlib.}
 
 proc fmi2SetRealInputDerivatives*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference;
@@ -36,17 +49,18 @@ proc fmi2CancelStep*(comp: ModelInstanceRef):fmi2Status =
     return fmi2Error
 
 
-proc fmi2DoStep*(comp: ModelInstanceRef; currentCommunicationPoint: fmi2Real;
-                communicationStepSize: fmi2Real;
-                noSetFMUStatePriorToCurrentPoint: fmi2Boolean): fmi2Status =
+proc fmi2DoStep*( comp: ModelInstanceRef; 
+                  currentCommunicationPoint: fmi2Real;
+                  communicationStepSize: fmi2Real;
+                  noSetFMUStatePriorToCurrentPoint: fmi2Boolean): fmi2Status =
     ##[
 
     ]##
     var h:cdouble  = communicationStepSize / 10
 
     var n = 10 # how many Euler steps to perform for one do step
-    var prevState: array[max(NUMBER_OF_STATES, 1), cdouble]
-    var prevEventIndicators: array[max(NUMBER_OF_EVENT_INDICATORS, 1), cdouble]
+    var prevState: seq[float] #array[max(comp.states.len, 1), cdouble]
+    var prevEventIndicators: seq[float]#array[max(NUMBER_OF_EVENT_INDICATORS, 1), cdouble]
     var stateEvent:int = 0
     var timeEvent:int = 0
 
@@ -76,14 +90,18 @@ proc fmi2DoStep*(comp: ModelInstanceRef; currentCommunicationPoint: fmi2Real;
     comp.time = currentCommunicationPoint
     for k in 0 ..< n:
         comp.time += h
+    #echo "---------------->", comp.states.len
+    when compiles(useGetReal): # Checks if the template compiles
+        useGetReal()    
+    
+    # if comp.states.len > 0:  # NUMBER_OF_STATES > 0:
 
-    when NUMBER_OF_STATES > 0:
-        for i in 0 ..< NUMBER_OF_STATES:
-            prevState[i] = comp.r[vrStates[i]][]
+    #     for i in 0 ..< comp.states.len: #NUMBER_OF_STATES:
+    #         prevState[i] = comp.realAddr[comp.states[i]][]
 
-        for i in 0 ..< NUMBER_OF_STATES:
-            var vr:fmi2ValueReference = vrStates[i]
-            comp.r[vr][] += h * getReal(comp, vr + 1)  # forward Euler step
+    #     for i in 0 ..< comp.states.len: #NUMBER_OF_STATES:
+    #         var vr:fmi2ValueReference = comp.states[i].fmi2ValueReference #vrStates[i]
+    #         comp.realAddr[comp.states[i]][] += h * getReal(comp, vr + 1)  # forward Euler step
 
     when NUMBER_OF_EVENT_INDICATORS > 0:
         # check for state event

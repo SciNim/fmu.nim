@@ -9,6 +9,9 @@ proc fmi2SetupExperiment*( comp: ModelInstanceRef;
                            stopTimeDefined: fmi2Boolean; 
                            stopTime: fmi2Real): fmi2Status =
     # ignore arguments: stopTimeDefined, stopTime
+    # echo "IN: fmi2SetupExperiment"
+    # echo "comp.state: ", $comp.state
+    # echo "mark: ", MASK_fmi2SetupExperiment
     if invalidState(comp, "fmi2SetupExperiment", MASK_fmi2SetupExperiment):
     #if invalidState(cast[ptr ModelInstanceRef](c), "fmi2SetupExperiment", MASK_fmi2SetupExperiment):
         echo "INVALID STATE!!!"

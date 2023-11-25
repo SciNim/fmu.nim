@@ -3,7 +3,7 @@
 ## Boolean, String
 ## ---------------------------------------------------------------------------
 import strformat
-import ../defs/[definitions,modelinstance, masks]
+import ../defs/[definitions, modelinstance, masks]
 import helpers
 import ../meta/filteredlog
 
@@ -11,9 +11,13 @@ template useGetReal():untyped =
     mixin getReal
     if comp.realAddr.len > 0:  # when: no puede evaluar en tiempo de compilación
      for i in 0 ..< nvr:
+         #echo "OK--> ", i
+         #echo "comp.realAddr.len: ", comp.realAddr.len
          if vrOutOfRange(comp, "fmi2GetReal", vr[i], comp.realAddr.len): #NUMBER_OF_REALS):
              return fmi2Error
+         echo "useGetReal - 1"
          value[i] = getReal(comp, i.fmi2ValueReference) # <--------to be implemented by the includer of this file
+         echo "useGetReal - 2"
          #value[i] = comp.r[vr[i]]            
          #value[i] = r[val] #getReal(comp, val)
          filteredLog(comp, fmi2OK, fmiCall, ("fmi2GetReal: #r" & $vr[i] & "# = " & $value[i]).fmi2String )    
@@ -50,11 +54,10 @@ proc fmi2GetReal*(comp: ModelInstanceRef;
     # inspired by: 
     # https://forum.nim-lang.org/t/10272
     # https://forum.nim-lang.org/t/9070
+    echo "\n\n\n===========> NVR: ", nvr
     when compiles(useGetReal): # Checks if the template compiles
-        echo "------------> COMPILED"
         useGetReal()
-    else:
-        echo "============> SHIIIT"
+
     # mixin getReal
     # if comp.realAddr.len > 0:  # when: no puede evaluar en tiempo de compilación
     #  for i in 0 ..< nvr:
@@ -68,10 +71,10 @@ proc fmi2GetReal*(comp: ModelInstanceRef;
 
 
 
-proc fmi2GetInteger*(comp: ModelInstanceRef; 
-                    vr: ptr fmi2ValueReference; 
-                    nvr: csize_t;
-                    value: ptr fmi2Integer): fmi2Status  =
+proc fmi2GetInteger*( comp: ModelInstanceRef; 
+                      vr: ptr fmi2ValueReference; 
+                      nvr: csize_t;
+                      value: ptr fmi2Integer): fmi2Status  =
     ## returns an integer value
     ## `vr` is a vector and `nvr` its size.
     ## `value` is another vector with the results (same `nvr` size)
@@ -97,7 +100,9 @@ proc fmi2GetInteger*(comp: ModelInstanceRef;
 
 
     # iterate over all the values required by `vr`
+
     for i in 0 ..< nvr: 
+        #echo "comp.integerAddr.len: ", comp.integerAddr.len
         if vrOutOfRange(comp, "fmi2GetInteger", vr[i], comp.integerAddr.len):#NUMBER_OF_INTEGERS):
             return fmi2Error
 

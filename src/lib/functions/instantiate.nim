@@ -26,9 +26,9 @@ proc fmi2Instantiate*( instanceName: fmi2String;
   ## tool; just a pointer will be shared.
   
   # ignoring arguments: fmuResourceLocation, visible
-  echo "Entering fmi2Instantiate"
-  echo repr functions
-  echo repr functions.componentEnvironment
+#   echo "Entering fmi2Instantiate"
+#   echo repr functions
+#   echo repr functions.componentEnvironment
 
   # Under the following conditions, it cannot be instantiated. Log details when possible.
   
@@ -86,8 +86,11 @@ proc fmi2Instantiate*( instanceName: fmi2String;
 
   comp.state = modelInstantiated   # State changed
 
-  #setStartValues( comp )    # <------ to be implemented by the includer of this file
-  
+  setStartValues( comp )    # <------ to be implemented by the includer of this file
+
+  #setStates( comp )
+
+ 
   comp.isDirtyValues = fmi2True # because we just called setStartValues
   comp.isNewEventIteration = fmi2False
 
@@ -99,11 +102,11 @@ proc fmi2Instantiate*( instanceName: fmi2String;
   comp.eventInfo.nextEventTime = 0
 
   # FILTERED_LOG(comp, fmi2OK, fmiCall, "fmi2Instantiate: GUID=%s", fmuGUID)
-  echo "ok-4"     # FIXME-----
+  #echo "ok-4"     # FIXME-----
   filteredLog( comp, fmi2OK, fmiCall, 
                 fmt"fmi2Instantiate: GUID={$fmuGUID}".fmi2String)#, fmuGUID)
-  echo "ok-5"     # -----------
-  echo "leaving fmi2Instantiate"
+  #echo "ok-5"     # -----------
+  #echo "leaving fmi2Instantiate"
   return comp  
 
 
@@ -116,16 +119,6 @@ by manually allocating memory with procs like:
 The garbage collector won't try to free them, you need to call their 
 respective dealloc pairs (dealloc, deallocShared, deallocCStringArray, etc) 
 when you are done with them or they will leak.
-]#
-
-
-#[
-if (!comp || !comp->r || !comp->i || !comp->b || !comp->s || !comp->isPositive
-    || !comp->instanceName || !comp->GUID) {
-    functions->logger(functions->componentEnvironment, instanceName, fmi2Error, "error",
-        "fmi2Instantiate: Out of memory.");
-    return NULL;
-}
 ]#
 
 
