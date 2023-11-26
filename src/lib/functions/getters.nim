@@ -11,15 +11,11 @@ template useGetReal():untyped =
     mixin getReal
     if comp.realAddr.len > 0:  # when: no puede evaluar en tiempo de compilación
      for i in 0 ..< nvr:
-         #echo "OK--> ", i
-         #echo "comp.realAddr.len: ", comp.realAddr.len
          if vrOutOfRange(comp, "fmi2GetReal", vr[i], comp.realAddr.len): #NUMBER_OF_REALS):
              return fmi2Error
-         echo "useGetReal - 1"
+         #echo "useGetReal - 1"
          value[i] = getReal(comp, i.fmi2ValueReference) # <--------to be implemented by the includer of this file
-         echo "useGetReal - 2"
-         #value[i] = comp.r[vr[i]]            
-         #value[i] = r[val] #getReal(comp, val)
+         #echo "useGetReal - 2"
          filteredLog(comp, fmi2OK, fmiCall, ("fmi2GetReal: #r" & $vr[i] & "# = " & $value[i]).fmi2String )    
 
 {.push exportc: "$1",dynlib,cdecl.}
@@ -36,7 +32,7 @@ proc fmi2GetReal*(comp: ModelInstanceRef;
                   nvr: csize_t;
                   value: ptr fmi2Real): fmi2Status =
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
-    
+    #echo "fmi2GetReal: enter-------"
     if invalidState(comp, "fmi2GetReal", MASK_fmi2GetReal):
         return fmi2Error
     
@@ -54,7 +50,7 @@ proc fmi2GetReal*(comp: ModelInstanceRef;
     # inspired by: 
     # https://forum.nim-lang.org/t/10272
     # https://forum.nim-lang.org/t/9070
-    echo "\n\n\n===========> NVR: ", nvr
+    #echo "\n\n\n===========> NVR: ", nvr
     when compiles(useGetReal): # Checks if the template compiles
         useGetReal()
 
@@ -67,6 +63,7 @@ proc fmi2GetReal*(comp: ModelInstanceRef;
     #      #value[i] = comp.r[vr[i]]            
     #      #value[i] = r[val] #getReal(comp, val)
     #      filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetReal: #r{vr[i]}# = {value[i]}".fmi2String )
+    #echo "fmi2GetReal: exit-------"    
     return fmi2OK
 
 
@@ -139,9 +136,12 @@ proc fmi2GetBoolean*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: cs
     
     return fmi2OK
 
-proc fmi2GetString*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize_t;
-                   value: ptr fmi2String): fmi2Status =
+proc fmi2GetString*( comp: ModelInstanceRef; 
+                     vr: ptr fmi2ValueReference; 
+                     nvr: csize_t;
+                     value: ptr fmi2String): fmi2Status =
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
+    #echo "fmi2GetString----"
     if invalidState(comp, "fmi2GetString", MASK_fmi2GetString):
         return fmi2Error
     if nvr > 0 and nullPointer(comp, "fmi2GetString", "vr[]", vr):
@@ -154,15 +154,45 @@ proc fmi2GetString*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csi
     #FIXME---------------------
     # var v = cast[ptr UncheckedArray[fmi2ValueReference]](vr)
     # var s = cast[ptr UncheckedArray[fmi2String]](comp.s)
-    # var val = cast[ptr UncheckedArray[ptr fmi2String]](value)
-    # for i in 0 ..< nvr:
-    #     if vrOutOfRange(comp, "fmi2GetString", vr[i], NUMBER_OF_STRINGS):
-    #         return fmi2Error
-
-    #     # WARNING: to be tested the following
-    #     val[i] = unsafeAddr( s[v[i]] )
-    #     filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetString: #s{vr[i]}# = '{value[i]}'")
+    #var val = cast[ptr UncheckedArray[ptr fmi2String]](value)
+    #echo nvr
+    for i in 0 ..< nvr:
+        #echo vr[i], " ", nvr, " ", comp.stringAddr.len
+        #echo comp.stringAddr[0][]
+        #echo comp.stringAddr[1][]
+        if vrOutOfRange(comp, "fmi2GetString", vr[i], comp.stringAddr.len):
+            return fmi2Error
+        #echo vr[i]
+        # WARNING: to be tested the following
+        value[i] = comp.stringAddr[vr[i]][].fmi2String   # unsafeAddr
+        var tmp = "fmi2GetString: " & $vr[i] & " = '" & comp.stringAddr[vr[i]][] & "'"
+        filteredLog(comp, fmi2OK, fmiCall, tmp.fmi2string)
     #-------------------
+    #echo "fmi2GetString - exit"
     return fmi2OK
 
+
+#[
+fmi2Status fmi2GetString (fmi2Component c, const fmi2ValueReference vr[], size_t nvr, fmi2String value[]) {
+    int i;
+    ModelInstance *comp = (ModelInstance *)c;
+    if (invalidState(comp, "fmi2GetString", MASK_fmi2GetString))
+        return fmi2Error;
+    if (nvr>0 && nullPointer(comp, "fmi2GetString", "vr[]", vr))
+            return fmi2Error;
+    if (nvr>0 && nullPointer(comp, "fmi2GetString", "value[]", value))
+            return fmi2Error;
+    if (nvr > 0 && comp->isDirtyValues) {
+        calculateValues(comp);
+        comp->isDirtyValues = fmi2False;
+    }
+    for (i=0; i<nvr; i++) {
+        if (vrOutOfRange(comp, "fmi2GetString", vr[i], NUMBER_OF_STRINGS))
+            return fmi2Error;
+        value[i] = comp->s[vr[i]];
+        FILTERED_LOG(comp, fmi2OK, LOG_FMI_CALL, "fmi2GetString: #s%u# = '%s'", vr[i], value[i])
+    }
+    return fmi2OK;
+}
+]#
 {.pop.}

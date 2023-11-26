@@ -3,16 +3,6 @@ import std/[strformat]
 import std/macros
 {.push exportc, dynlib, cdecl.}
 
-#[
-  if status == fmi2Error or status == fmi2Fatal or isCategoryLogged(instance, categoryIndex).bool:
-    instance.functions.logger(instance.functions.componentEnvironment, # fmi2ComponentEnvironment
-                              instance.instanceName, # fmi2String
-                              status, # fmi2Status
-                              logCategoriesNames[categoryIndex].fmi2String, # fmi2String
-                              message.fmi2String, # fmi2String
-                              args ) # FIXME  # varargs[fmi2String]
-]#
-
 type
   fmi2CallbackLogger*  = proc( a1: fmi2ComponentEnvironment,
                                a2: fmi2String,
@@ -139,7 +129,12 @@ macro init*(args: varargs[typed]) =
           `id` = `argVal`  # We do this only for initialization
         comp.realAddr.add( addr(`id`) )  # We define this for all floats
         
-
+    # string case
+    elif arg.getType.typeKind == ntyString:
+      let argVal = arg.getImpl[2].strVal
+      body.add quote do:
+        `id` = `argVal`
+        comp.stringAddr.add( addr(`id`) )
 
   result = quote do:
     #NUMBER_OF_INTEGERS = `nIntegers`    
