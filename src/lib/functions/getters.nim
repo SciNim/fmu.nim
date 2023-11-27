@@ -151,48 +151,19 @@ proc fmi2GetString*( comp: ModelInstanceRef;
     if nvr > 0 and comp.isDirtyValues == fmi2True:
         calculateValues(comp)
         comp.isDirtyValues = fmi2False
-    #FIXME---------------------
+
     # var v = cast[ptr UncheckedArray[fmi2ValueReference]](vr)
     # var s = cast[ptr UncheckedArray[fmi2String]](comp.s)
     #var val = cast[ptr UncheckedArray[ptr fmi2String]](value)
-    #echo nvr
+
     for i in 0 ..< nvr:
-        #echo vr[i], " ", nvr, " ", comp.stringAddr.len
-        #echo comp.stringAddr[0][]
-        #echo comp.stringAddr[1][]
         if vrOutOfRange(comp, "fmi2GetString", vr[i], comp.stringAddr.len):
             return fmi2Error
-        #echo vr[i]
-        # WARNING: to be tested the following
+
         value[i] = comp.stringAddr[vr[i]][].fmi2String   # unsafeAddr
         var tmp = "fmi2GetString: " & $vr[i] & " = '" & comp.stringAddr[vr[i]][] & "'"
         filteredLog(comp, fmi2OK, fmiCall, tmp.fmi2string)
-    #-------------------
-    #echo "fmi2GetString - exit"
+
     return fmi2OK
 
-
-#[
-fmi2Status fmi2GetString (fmi2Component c, const fmi2ValueReference vr[], size_t nvr, fmi2String value[]) {
-    int i;
-    ModelInstance *comp = (ModelInstance *)c;
-    if (invalidState(comp, "fmi2GetString", MASK_fmi2GetString))
-        return fmi2Error;
-    if (nvr>0 && nullPointer(comp, "fmi2GetString", "vr[]", vr))
-            return fmi2Error;
-    if (nvr>0 && nullPointer(comp, "fmi2GetString", "value[]", value))
-            return fmi2Error;
-    if (nvr > 0 && comp->isDirtyValues) {
-        calculateValues(comp);
-        comp->isDirtyValues = fmi2False;
-    }
-    for (i=0; i<nvr; i++) {
-        if (vrOutOfRange(comp, "fmi2GetString", vr[i], NUMBER_OF_STRINGS))
-            return fmi2Error;
-        value[i] = comp->s[vr[i]];
-        FILTERED_LOG(comp, fmi2OK, LOG_FMI_CALL, "fmi2GetString: #s%u# = '%s'", vr[i], value[i])
-    }
-    return fmi2OK;
-}
-]#
 {.pop.}
