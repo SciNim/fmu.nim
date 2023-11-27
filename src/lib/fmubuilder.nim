@@ -5,7 +5,10 @@ import ../fmu
 #import tempfile
 
 # FMU BUILDER
-proc genFmu2*(myModel: ModelInstanceRef; fname:string; callingFile: string) =
+proc genFmu2*( myModel: ModelInstanceRef; 
+               fname:string; 
+               callingFile: string;
+               clean:bool = false) =
   echo repr myModel.params
   # 1. Create folder structure
   #var dir = mkdtemp()
@@ -40,7 +43,8 @@ proc genFmu2*(myModel: ModelInstanceRef; fname:string; callingFile: string) =
   tmpFolder.compressInto( fname )
 
   # 4. Clean
-  #removeDir(tmpFolder, checkDir = false )
+  if clean:
+    removeDir(tmpFolder, checkDir = false )
 
 
 template genFmu*(myModel: ModelInstanceRef; fname:string) =

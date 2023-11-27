@@ -52,6 +52,10 @@ type
 
     nEventIndicators*:int # <-- NEW
 
+    icon:string = ""
+    documentation:seq[string] = @[]
+    sources:seq[string] = @[]
+
 
 
 

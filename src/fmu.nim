@@ -24,22 +24,6 @@ template model2*(id,guid, outFile, callingFile: string;
     #var NUMBER_OF_STATES* {.compileTime.}:int = 1 # <-- FIXME
     var NUMBER_OF_EVENT_INDICATORS*{.compileTime.}:int = 0
 
-    # for p in myModel.params:
-    #   var nReals, nBooleans, nStrings: int
-    #   case p.kind
-    #   of tInteger:
-    #     #NUMBER_OF_INTEGERS += 1
-    #     discard
-    #   of tReal:
-    #     #nReals += 1
-    #     discard
-    #   of tBoolean:
-    #     #nBooleans += 1
-    #     discard
-    #   of tString:
-    #     discard
-    #     #nStrings += 1
-
     include lib/functions/modelexchange
     include lib/functions/cosimulation
     include lib/functions/common
@@ -58,7 +42,8 @@ template model2*(id,guid, outFile, callingFile: string;
       
       myModel.genFmu2(outFile, callingFile)
 
-template model*(id,guid, outFile: string; body:untyped) {.dirty.} =
+template model*(id,guid, outFile: string; 
+                body:untyped) {.dirty.} =
   #var NUMBER_OF_INTEGERS*:int
   # needed in order to know the filename calling `genFmu`
   let pos = instantiationInfo() # https://nim-lang.org/docs/system.html#instantiationInfo%2Cint

@@ -3,17 +3,18 @@ import ../defs/[definitions, modelinstance, parameters]
 
 
 
-# type
-#   FmuObj* = object
-#     id*: string
-#     guid*: string
-#     params*:seq[Param]
+type
+  FmuObj* = object
+    id*: string
+    guid*: string
+    outFile*: string
+    params*:seq[Param]
 
-#     nEventIndicators*: int
-#     nStates*: int
+    nEventIndicators*: int
+    nStates*: int
 
 
-#   FMU* = ref FmuObj
+  FmuRef* = ref FmuObj
 
 
 # proc genCode*( m: FMU ) =
