@@ -6,6 +6,14 @@ src/inc.fmu
 src/inc2.fmu
 src/inc
 src/inc.so
-examples/*
-!examples/*.nim
+examples/fmusdk-master/*
+examples/inc/tmpFmu/*
+examples/inc/inc
+examples/inc/inc.fmu
+examples/values/tmpFmu/*
+examples/values/values
+examples/values/values.fmu
+
+
+#!examples/*.nim
 
