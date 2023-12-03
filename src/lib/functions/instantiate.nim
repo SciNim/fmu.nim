@@ -81,27 +81,31 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
     comp.states = `fmu`.states
 
     # Set initial values
+    comp.reals    = `fmu`.reals
+    comp.integers = `fmu`.integers
+    comp.booleans = `fmu`.booleans  
+    comp.strings  = `fmu`.strings   
     for key,p in comp.parameters.pairs:
       case p.kind
       of tInteger:
         if p.startI.isSome:
           p.valueI = p.startI.get
-        comp.integers &= key
+        #comp.integers &= key
 
       of tReal:
         if p.startR.isSome:
           p.valueR = p.startR.get
-        comp.reals &= key
+        #comp.reals &= key
 
       of tBoolean:
         if p.startB.isSome:
           p.valueB = p.startB.get
-        comp.booleans &= key
+        #comp.booleans &= key
 
       of tString:
         if p.startS.isSome:
           p.valueS = p.startS.get
-        comp.strings &= key
+        #comp.strings &= key
       #case p.kind
       #of tInteger:
 

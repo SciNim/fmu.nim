@@ -30,15 +30,12 @@ inc.sourceFiles = @["data/inc.c"]
 inc.docFiles    = @["data/index.html"]
 inc.icon        = "data/model.png"
 
-
-
-inc.parameters["counter"] = Param(kind: tInteger,
-                     idx: 0,
-                     causality: cOutput, #`causality`.Causality,  set it as an output variable
-                     variability: vDiscrete, #`variability`.Variability,
-                     initial: iExact, #`initial`.Initial, initialized at start
-                     description: "counts the seconds" )
-inc.parameters["counter"].startI = some(1) 
+inc.addInteger("counter")
+inc.setOutput("counter")     
+inc.setDiscrete("counter")
+inc.setExact("counter")  
+inc.setDescription("counter", "counts the seconds")  
+inc.parameters["counter"].startI = some(1)
 
 
 # IMHO, the following should be named: createTimeEvent.
@@ -51,7 +48,7 @@ inc.parameters["counter"].startI = some(1)
 model(inc):
   proc calculateValues*(comp: FmuRef) = #ModelInstanceRef) =
   #inc.calculateValues = proc() =
-    ## calculate the values of the FMU (Functional Mock-up Unit) variables 
+    ## calculate the inc of the FMU (Functional Mock-up Unit) variables 
     ## at a specific time step during simulation.
     if comp.state == modelInitializationMode:
         # set first time event

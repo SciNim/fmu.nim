@@ -17,75 +17,62 @@ model(values):
     months = @["jan","feb","march","april","may","june","july",
                 "august","sept","october","november","december"]
 
-  values.parameters["myFloat"] = Param(kind: tReal,
-                      idx: 0,
-                      causality: cLocal, #causality: local variable
-                      variability: vContinuous, #variability: continuous
-                      initial: iExact, #initialized at start
-                      description: "used as continuous state",# description
-                      )
+  values.addFloat("myFloat")
+  values.setLocal("myFloat")
+  values.setContinuous("myFloat")  
+  values.setExact("myFloat")   
+  values.setDescription("myFloat", "used as continuous state" )
+
   values.states &= values.parameters["myFloat"].idx
   #values.parameters["myFloat"].isState = true
   values.parameters["myFloat"].startR = some(1.0) 
 
-  values.parameters["myFloatDerivative"] = Param(kind: tReal,
-                      idx: 1,
-                      causality: cLocal, #causality: local variable
-                      variability: vContinuous, #variability: continuous
-                      initial: iCalculated, #initialized at start
-                      description: "time derivative of x",# description
-                      ) # indicates this is the derivative for the first param
+  values.addFloat("myFloatDerivative")
+  values.setLocal("myFloatDerivative")
+  values.setContinuous("myFloatDerivative")  
+  values.setCalculated("myFloatDerivative")  
+  values.setDescription("myFloatDerivative", "time derivative of x" )    
+  # indicates this is the derivative for the first param ]#
   values.parameters["myFloatDerivative"].derivative = 1.uint.some
 
-  values.parameters["myInputInteger"] = Param(kind: tInteger,
-                      idx: 0,
-                      causality: cInput, #causality: input
-                      variability: vDiscrete, #variability: discrete
-                      initial: iUnset, #initialized at start
-                      description: "integer input" ) # description 
+  values.addInteger("myInputInteger")
+  values.setInput("myInputInteger") 
+  values.setDiscrete("myInputInteger")  
+  values.setDescription("myInputInteger", "integer input")       
   values.parameters["myInputInteger"].startI = 2.some
 
-  values.parameters["myOutputInteger"] = Param(kind: tInteger,
-                      idx: 1,
-                      causality: cOutput, #causality: output
-                      variability: vDiscrete, #variability: discrete
-                      initial: iExact, #initialized at start
-                      description: "index in string array 'month'" ) # description 
+  values.addInteger("myOutputInteger")
+  values.setOutput("myOutputInteger")     
+  values.setDiscrete("myOutputInteger")
+  values.setExact("myOutputInteger")  
+  values.setDescription("myOutputInteger", "index in string array 'month'")  
   values.parameters["myOutputInteger"].startI = 0.some
 
-  values.parameters["myInputBool"] = Param(kind: tBoolean,
-                      idx: 0,
-                      causality: cInput, #causality: input
-                      variability: vDiscrete, #variability: discrete
-                      initial: iUnset, # unset?
-                      description: "boolean input" ) # description 
+  values.addBoolean("myInputBool")  
+  values.setInput("myInputBool")    
+  values.setDiscrete("myInputBool")  
+  values.setDescription("myInputBool", "boolean input")    
   values.parameters["myInputBool"].startB = true.some
 
-  values.parameters["myOutputBool"] = Param(kind: tBoolean,
-                      idx: 1,
-                      causality: cOutput, #causality: output
-                      variability: vDiscrete, #variability: discrete
-                      initial: iExact, # unset?
-                      description: "boolean output" ) # description 
-  values.parameters["myInputBool"].startB = true.some
+  values.addBoolean("myOutputBool")
+  values.setOutput("myOutputBool")    
+  values.setDiscrete("myOutputBool")   
+  values.setExact("myOutputBool")  
+  values.setDescription("myOutputBool", "boolean output")    
+  values.parameters["myOutputBool"].startB = true.some
 
 
-  values.parameters["myInputString"] = Param(kind: tString,
-                      idx: 0,
-                      causality: cInput, #causality: input
-                      variability: vDiscrete, #variability: discrete
-                      initial: iUnset, # unset?
-                      description: "string input" ) # description 
-  values.parameters["myOutputBool"].startB = false.some
-
+  values.addString("myInputString")
+  values.setInput("myInputString")  
+  values.setDiscrete("myInputString") 
+  values.setDescription("myInputString", "string input")    
   values.parameters["myInputString"].startS = "QTronic".some
 
-  values.parameters["myOutputString"] = Param(kind: tString,
-                      idx: 1,
-                      causality: cOutput, #causality: input
-                      variability: vDiscrete, #variability: discrete
-                      initial: iExact, # unset?
-                      description: "the string month[int_out]" ) # description 
+  values.addString("myOutputString")
+  values.setOutput("myOutputString")   
+  values.setDiscrete("myOutputString")   
+  values.setExact("myOutputString")   
+  values.setDescription("myOutputString", "the string month[int_out]" )    
   values.parameters["myOutputString"].startS = months[0].some # "jan"
 
 

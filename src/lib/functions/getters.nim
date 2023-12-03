@@ -76,6 +76,7 @@ proc fmi2GetInteger*( comp: FmuRef;
     ## `vr` is a vector and `nvr` its size.
     ## `value` is another vector with the results (same `nvr` size)
     #echo ">>>>>>>>>>>>>>>>",comp.integers # [n]
+    #echo "----------------", comp.nIntegers
     # Perform a number of checks
     # - check if the model is in an invalid state
     if invalidState(comp, "fmi2GetInteger", MASK_fmi2GetInteger):
@@ -99,7 +100,6 @@ proc fmi2GetInteger*( comp: FmuRef;
     # iterate over all the values required by `vr`
 
     for i in 0 ..< nvr: 
-        #echo "comp.integerAddr.len: ", comp.integerAddr.len
         if vrOutOfRange(comp, "fmi2GetInteger", vr[i], comp.nIntegers):#NUMBER_OF_INTEGERS):
             return fmi2Error
 

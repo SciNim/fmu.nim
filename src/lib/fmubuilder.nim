@@ -8,7 +8,7 @@ template exportFmu*( fmu:Fmu;
                      outFile:string;
                      clean:bool = false) =
   echo "----------------- Exporting FMU -----------------"
-  echo repr getCurrentDir()
+  #echo repr getCurrentDir()
   # if compiles(calculateValues):
   #   echo "definido"
   #   #var calculateValues = calculaValues
