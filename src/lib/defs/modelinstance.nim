@@ -26,7 +26,7 @@ type
   FmuObj* = object of RootObj
     id*: string
     guid*: string
-    outFile*: string
+    #outFile*: string
     #params*:seq[Param] 
     parameters*:OrderedTable[string, Param]
     sourceFiles*: seq[string]

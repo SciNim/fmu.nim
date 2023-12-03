@@ -23,9 +23,8 @@ echo a.hola
 
 
 
-var inc = FmuRef( id: "inc",
-               guid: "{8c4e810f-3df3-4a00-8276-176fa3c9f008}",
-               outFile: "inc.fmu" )
+var inc = FmuRef( id:   "inc",
+                  guid: "{8c4e810f-3df3-4a00-8276-176fa3c9f008}" )
 
 inc.sourceFiles = @["data/inc.c"]
 inc.docFiles    = @["data/index.html"]
@@ -79,4 +78,4 @@ model(inc):
             eventInfo.nextEventTime        = 1 + comp.time
 
 when defined(fmu):
-  inc.exportFmu()
+  inc.exportFmu("inc.fmu")

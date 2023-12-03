@@ -4,7 +4,8 @@ import fmu/[model, folder, compress, xml]
 import ../fmu
 
 
-template exportFmu*( fmu:Fmu; 
+template exportFmu*( fmu:Fmu;
+                     outFile:string;
                      clean:bool = false) =
   echo "----------------- Exporting FMU -----------------"
   echo repr getCurrentDir()
@@ -61,7 +62,7 @@ template exportFmu*( fmu:Fmu;
   writeFile(joinPath(tmpFolder, "modelDescription.xml"), xmlData)
 
   # 3. Compress
-  tmpFolder.compressInto( fmu.outFile) #fname )
+  tmpFolder.compressInto( outFile) #fname )
 
   # 4. Clean
   if clean:
