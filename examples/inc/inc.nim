@@ -43,11 +43,9 @@ inc.parameters["counter"].startI = some(1)
 # When t= 1s, the state is again=modelInitializationMode, so another time event is set: t = 2s
 # and so on.
 
-# NOTA: Que no esté  embebido en FMU
 
 model(inc):
-  proc calculateValues*(comp: FmuRef) = #ModelInstanceRef) =
-  #inc.calculateValues = proc() =
+  proc calculateValues*(comp: FmuRef) = 
     ## calculate the inc of the FMU (Functional Mock-up Unit) variables 
     ## at a specific time step during simulation.
     if comp.state == modelInitializationMode:
@@ -59,12 +57,13 @@ model(inc):
   # I think this the reason why the call this lazy evaluation
   # The evaluation only takes places during the time events.
   # TODO: to undestand better `eventInfo`
-  proc eventUpdate*(comp: FmuRef; #ModelInstanceRef; 
+  proc eventUpdate*(comp: FmuRef;
                     eventInfo:ptr fmi2EventInfo;
                     timeEvent:bool;
                     isNewEventIteration:fmi2Boolean) =
     if timeEvent: 
         #comp.counter += 1
+        #echo repr comp["counter"]
         comp["counter"] = comp["counter"] + 1
         #if comp.counter == 13: # in this case we finish (even if the simulation time is bigger)
         if comp["counter"] == 13: # in this case we finish (even if the simulation time is bigger)

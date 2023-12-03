@@ -2,7 +2,7 @@ import definitions, parameters
 import std/[macros, tables]
 import options
 
-{.push exportc, dynlib, cdecl.}
+
 type
   #[
   typedef void      (*fmi2CallbackLogger)        (
@@ -17,13 +17,13 @@ type
                                instanceName: fmi2String,
                                status: fmi2Status,
                                category: fmi2String, 
-                               message: fmi2String,
-                               a6: varargs[fmi2String] )
-  fmi2CallbackAllocateMemory* = proc(a1: cuint, a2: cuint) #{.cdecl.}
-  fmi2CallbackFreeMemory*  = proc(a1: pointer) #{.cdecl.}
-  fmi2StepFinished*  = proc(a1: fmi2ComponentEnvironment, a2: fmi2Status) #{.cdecl.}
+                               message: fmi2String) {.varargs.}
+  fmi2CallbackAllocateMemory* = proc(a1: cuint, a2: cuint) 
+  fmi2CallbackFreeMemory*  = proc(a1: pointer) 
+  fmi2StepFinished*  = proc(a1: fmi2ComponentEnvironment, a2: fmi2Status) 
 
-
+{.push exportc, dynlib, cdecl.}
+type
   fmi2CallbackFunctions* = ref object 
     logger*: fmi2CallbackLogger
     allocateMemory*: fmi2CallbackAllocateMemory
@@ -242,17 +242,17 @@ type
 
 # ]#
 
-proc `[]`*(fmu:FmuRef; name:string): int =
-  fmu.parameters[name].startI.get
+# proc `[]`*(fmu:FmuRef; name:string): int =
+#   fmu.parameters[name].startI.get
 
-proc `[]=`*(fmu:FmuRef; name:string; val:int) =
-  fmu.parameters[name].startI = some(val)
+# proc `[]=`*(fmu:FmuRef; name:string; val:int) =
+#   fmu.parameters[name].startI = some(val)
 
-proc getIntegersNumber*(fmu:FmuRef): int =
-  result = 0
-  for p in fmu.parameters.values:
-    if p.kind == tInteger:
-      result += 1
+# proc getIntegersNumber*(fmu:FmuRef): int =
+#   result = 0
+#   for p in fmu.parameters.values:
+#     if p.kind == tInteger:
+#       result += 1
 
 proc getReal*(fmu: FmuRef; n:int):float =
   fmu.parameters[fmu.reals[n]].valueR
@@ -443,3 +443,82 @@ proc setCalculated*(fmu:FmuRef; name:string) =
 # Description
 proc setDescription*(fmu:FmuRef; name, description: string) =
   fmu.parameters[name].description = description
+
+
+
+# Getter
+# template `[]`*(fmu:FmuRef; name:string) =
+#   case `fmu`.parameters[name].kind
+#   of tInteger:
+#     `fmu`.parameters[name].valueI
+#   else:
+#     discard    
+# proc `[]`*(fmu:FmuRef; name:string):int =
+#   return fmu.parameters[name].valueI
+
+# proc `[]`*(fmu:FmuRef; name:string):float =
+#   return fmu.parameters[name].valueR
+
+# proc `[]`*(fmu:FmuRef; name:string):auto =
+#   var p = fmu.parameters[name]
+#   if p.kind == tInteger:
+#     return p.valueI
+#   elif p.kind == tReal:
+#     return p.valueR
+#   # case p.kind
+#   # of tInteger:
+#   #   return p.valueI
+#   # of tReal:
+#   #   return p.valueR
+#   #of tBoolean:
+#   #  return p.valueB
+#   #of tString:
+#   #  return p.valueS
+#   else:
+#     echo "shit"
+
+# proc getInteger*(fmu:FmuRef; name:string):int =
+#   return fmu.parameters[name].valueI
+
+# FIXME: ----- I DON'T LIKE THIS-------------- 
+proc `[]`*(fmu:FmuRef; name:string): Param =
+  fmu.parameters[name]
+
+proc getReal*(fmu:FmuRef; name:string):float =
+  return fmu.parameters[name].valueR
+
+proc `+`*(p:Param; value:int):int =
+  return p.valueI + value
+
+proc `-`*(p:Param; value:int):int =
+  return p.valueI - value
+
+proc `*`*(p:Param; value:int):int =
+  return p.valueI * value
+
+proc `/`*(p:Param; value:int):int =
+  return p.valueI / value
+
+proc `==`*(p:Param; value:int):bool =
+  return p.valueI == value
+# FIXME: ------------------------------------- 
+
+
+# Setter
+proc `[]=`*(fmu:FmuRef; name:string; value:int) =
+  fmu.parameters[name].valueI = value
+
+proc `[]=`*(fmu:FmuRef; name:string; value:float) =
+  fmu.parameters[name].valueR = value
+
+proc `[]=`*(fmu:FmuRef; name:string; value:bool) =
+  fmu.parameters[name].valueB = value
+
+proc `[]=`*(fmu:FmuRef; name:string; value:string) =
+  fmu.parameters[name].valueS = value
+
+# proc `[]`*(fmu:FmuRef; name:string): int =
+#   fmu.parameters[name].startI.get
+
+# proc `[]=`*(fmu:FmuRef; name:string; val:int) =
+#   fmu.parameters[name].startI = some(val)

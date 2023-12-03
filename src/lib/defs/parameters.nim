@@ -140,175 +140,175 @@ type
   Param* = ref ParamObj
 
 
-var nIntegers {.compileTime.}: int = 0
-var nReals    {.compileTime.}: int = 0
-var nBooleans {.compileTime.}: int = 0
-var nStrings  {.compileTime.}: int = 0
+# var nIntegers {.compileTime.}: int = 0
+# var nReals    {.compileTime.}: int = 0
+# var nBooleans {.compileTime.}: int = 0
+# var nStrings  {.compileTime.}: int = 0
 #var numStates* {.compileTime.}:int = 0
 
-macro param*( arg:typed; 
-              causality: static[Causality]     = cLocal; 
-              variability: static[Variability] = vContinuous;
-              initial: static[Initial]         = iUnset ;
-              description: static[string]      = "",
-              derivative: static[int]          = 0,
-              isState: static[bool]            = false ) =
+# macro param*( arg:typed; 
+#               causality: static[Causality]     = cLocal; 
+#               variability: static[Variability] = vContinuous;
+#               initial: static[Initial]         = iUnset ;
+#               description: static[string]      = "",
+#               derivative: static[int]          = 0,
+#               isState: static[bool]            = false ) =
 
-  ## tracks the characteristics of all the arguments
-  result = nnkStmtList.newTree()
-  # 1. Check that the first argument is a variable
-  var impl = arg.getImpl
+#   ## tracks the characteristics of all the arguments
+#   result = nnkStmtList.newTree()
+#   # 1. Check that the first argument is a variable
+#   var impl = arg.getImpl
 
-  # 1.1 check it is an identifier definition
-  if impl.kind != nnkIdentDefs:
-    raise newException(ValueError, "the first argument should be a variable defined like: var name:int = 1")
+#   # 1.1 check it is an identifier definition
+#   if impl.kind != nnkIdentDefs:
+#     raise newException(ValueError, "the first argument should be a variable defined like: var name:int = 1")
 
-  # 1.2 the first element should be a symbol
-  if impl[0].kind != nnkSym:
-    raise newException(ValueError, "the first argument is a variable defined like: var name:int = 1")
+#   # 1.2 the first element should be a symbol
+#   if impl[0].kind != nnkSym:
+#     raise newException(ValueError, "the first argument is a variable defined like: var name:int = 1")
 
 
-  # 1.3 the second element should be the type; we want the type to be explicit
-  if impl[1].kind == nnkEmpty:
-    raise newException(ValueError, "it is mandatory to define the variable with its type: int, float, boolean or string")
-  if impl[1].kind != nnkSym:
-    raise newException(ValueError, "the first argument is variable defined like: var name:int = 1")
+#   # 1.3 the second element should be the type; we want the type to be explicit
+#   if impl[1].kind == nnkEmpty:
+#     raise newException(ValueError, "it is mandatory to define the variable with its type: int, float, boolean or string")
+#   if impl[1].kind != nnkSym:
+#     raise newException(ValueError, "the first argument is variable defined like: var name:int = 1")
   
 
-  # 3. Causality
-  #param.causality = causality
+#   # 3. Causality
+#   #param.causality = causality
 
 
-  # 4. Variability
-  #param.variability = variability
+#   # 4. Variability
+#   #param.variability = variability
 
-  # 5. Initial
-  if causality in @[cInput, cIndependent] and initial != iUnset:
-    raise newException(ValueError, """it is not allowed to provide a value for initial if causality = "input" or "independent"""")
+#   # 5. Initial
+#   if causality in @[cInput, cIndependent] and initial != iUnset:
+#     raise newException(ValueError, """it is not allowed to provide a value for initial if causality = "input" or "independent"""")
   
-  #if initial != iUnset:
-  #  param.initial = initial
-  #echo initial
-  if initial == iExact and impl[2].kind == nnkEmpty:
-    raise newException(ValueError, """= "exact": The variable is initialized with the start value (provided under Real, Integer, Boolean, String or Enumeration).""")
+#   #if initial != iUnset:
+#   #  param.initial = initial
+#   #echo initial
+#   if initial == iExact and impl[2].kind == nnkEmpty:
+#     raise newException(ValueError, """= "exact": The variable is initialized with the start value (provided under Real, Integer, Boolean, String or Enumeration).""")
 
-  if initial == iApprox and impl[2].kind == nnkEmpty:
-    raise newException(ValueError, """= "approx": The variable is an iteration variable of an algebraic loop and the iteration at initialization starts with the start value.""")
+#   if initial == iApprox and impl[2].kind == nnkEmpty:
+#     raise newException(ValueError, """= "approx": The variable is an iteration variable of an algebraic loop and the iteration at initialization starts with the start value.""")
 
-  if initial == iCalculated and impl[2].kind != nnkEmpty:
-    raise newException(ValueError, """= "calculated": The variable is calculated from other variables during initialization. It is not allowed to provide a “start” value.""")
+#   if initial == iCalculated and impl[2].kind != nnkEmpty:
+#     raise newException(ValueError, """= "calculated": The variable is calculated from other variables during initialization. It is not allowed to provide a “start” value.""")
   
 
-  # 2. Processing depending on the type  # FIXME
-  var name = impl[0].strVal
+#   # 2. Processing depending on the type  # FIXME
+#   var name = impl[0].strVal
 
 
-  case impl[1].getType.typeKind 
-  of ntyInt:  # 2.1 integer case
-    result.add quote do:
-      myModel.params.add Param( name: `name`, 
-                                kind: tInteger,
-                                idx: `nIntegers`,
+#   case impl[1].getType.typeKind 
+#   of ntyInt:  # 2.1 integer case
+#     result.add quote do:
+#       myModel.params.add Param( name: `name`, 
+#                                 kind: tInteger,
+#                                 idx: `nIntegers`,
 
-                              #startI: some(`value`),
-                              causality: `causality`.Causality,
-                              variability: `variability`.Variability,
-                              initial: `initial`.Initial,
-                              description: `description` )
+#                               #startI: some(`value`),
+#                               causality: `causality`.Causality,
+#                               variability: `variability`.Variability,
+#                               initial: `initial`.Initial,
+#                               description: `description` )
 
-    nIntegers += 1
+#     nIntegers += 1
     
-    if impl[2].kind == nnkIntLit:
-      var value = impl[2].intVal.int
-      result.add quote do:
-        myModel.params[^1].startI = some(`value`)
+#     if impl[2].kind == nnkIntLit:
+#       var value = impl[2].intVal.int
+#       result.add quote do:
+#         myModel.params[^1].startI = some(`value`)
 
-    else:
-      result.add quote do:         
-        myModel.params[^1].startI = none()
-        #echo repr myModel.params[^1]
+#     else:
+#       result.add quote do:         
+#         myModel.params[^1].startI = none()
+#         #echo repr myModel.params[^1]
    
-  of ntyFloat:  # 2.2 float case
-    result.add quote do:
-      myModel.params.add Param( name: `name`, 
-                                idx: `nReals`,
+#   of ntyFloat:  # 2.2 float case
+#     result.add quote do:
+#       myModel.params.add Param( name: `name`, 
+#                                 idx: `nReals`,
 
-                                causality: `causality`.Causality,
-                                variability: `variability`.Variability,
-                                initial: `initial`.Initial,
-                                description: `description`,
-                                kind: tReal )
-    if derivative > 0:
-      result.add quote do:
-        myModel.params[^1].derivative = some(`derivative`.uint)
+#                                 causality: `causality`.Causality,
+#                                 variability: `variability`.Variability,
+#                                 initial: `initial`.Initial,
+#                                 description: `description`,
+#                                 kind: tReal )
+#     if derivative > 0:
+#       result.add quote do:
+#         myModel.params[^1].derivative = some(`derivative`.uint)
 
-    if isState:
-      result.add quote do:
-        myModel.states &= `nReals`
+#     if isState:
+#       result.add quote do:
+#         myModel.states &= `nReals`
 
-    nReals += 1
+#     nReals += 1
     
-    if impl[2].kind == nnkFloatLit:
-      var value = impl[2].floatVal.float
-      result.add quote do:
-        #echo repr `value`
-        myModel.params[^1].startR = some(`value`)
+#     if impl[2].kind == nnkFloatLit:
+#       var value = impl[2].floatVal.float
+#       result.add quote do:
+#         #echo repr `value`
+#         myModel.params[^1].startR = some(`value`)
 
-    else:
-      result.add quote do:
-        myModel.params[^1].startR = none(float)
-        #echo repr myModel.params[^1]
-
-
-
-  of ntyBool:  # 2.3 bool case 
-    result.add quote do:
-      myModel.params.add Param( name: `name`, 
-                                idx: `nBooleans`,
-
-                                causality: `causality`.Causality,
-                                variability: `variability`.Variability,
-                                initial: `initial`.Initial,
-                                description: `description`,
-                                kind: tBoolean )
-
-    nBooleans += 1
+#     else:
+#       result.add quote do:
+#         myModel.params[^1].startR = none(float)
+#         #echo repr myModel.params[^1]
 
 
-    if impl[2].kind == nnkSym:
-      var value = impl[2].boolVal.bool
-      result.add quote do:
-        myModel.params[^1].startB = some(`value`)
 
-    else:
-      result.add quote do:
-        myModel.params[^1].startB = none(bool)
-        #echo repr myModel.params[^1]
+#   of ntyBool:  # 2.3 bool case 
+#     result.add quote do:
+#       myModel.params.add Param( name: `name`, 
+#                                 idx: `nBooleans`,
 
-  of ntyString:  # 2.4 float case
-    result.add quote do:
-      myModel.params.add Param( name: `name`, 
-                                idx: `nStrings`,
+#                                 causality: `causality`.Causality,
+#                                 variability: `variability`.Variability,
+#                                 initial: `initial`.Initial,
+#                                 description: `description`,
+#                                 kind: tBoolean )
 
-                                causality: `causality`.Causality,
-                                variability: `variability`.Variability,
-                                initial: `initial`.Initial,
-                                description: `description`,
-                                kind: tString )
+#     nBooleans += 1
 
-    nStrings += 1
+
+#     if impl[2].kind == nnkSym:
+#       var value = impl[2].boolVal.bool
+#       result.add quote do:
+#         myModel.params[^1].startB = some(`value`)
+
+#     else:
+#       result.add quote do:
+#         myModel.params[^1].startB = none(bool)
+#         #echo repr myModel.params[^1]
+
+#   of ntyString:  # 2.4 float case
+#     result.add quote do:
+#       myModel.params.add Param( name: `name`, 
+#                                 idx: `nStrings`,
+
+#                                 causality: `causality`.Causality,
+#                                 variability: `variability`.Variability,
+#                                 initial: `initial`.Initial,
+#                                 description: `description`,
+#                                 kind: tString )
+
+#     nStrings += 1
     
-    if impl[2].kind == nnkStrLit:  #nnkStringLit:
-      var value = impl[2].strVal#.string
-      result.add quote do:
-        #echo repr `value`
-        myModel.params[^1].startS = some(`value`)
+#     if impl[2].kind == nnkStrLit:  #nnkStringLit:
+#       var value = impl[2].strVal#.string
+#       result.add quote do:
+#         #echo repr `value`
+#         myModel.params[^1].startS = some(`value`)
 
-    else:
-      echo "nok"
-      result.add quote do:
-        myModel.params[^1].startS = none(string)
-        #echo repr myModel.params[^1]
+#     else:
+#       echo "nok"
+#       result.add quote do:
+#         myModel.params[^1].startS = none(string)
+#         #echo repr myModel.params[^1]
 
-  else:
-    raise newException(ValueError, "only variables typed: `int`, `float`, `bool` and `string` are supported")
+#   else:
+#     raise newException(ValueError, "only variables typed: `int`, `float`, `bool` and `string` are supported")
