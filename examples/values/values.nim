@@ -3,7 +3,7 @@
 
 import fmu
 import std/[tables, options]
-
+import std/paths
 
 var values = FmuRef( id: "values",
                guid: "{8c4e810f-3df3-4a00-8276-176fa3c9f004}",
@@ -132,4 +132,5 @@ model(values):
         eventInfo.terminateSimulation  = fmi2True
         eventInfo.nextEventTimeDefined = fmi2False
 
- 
+when defined(fmu):
+  values.exportFmu()

@@ -77,3 +77,6 @@ model(inc):
         else:
             eventInfo.nextEventTimeDefined = fmi2True
             eventInfo.nextEventTime        = 1 + comp.time
+
+when defined(fmu):
+  inc.exportFmu()

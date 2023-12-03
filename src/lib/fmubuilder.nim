@@ -1,11 +1,13 @@
 import system
-import std/[os, osproc, strformat]
+import std/[os, osproc, strformat] #, paths]
 import fmu/[model, folder, compress, xml]
 import ../fmu
 
 
 template exportFmu*( fmu:Fmu; 
                      clean:bool = false) =
+  echo "----------------- Exporting FMU -----------------"
+  echo repr getCurrentDir()
   # if compiles(calculateValues):
   #   echo "definido"
   #   #var calculateValues = calculaValues
