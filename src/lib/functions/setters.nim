@@ -1,7 +1,8 @@
 import strformat
+import ../defs/modelinstance
 
 {.push exportc:"$1",dynlib,cdecl.}
-proc fmi2SetReal*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize_t;
+proc fmi2SetReal*(comp: FmuRef; vr: ptr fmi2ValueReference; nvr: csize_t;
                  value: ptr fmi2Real): fmi2Status =
     #var i:int
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
@@ -14,17 +15,17 @@ proc fmi2SetReal*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize
     filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2SetReal: nvr = {nvr}".fmi2String )
     # no check whether setting the value is allowed in the current state
     for i in 0 ..< nvr:
-        if vrOutOfRange(comp, "fmi2SetReal", vr[i], comp.realAddr.len): #NUMBER_OF_REALS):
+        if vrOutOfRange(comp, "fmi2SetReal", vr[i], comp.nFloats): #NUMBER_OF_REALS):
             return fmi2Error
         filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2SetReal: #r{vr[i]}# = {value[i]}".fmi2String)
-        comp.realAddr[vr[i]][] = value[i]#.float  # set the value
+        comp.setReal(vr[i], value[i])#.float  # set the value
 
     if nvr > 0:
        comp.isDirtyValues = fmi2True
     return fmi2OK
 
 
-proc fmi2SetInteger*( comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize_t;
+proc fmi2SetInteger*( comp: FmuRef; vr: ptr fmi2ValueReference; nvr: csize_t;
                       value: ptr fmi2Integer): fmi2Status =
     #var i:int
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
@@ -37,19 +38,20 @@ proc fmi2SetInteger*( comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: c
     filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2SetInteger: nvr = {nvr}".fmi2String)
 
     for i in 0 ..< nvr:
-        if vrOutOfRange(comp, "fmi2SetInteger", vr[i], comp.integerAddr.len):#NUMBER_OF_INTEGERS):
+        if vrOutOfRange(comp, "fmi2SetInteger", vr[i], comp.nIntegers):#NUMBER_OF_INTEGERS):
             return fmi2Error
         filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2SetInteger: #i{vr[i]}# = {value[i]}".fmi2String )
         #comp.i[vr[i]][] = value[i].int32
         #comp.i[vr[i]] = value[i]
-        comp.integerAddr[vr[i]][] = value[i].int
+        #comp.integerAddr[vr[i]][] = value[i].int
+        comp.setInteger(vr[i], value[i].int)
 
     if nvr > 0:
        comp.isDirtyValues = fmi2True
     return fmi2OK
 
 
-proc fmi2SetBoolean*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize_t;
+proc fmi2SetBoolean*(comp: FmuRef; vr: ptr fmi2ValueReference; nvr: csize_t;
                     value: ptr fmi2Boolean): fmi2Status =
     #var i:int
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
@@ -62,7 +64,7 @@ proc fmi2SetBoolean*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: cs
     filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2SetBoolean: nvr = {nvr}".fmi2String)
 
     for i in 0 ..< nvr:
-        if vrOutOfRange(comp, "fmi2SetBoolean", vr[i], comp.boolAddr.len):#NUMBER_OF_BOOLEANS):
+        if vrOutOfRange(comp, "fmi2SetBoolean", vr[i], comp.nBooleans):#NUMBER_OF_BOOLEANS):
             return fmi2Error
 
         var tmp:string
@@ -71,7 +73,7 @@ proc fmi2SetBoolean*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: cs
         else:
             tmp = "false"
         filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2SetBoolean: #b{vr[i]}# = {tmp}".fmi2String)
-        comp.boolAddr[vr[i]][] = value[i].bool  # set the value
+        comp.setBoolean(vr[i], value[i].bool)  # set the value
 
     if nvr > 0:
         comp.isDirtyValues = fmi2True
@@ -79,7 +81,7 @@ proc fmi2SetBoolean*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: cs
     return fmi2OK
 
 
-proc fmi2SetString*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize_t;
+proc fmi2SetString*(comp: FmuRef; vr: ptr fmi2ValueReference; nvr: csize_t;
                    value: ptr fmi2String): fmi2Status  =
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     if invalidState(comp, "fmi2SetString", MASK_fmi2SetString):

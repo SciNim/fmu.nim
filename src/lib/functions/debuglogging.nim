@@ -2,7 +2,7 @@ import ../defs/[definitions, modelinstance]
 import ../meta/filteredlog
 
 {.push exportc:"$1",dynlib,cdecl.}
-proc fmi2SetDebugLogging*( comp:ModelInstanceRef;
+proc fmi2SetDebugLogging*( comp: FmuRef;
                            loggingOn: fmi2Boolean;
                            nCategories: csize_t;
                            categories: cstringArray):fmi2Status =  #categories: ptr fmi2String

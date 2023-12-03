@@ -1,6 +1,7 @@
 import std/macros
 import options#, xmltree, strformat
 
+
 type
   ParamType* = enum
     tInteger, tReal, tBoolean, tString
@@ -119,19 +120,21 @@ type
     canHandleMultipleSetPerTimeInstant*: Option[string] 
     case kind*:ParamType
     of tReal:
-      #addressR*: ptr float
+      valueR*: float
       startR*: Option[float]
       derivative*: Option[uint]
       reinit*: Option[bool]
     of tInteger:
-      valI*: int
+      valueI*: int
       #addressI*: ptr int
       startI*: Option[int]  # Initial value
     of tBoolean:
       #addressB*: ptr bool
+      valueB*: bool
       startB*: Option[bool]
     of tString:
       #addressS*: ptr string
+      valueS*:string
       startS*: Option[string]
 
   Param* = ref ParamObj
@@ -198,15 +201,7 @@ macro param*( arg:typed;
 
   # 2. Processing depending on the type  # FIXME
   var name = impl[0].strVal
-  #var param = Param(name: name)  
 
-  #result.add quote do:
-    # myModel.params.add Param( name: `name`, #kind: tInteger,
-    #                           #startI: some(`value`),
-    #                           causality: `causality`.Causality,
-    #                           variability: `variability`.Variability,
-    #                           initial: `initial`.Initial,
-    #                           description: `description` )
 
   case impl[1].getType.typeKind 
   of ntyInt:  # 2.1 integer case
@@ -220,11 +215,7 @@ macro param*( arg:typed;
                               variability: `variability`.Variability,
                               initial: `initial`.Initial,
                               description: `description` )
-      #myModel.params[^1].idx = `nIntegers`
-      #myModel.params[^1].kind = tInteger
-      #myModel.add `name`
-      #myModel.integerAddr.add( addr(`name`) )
-      #echo "--------------------> ", myModel.integerAddr.len
+
     nIntegers += 1
     
     if impl[2].kind == nnkIntLit:

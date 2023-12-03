@@ -12,7 +12,7 @@ import strformat
 ##  Destruction of FMU instances and setting debug status
 {.push exportc:"$1",dynlib,cdecl.}
 # https://nim-lang.org/docs/destructors.html
-proc fmi2FreeInstance*(comp: ModelInstanceRef) =
+proc fmi2FreeInstance*(comp: FmuRef) =
     ##[
     Disposes the given instance, unloads the loaded model, and frees all the allocated memory
     and other resources that have been allocated by the functions of the FMU interface. If a null

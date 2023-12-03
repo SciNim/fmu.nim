@@ -2,14 +2,24 @@ import system
 import std/[os, osproc, strformat]
 import fmu/[model, folder, compress, xml]
 import ../fmu
-#import tempfile
 
-# FMU BUILDER
-proc genFmu2*( myModel: ModelInstanceRef; 
-               fname:string; 
-               callingFile: string;
-               clean:bool = false) =
-  echo repr myModel.params
+
+template exportFmu*( fmu:Fmu; 
+                     clean:bool = false) =
+  # if compiles(calculateValues):
+  #   echo "definido"
+  #   #var calculateValues = calculaValues
+  # if declared(calculateValues):
+  #   echo "declared"
+  # echo repr instantiationInfo()
+  # echo "holA"
+  # echo repr fmu
+  # echo typeof(fmu)
+  #var cmdline = &"nim c --app:lib -o:./borrame.so --mm:orc -f -d:release inc"
+  #echo cmdLine
+  #doAssert execCmdEx( cmdline ).exitCode == QuitSuccess
+  #export(fmu)
+
   # 1. Create folder structure
   #var dir = mkdtemp()
   var tmpFolder = "tmpFmu"  # FIXME: create a temporal folder
@@ -17,38 +27,40 @@ proc genFmu2*( myModel: ModelInstanceRef;
 
   # 2. Populate folder content
   # 2.1 Create the library: inc.so
-  var nimFile = callingFile
-  echo "Compiling module into a library: ", nimFile
-  var libFolder = joinPath(tmpFolder, "binaries/linux64", myModel.id & ".so") 
-  var cmdline = &"nim c --app:lib -o:{libFolder} --mm:orc -f -d:release {nimFile}"
-  doAssert execCmdEx( cmdline ).exitCode == QuitSuccess
-  echo "Executed: ", cmdline
+  #var nimFile = instantiationInfo().filename#callingFile
+  #echo "Compiling module into a library: ", nimFile
+  var libFolder = joinPath(tmpFolder, "binaries/linux64", fmu.id & ".so") 
+  #echo "Lib folder: ", libFolder
+  #var cmd = 
+  var cmdline = "nim c --app:lib -o:" & libFolder & " --mm:orc -f -d:release " & fmu.nimFile
+  echo "Create library:"
+  echo cmdline
+  # echo fmu.nimFile
 
-  # 2.2 Documentation into: documentation/  FIXME
-  copyFileToDir( "fmusdk-master/fmu20/src/models/inc/index.html", 
-                 joinPath(tmpFolder, "documentation") )
-  copyFileToDir( "fmusdk-master/fmu20/src/models/inc/model.png", 
+  doAssert execCmdEx( cmdline ).exitCode == QuitSuccess
+
+
+  # 2.2 Documentation into: documentation/ 
+  for docFile in fmu.docFiles:
+    copyFileToDir( docFile, 
+                  joinPath(tmpFolder, "documentation") )
+    
+  copyFileToDir( fmu.icon, 
                  joinPath(tmpFolder, "documentation") )
 
 
   # 2.3 Sources into: sources/  FIXME
-  copyFileToDir( "fmusdk-master/fmu20/src/models/inc/inc.c", 
+  for sourceFile in fmu.sourceFiles:  
+    copyFileToDir( sourceFile, 
                  joinPath(tmpFolder, "sources") )
 
   # 2.4 XML
-  var xmlData = createXml(myModel, myModel.nEventIndicators)
+  var xmlData = createXml(fmu)#, inc.nEventIndicators)
   writeFile(joinPath(tmpFolder, "modelDescription.xml"), xmlData)
 
   # 3. Compress
-  tmpFolder.compressInto( fname )
+  tmpFolder.compressInto( fmu.outFile) #fname )
 
   # 4. Clean
   if clean:
     removeDir(tmpFolder, checkDir = false )
-
-
-template genFmu*(myModel: ModelInstanceRef; fname:string) =
-  # needed in order to know the filename calling `genFmu`
-  let pos = instantiationInfo()
-  genFmu2(myModel, fname, pos.filename)
-

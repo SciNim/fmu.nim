@@ -10,7 +10,7 @@ import strformat
 # Enter and exit the different modes
 
 {.push exportc:"$1", dynlib, cdecl.}
-proc fmi2EnterEventMode*(comp: ModelInstanceRef): fmi2Status =
+proc fmi2EnterEventMode*(comp: FmuRef): fmi2Status =
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     if invalidState(comp, "fmi2EnterEventMode", MASK_fmi2EnterEventMode):
         return fmi2Error
@@ -21,7 +21,7 @@ proc fmi2EnterEventMode*(comp: ModelInstanceRef): fmi2Status =
     return fmi2OK
 
 
-proc fmi2NewDiscreteStates*(comp: ModelInstanceRef; 
+proc fmi2NewDiscreteStates*(comp: FmuRef; #ModelInstanceRef; 
                             eventInfo: ptr fmi2EventInfo): fmi2Status =
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     var timeEvent = false
@@ -51,7 +51,7 @@ proc fmi2NewDiscreteStates*(comp: ModelInstanceRef;
     return fmi2OK
 
 
-proc fmi2EnterContinuousTimeMode*(comp: ModelInstanceRef): fmi2Status =
+proc fmi2EnterContinuousTimeMode*(comp: FmuRef): fmi2Status =
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     if invalidState(comp, "fmi2EnterContinuousTimeMode", MASK_fmi2EnterContinuousTimeMode):
         return fmi2Error
@@ -61,7 +61,7 @@ proc fmi2EnterContinuousTimeMode*(comp: ModelInstanceRef): fmi2Status =
     return fmi2OK
 
 
-proc fmi2CompletedIntegratorStep*(comp: ModelInstanceRef;
+proc fmi2CompletedIntegratorStep*(comp: FmuRef;
                                  noSetFMUStatePriorToCurrentPoint: fmi2Boolean;
                                  enterEventMode: ptr fmi2Boolean;
                                  terminateSimulation: ptr fmi2Boolean): fmi2Status = # {.exportc:"$1", cdecl, dynlib.}
@@ -80,7 +80,7 @@ proc fmi2CompletedIntegratorStep*(comp: ModelInstanceRef;
 
 
 # Providing independent variables and re-initialization of caching
-proc fmi2SetTime*(comp: ModelInstanceRef; time: fmi2Real): fmi2Status = # {.exportc: "$1",dynlib,cdecl.}
+proc fmi2SetTime*(comp: FmuRef; time: fmi2Real): fmi2Status = # {.exportc: "$1",dynlib,cdecl.}
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     if invalidState(comp, "fmi2SetTime", MASK_fmi2SetTime):
         return fmi2Error
@@ -89,7 +89,7 @@ proc fmi2SetTime*(comp: ModelInstanceRef; time: fmi2Real): fmi2Status = # {.expo
     return fmi2OK
 
 
-proc fmi2SetContinuousStates*(comp: ModelInstanceRef; 
+proc fmi2SetContinuousStates*(comp: FmuRef; 
                               x: ptr fmi2Real; 
                               nx: csize_t): fmi2Status =
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
@@ -110,7 +110,7 @@ proc fmi2SetContinuousStates*(comp: ModelInstanceRef;
 
 
 # Evaluation of the model equations
-proc fmi2GetDerivatives*(comp: ModelInstanceRef; 
+proc fmi2GetDerivatives*(comp: FmuRef; 
                          derivatives: ptr fmi2Real; 
                          nx: csize_t): fmi2Status =
     #var i:int
@@ -130,13 +130,14 @@ proc fmi2GetDerivatives*(comp: ModelInstanceRef;
     return fmi2OK
 
 
-proc fmi2GetEventIndicators*(comp: ModelInstanceRef; eventIndicators: ptr fmi2Real;
-                            ni: csize_t): fmi2Status =
+proc fmi2GetEventIndicators*( comp: FmuRef; #ModelInstanceRef; 
+                              eventIndicators: ptr fmi2Real;
+                              ni: csize_t): fmi2Status =
     #var i:int
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     if invalidState(comp, "fmi2GetEventIndicators", MASK_fmi2GetEventIndicators):
         return fmi2Error
-    if invalidNumber(comp, "fmi2GetEventIndicators", "ni", ni, NUMBER_OF_EVENT_INDICATORS):
+    if invalidNumber(comp, "fmi2GetEventIndicators", "ni", ni, comp.nEventIndicators): #NUMBER_OF_EVENT_INDICATORS):
         return fmi2Error
     # FIXME
     #if NUMBER_OF_EVENT_INDICATORS > 0:
@@ -147,7 +148,7 @@ proc fmi2GetEventIndicators*(comp: ModelInstanceRef; eventIndicators: ptr fmi2Re
     return fmi2OK
 
 
-proc fmi2GetContinuousStates*(comp: ModelInstanceRef; 
+proc fmi2GetContinuousStates*(comp: FmuRef; 
                               states: ptr fmi2Real; 
                               nx: csize_t): fmi2Status =
     ##[
@@ -180,7 +181,7 @@ proc fmi2GetContinuousStates*(comp: ModelInstanceRef;
     return fmi2OK
 
 
-# proc fmi2GetNominalsOfContinuousStates*(comp: ModelInstanceRef; x_nominal: ptr fmi2Real;
+# proc fmi2GetNominalsOfContinuousStates*(comp: FmuRef; x_nominal: ptr fmi2Real;
 #                                        nx: csize_t): fmi2Status =
 #     #var i: int
 #     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
@@ -198,10 +199,10 @@ proc fmi2GetContinuousStates*(comp: ModelInstanceRef;
 #import lib/functions/helpers
 
 
-proc fmi2GetNominalsOfContinuousStates*(comp: ModelInstanceRef; # ¿Susituir por ModelInstance?
+proc fmi2GetNominalsOfContinuousStates*(comp: FmuRef; # ¿Susituir por ModelInstance?
                                         x_nominal: ptr fmi2Real; # Esto en teoría es un array
                                         nx: csize_t): fmi2Status =
-  #var comp: ModelInstanceRef = cast[ModelInstance](c)  # c es un pointer
+  #var comp: FmuRef = cast[ModelInstance](c)  # c es un pointer
   if invalidState(comp, "fmi2GetNominalsOfContinuousStates",
                  MASK_fmi2GetNominalsOfContinuousStates):
     return fmi2Error

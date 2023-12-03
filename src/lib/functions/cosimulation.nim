@@ -11,9 +11,37 @@ template useGetReal():untyped =
             comp.realAddr[comp.states[i]][] += h * getReal(comp, vr + 1)  # forward Euler step
             echo "ok"
 
+template useGetEventIndicator():untyped =
+    mixin getEventIndicator
+
+    if comp.nEventIndicators > 0:
+        # initialize previous event indicators with current values
+        for i in 0 ..< comp.nEventIndicators: #NUMBER_OF_EVENT_INDICATORS:
+           prevEventIndicators[i] = getEventIndicator(comp, i)  # <-- // to be implemented by the includer of this file
+
+template useGetEventIndicator2():untyped =
+    mixin getEventIndicator
+
+    if comp.nEventIndicators > 0:
+        # check for state event
+        for i in 0 ..< comp.nEventIndicators: #NUMBER_OF_EVENT_INDICATORS:
+            var ei:double = getEventIndicator(comp, i)
+            var ei:float = 0.0  # <---- borrame
+            if ei * prevEventIndicators[i] < 0 :
+                var tmp:string
+                if ei < 0:
+                    tmp = "\\"
+                else:
+                    tmp = "/"
+                filteredLog(comp, fmi2OK, LOG_EVENT,
+                    fmt"fmi2DoStep: state event at {comp.time}, z{i} crosses zero -{tmp}-".fmi2String)
+                inc stateEvent # stateEvent++
+
+            prevEventIndicators[i] = ei
+
 {.push exportc,cdecl,dynlib.}
 
-proc fmi2SetRealInputDerivatives*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference;
+proc fmi2SetRealInputDerivatives*(comp: FmuRef; vr: ptr fmi2ValueReference;
                                  nvr: csize_t; order: ptr fmi2Integer;
                                  value: ptr fmi2Real): fmi2Status =
     ##var comp: ptr ModelInstanceRef = cast[ptr ModelInstanceRef](c)
@@ -24,7 +52,7 @@ proc fmi2SetRealInputDerivatives*(comp: ModelInstanceRef; vr: ptr fmi2ValueRefer
     filteredLog(comp, fmi2Error, error, fmt"fmi2SetRealInputDerivatives: ignoring function call.\nThis model cannot interpolate inputs: canInterpolateInputs='{fmi2False}'".fmi2String)
     return fmi2Error
 
-proc fmi2GetRealOutputDerivatives*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference;
+proc fmi2GetRealOutputDerivatives*(comp: FmuRef; vr: ptr fmi2ValueReference;
                                   nvr: csize_t; order: ptr fmi2Integer;
                                   value: ptr fmi2Real): fmi2Status =
     ##var comp: ptr ModelInstanceRef = cast[ptr ModelInstanceRef](c)
@@ -37,7 +65,8 @@ proc fmi2GetRealOutputDerivatives*(comp: ModelInstanceRef; vr: ptr fmi2ValueRefe
     return fmi2Error
 
 
-proc fmi2CancelStep*(comp: ModelInstanceRef):fmi2Status =
+
+proc fmi2CancelStep*(comp: FmuRef):fmi2Status =
     ##var comp: ptr ModelInstanceRef = cast[ptr ModelInstanceRef](c)
     if invalidState(comp, "fmi2CancelStep", MASK_fmi2CancelStep):
         # always fmi2CancelStep is invalid, because model is never in modelStepInProgress state.
@@ -49,7 +78,7 @@ proc fmi2CancelStep*(comp: ModelInstanceRef):fmi2Status =
     return fmi2Error
 
 
-proc fmi2DoStep*( comp: ModelInstanceRef; 
+proc fmi2DoStep*( comp: FmuRef; 
                   currentCommunicationPoint: fmi2Real;
                   communicationStepSize: fmi2Real;
                   noSetFMUStatePriorToCurrentPoint: fmi2Boolean): fmi2Status =
@@ -81,10 +110,13 @@ proc fmi2DoStep*( comp: ModelInstanceRef;
         return fmi2Error
 
 
-    when NUMBER_OF_EVENT_INDICATORS > 0:
-        # initialize previous event indicators with current values
-        for i in 0 ..< NUMBER_OF_EVENT_INDICATORS:
-           prevEventIndicators[i] = getEventIndicator(comp, i)  # <-- // to be implemented by the includer of this file
+    #when NUMBER_OF_EVENT_INDICATORS > 0:
+    # if comp.nEventIndicators > 0:
+    #     # initialize previous event indicators with current values
+    #     for i in 0 ..< comp.nEventIndicators: #NUMBER_OF_EVENT_INDICATORS:
+    #        prevEventIndicators[i] = getEventIndicator(comp, i)  # <-- // to be implemented by the includer of this file
+    when compiles(useGetEventIndicator): # Checks if the template compiles
+        useGetEventIndicator() 
 
     # break the step into n steps and do forward Euler.
     comp.time = currentCommunicationPoint
@@ -103,23 +135,26 @@ proc fmi2DoStep*( comp: ModelInstanceRef;
     #         var vr:fmi2ValueReference = comp.states[i].fmi2ValueReference #vrStates[i]
     #         comp.realAddr[comp.states[i]][] += h * getReal(comp, vr + 1)  # forward Euler step
 
-    when NUMBER_OF_EVENT_INDICATORS > 0:
-        # check for state event
-        for i in 0 ..< NUMBER_OF_EVENT_INDICATORS:
-            var ei:double = getEventIndicator(comp, i)
-            var ei:float = 0.0  # <---- borrame
-            if ei * prevEventIndicators[i] < 0 :
-                var tmp:string
-                if ei < 0:
-                    tmp = "\\"
-                else:
-                    tmp = "/"
-                filteredLog(comp, fmi2OK, LOG_EVENT,
-                    fmt"fmi2DoStep: state event at {comp.time}, z{i} crosses zero -{tmp}-".fmi2String)
-                inc stateEvent # stateEvent++
+    # when NUMBER_OF_EVENT_INDICATORS > 0:
+    #     # check for state event
+    #     for i in 0 ..< NUMBER_OF_EVENT_INDICATORS:
+    #         var ei:double = getEventIndicator(comp, i)
+    #         var ei:float = 0.0  # <---- borrame
+    #         if ei * prevEventIndicators[i] < 0 :
+    #             var tmp:string
+    #             if ei < 0:
+    #                 tmp = "\\"
+    #             else:
+    #                 tmp = "/"
+    #             filteredLog(comp, fmi2OK, LOG_EVENT,
+    #                 fmt"fmi2DoStep: state event at {comp.time}, z{i} crosses zero -{tmp}-".fmi2String)
+    #             inc stateEvent # stateEvent++
 
-            prevEventIndicators[i] = ei
+    #         prevEventIndicators[i] = ei
 
+
+        when compiles(useGetEventIndicator2): # Checks if the template compiles
+            useGetEventIndicator2()  
 
         # check for time event
         if (comp.eventInfo.nextEventTimeDefined > 0 and (comp.time - comp.eventInfo.nextEventTime > -DT_EVENT_DETECT)):

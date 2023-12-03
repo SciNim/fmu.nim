@@ -9,7 +9,7 @@ import ../meta/filteredlog
 
 template useGetReal():untyped =
     mixin getReal
-    if comp.realAddr.len > 0:  # when: no puede evaluar en tiempo de compilación
+    if comp.nFloats > 0:  # when: no puede evaluar en tiempo de compilación
      for i in 0 ..< nvr:
          if vrOutOfRange(comp, "fmi2GetReal", vr[i], comp.realAddr.len): #NUMBER_OF_REALS):
              return fmi2Error
@@ -22,12 +22,12 @@ template useGetReal():untyped =
 
 
 # forward declaration (this needs to be override by the user)
-#proc getReal(comp: ModelInstanceRef; vr:ptr fmi2ValueReference):fmi2Real 
+#proc getReal(comp: FmuRef; vr:ptr fmi2ValueReference):fmi2Real 
 
 # https://forum.nim-lang.org/t/10272#68206
-#var getReal*: proc(comp: ModelInstanceRef; vr:ptr fmi2ValueReference):fmi2Real 
+#var getReal*: proc(comp: FmuRef; vr:ptr fmi2ValueReference):fmi2Real 
 
-proc fmi2GetReal*(comp: ModelInstanceRef; 
+proc fmi2GetReal*(comp: FmuRef; 
                   vr: ptr fmi2ValueReference; 
                   nvr: csize_t;
                   value: ptr fmi2Real): fmi2Status =
@@ -68,14 +68,14 @@ proc fmi2GetReal*(comp: ModelInstanceRef;
 
 
 
-proc fmi2GetInteger*( comp: ModelInstanceRef; 
+proc fmi2GetInteger*( comp: FmuRef; 
                       vr: ptr fmi2ValueReference; 
                       nvr: csize_t;
                       value: ptr fmi2Integer): fmi2Status  =
     ## returns an integer value
     ## `vr` is a vector and `nvr` its size.
     ## `value` is another vector with the results (same `nvr` size)
-
+    #echo ">>>>>>>>>>>>>>>>",comp.integers # [n]
     # Perform a number of checks
     # - check if the model is in an invalid state
     if invalidState(comp, "fmi2GetInteger", MASK_fmi2GetInteger):
@@ -92,7 +92,7 @@ proc fmi2GetInteger*( comp: ModelInstanceRef;
     # - if isDirtyValues recalculate the values. It seems this is done in a lazy way (by updating
     #   the time; the values are only calculate after a time event -I think-)
     if nvr > 0 and comp.isDirtyValues == fmi2True:       
-        calculateValues(comp)
+        calculateValues(comp) # user defined
         comp.isDirtyValues = fmi2False
 
 
@@ -100,16 +100,20 @@ proc fmi2GetInteger*( comp: ModelInstanceRef;
 
     for i in 0 ..< nvr: 
         #echo "comp.integerAddr.len: ", comp.integerAddr.len
-        if vrOutOfRange(comp, "fmi2GetInteger", vr[i], comp.integerAddr.len):#NUMBER_OF_INTEGERS):
+        if vrOutOfRange(comp, "fmi2GetInteger", vr[i], comp.nIntegers):#NUMBER_OF_INTEGERS):
             return fmi2Error
 
         # read the value from memory address (vr[i] is the position; `[]`: memory content)
-        value[i] = comp.integerAddr[vr[i]][].fmi2Integer 
+
+#proc getInteger*[I:int|fmi2ValueReference](fmu: FmuRef; n:I): int =
+        
+        value[i] = comp.parameters[comp.integers[vr[i]]].valueI.fmi2Integer
+        #value[i] = comp.getInteger(vr[i]).fmi2Integer 
         filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetInteger: #i{vr[i]}# = {value[i]}".fmi2String )
     
     return fmi2OK
 
-proc fmi2GetBoolean*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: csize_t;
+proc fmi2GetBoolean*(comp: FmuRef; vr: ptr fmi2ValueReference; nvr: csize_t;
                     value: ptr fmi2Boolean): fmi2Status  =
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     if invalidState(comp, "fmi2GetBoolean", MASK_fmi2GetBoolean):
@@ -123,9 +127,9 @@ proc fmi2GetBoolean*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: cs
         comp.isDirtyValues = fmi2False
     
     for i in 0 ..< nvr:
-        if vrOutOfRange(comp, "fmi2GetBoolean", vr[i], comp.boolAddr.len):#NUMBER_OF_BOOLEANS):
+        if vrOutOfRange(comp, "fmi2GetBoolean", vr[i], comp.nBooleans):#NUMBER_OF_BOOLEANS):
             return fmi2Error
-        value[i] = comp.boolAddr[vr[i]][].fmi2Boolean
+        value[i] = comp.getBoolean(vr[i]).fmi2Boolean
         var tmp:string
         if value[i] > 0:
            tmp = "true"
@@ -136,7 +140,7 @@ proc fmi2GetBoolean*(comp: ModelInstanceRef; vr: ptr fmi2ValueReference; nvr: cs
     
     return fmi2OK
 
-proc fmi2GetString*( comp: ModelInstanceRef; 
+proc fmi2GetString*( comp: FmuRef; 
                      vr: ptr fmi2ValueReference; 
                      nvr: csize_t;
                      value: ptr fmi2String): fmi2Status =
@@ -157,11 +161,11 @@ proc fmi2GetString*( comp: ModelInstanceRef;
     #var val = cast[ptr UncheckedArray[ptr fmi2String]](value)
 
     for i in 0 ..< nvr:
-        if vrOutOfRange(comp, "fmi2GetString", vr[i], comp.stringAddr.len):
+        if vrOutOfRange(comp, "fmi2GetString", vr[i], comp.nStrings):
             return fmi2Error
 
-        value[i] = comp.stringAddr[vr[i]][].fmi2String   # unsafeAddr
-        var tmp = "fmi2GetString: " & $vr[i] & " = '" & comp.stringAddr[vr[i]][] & "'"
+        value[i] = comp.getString(vr[i]).fmi2String   # unsafeAddr
+        var tmp = "fmi2GetString: " & $vr[i] & " = '" & comp.getString(vr[i]) & "'"
         filteredLog(comp, fmi2OK, fmiCall, tmp.fmi2string)
 
     return fmi2OK

@@ -2,142 +2,134 @@
 # Inspired by: https://github.com/qtronic/fmusdk/blob/master/fmu20/src/models/values/values.c
 
 import fmu
+import std/[tables, options]
 
-var 
-  id      = "values"
-  guid    = "{8c4e810f-3df3-4a00-8276-176fa3c9f004}"
-  outFile = "values.fmu"
 
-model(id, guid, outFile):
+var values = FmuRef( id: "values",
+               guid: "{8c4e810f-3df3-4a00-8276-176fa3c9f004}",
+               outFile: "values.fmu" )
+values.sourceFiles = @["data/inc.c"]
+values.docFiles    = @["data/index.html"]
+values.icon        = "data/model.png"
+
+model(values):
   # Define the variables (initialization)
-    var
-      months = @["jan","feb","march","april","may","june","july",
-                 "august","sept","october","november","december"]
-    #const
-    #  NUMBER_OF_STATES = 1 # FIXME
-    var
-      myFloat:float         = 1.0
-      myFloatDerivative:float
-      myInputInteger:int    = 2
-      myOutputInteger:int   = 0
-      myInputBool:bool      = true
-      myOutputBool:bool     = false
-      myInputString:string  = "QTronic" 
-      myOutputString:string = "jan" # months[0] # <--- NOT WORKING
+  var
+    months = @["jan","feb","march","april","may","june","july",
+                "august","sept","october","november","december"]
 
-    param( myFloat,     # include counter as a variable in the model.
-           cLocal,      # causality: local variable
-           vContinuous, # variability: continuous
-           iExact,      # initialized at start
-           "used as continuous state",
-           isState = true) # description
+  values.parameters["myFloat"] = Param(kind: tReal,
+                      idx: 0,
+                      causality: cLocal, #causality: local variable
+                      variability: vContinuous, #variability: continuous
+                      initial: iExact, #initialized at start
+                      description: "used as continuous state",# description
+                      )
+  values.states &= values.parameters["myFloat"].idx
+  #values.parameters["myFloat"].isState = true
+  values.parameters["myFloat"].startR = some(1.0) 
 
-    param( myFloatDerivative,     # include counter as a variable in the model.
-           cLocal,      # causality: local variable
-           vContinuous, # variability: continuous
-           iCalculated,      # initialized at start
-           "time derivative of x", # description
-           derivative = 1 ) # indicates this is the derivative for the first param
+  values.parameters["myFloatDerivative"] = Param(kind: tReal,
+                      idx: 1,
+                      causality: cLocal, #causality: local variable
+                      variability: vContinuous, #variability: continuous
+                      initial: iCalculated, #initialized at start
+                      description: "time derivative of x",# description
+                      ) # indicates this is the derivative for the first param
+  values.parameters["myFloatDerivative"].derivative = 1.uint.some
 
-    #myFloatDerivative.setDer
+  values.parameters["myInputInteger"] = Param(kind: tInteger,
+                      idx: 0,
+                      causality: cInput, #causality: input
+                      variability: vDiscrete, #variability: discrete
+                      initial: iUnset, #initialized at start
+                      description: "integer input" ) # description 
+  values.parameters["myInputInteger"].startI = 2.some
 
-    param( myInputInteger,     # include counter as a variable in the model.
-           cInput,      # causality: local variable
-           vDiscrete,   # variability: discrete
-           iUnset,      # initialized at start
-           "integer input") # description
+  values.parameters["myOutputInteger"] = Param(kind: tInteger,
+                      idx: 1,
+                      causality: cOutput, #causality: output
+                      variability: vDiscrete, #variability: discrete
+                      initial: iExact, #initialized at start
+                      description: "index in string array 'month'" ) # description 
+  values.parameters["myOutputInteger"].startI = 0.some
 
-    param( myOutputInteger,     # include counter as a variable in the model.
-           cOutput,      # causality: local variable
-           vDiscrete,   # variability: discrete
-           iExact,      # initialized at start
-           "index in string array 'month'") # description
+  values.parameters["myInputBool"] = Param(kind: tBoolean,
+                      idx: 0,
+                      causality: cInput, #causality: input
+                      variability: vDiscrete, #variability: discrete
+                      initial: iUnset, # unset?
+                      description: "boolean input" ) # description 
+  values.parameters["myInputBool"].startB = true.some
 
-    param( myInputBool,     # include counter as a variable in the model.
-           cInput,      # causality: local variable
-           vDiscrete,   # variability: discrete
-           iUnset,      # initialized at start
-           "boolean input") # description
-
-    param( myOutputBool,     # include counter as a variable in the model.
-           cOutput,      # causality: local variable
-           vDiscrete,   # variability: discrete
-           iExact,      # initialized at start
-           "boolean output") # description
-
-    param( myInputString,     # include counter as a variable in the model.
-           cInput,      # causality: local variable
-           vDiscrete,   # variability: discrete
-           iUnset,      # initialized at start
-           "string input") # description
-
-    param( myOutputString,     # include counter as a variable in the model.
-           cOutput,      # causality: local variable
-           vDiscrete,   # variability: discrete
-           iExact,      # initialized at start
-           "the string month[int_out]") # description
-    init(myFloat, myFloatDerivative,
-      myInputInteger, myOutputInteger, 
-      myInputBool, myOutputBool, 
-      myInputString, myOutputString)
-
-    #setState( myFloat )
-
-    #myModel.addState(myFloat)
-#[
-<ModelStructure>
-  <Outputs>
-    <Unknown index="4" />
-    <Unknown index="6" />
-    <Unknown index="8" />
-  </Outputs>
-  <Derivatives>
-    <Unknown index="2" />
-  </Derivatives>
-  <InitialUnknowns>
-    <Unknown index="2"/>
-  </InitialUnknowns>
-</ModelStructure>
-]#
-
-    # create time events every second
-    proc calculateValues*(comp: ModelInstanceRef) =
-      ## calculate the values of the FMU (Functional Mock-up Unit) variables 
-      ## at a specific time step during simulation.
-      if comp.state == modelInitializationMode:
-        # set first time event
-        comp.eventInfo.nextEventTimeDefined = fmi2True
-        comp.eventInfo.nextEventTime        = 1 + comp.time
+  values.parameters["myOutputBool"] = Param(kind: tBoolean,
+                      idx: 1,
+                      causality: cOutput, #causality: output
+                      variability: vDiscrete, #variability: discrete
+                      initial: iExact, # unset?
+                      description: "boolean output" ) # description 
+  values.parameters["myInputBool"].startB = true.some
 
 
-    proc getReal*(comp: ModelInstanceRef;
-                  vr:fmi2ValueReference):fmi2Real =
-      if vr == 0:  # el primer índice
-        return myfloat.fmi2Real
-      elif vr == 1:
-        return -myfloat.fmi2Real
+  values.parameters["myInputString"] = Param(kind: tString,
+                      idx: 0,
+                      causality: cInput, #causality: input
+                      variability: vDiscrete, #variability: discrete
+                      initial: iUnset, # unset?
+                      description: "string input" ) # description 
+  values.parameters["myOutputBool"].startB = false.some
+
+  values.parameters["myInputString"].startS = "QTronic".some
+
+  values.parameters["myOutputString"] = Param(kind: tString,
+                      idx: 1,
+                      causality: cOutput, #causality: input
+                      variability: vDiscrete, #variability: discrete
+                      initial: iExact, # unset?
+                      description: "the string month[int_out]" ) # description 
+  values.parameters["myOutputString"].startS = months[0].some # "jan"
+
+
+
+  # create time events every second
+  proc calculateValues*(comp: FmuRef) =
+    ## calculate the values of the FMU (Functional Mock-up Unit) variables 
+    ## at a specific time step during simulation.
+    if comp.state == modelInitializationMode:
+      # set first time event
+      comp.eventInfo.nextEventTimeDefined = fmi2True
+      comp.eventInfo.nextEventTime        = 1 + comp.time
+
+
+  proc getReal*(comp: FmuRef;
+                vr:fmi2ValueReference):fmi2Real =
+    if vr == 0:  # el primer índice
+      return comp.parameters["myfloat"].valueR.fmi2Real
+    elif vr == 1:
+      return -comp.parameters["myfloat"].valueR.fmi2Real
+    else:
+      return (0.0).fmi2Real
+
+  proc eventUpdate*(comp:FmuRef; 
+                    eventInfo:ptr fmi2EventInfo;
+                    isTimeEvent:bool;
+                    isNewEventIteration:fmi2Boolean) =
+    if isTimeEvent:
+      # Define next time event in 1s
+      eventInfo.nextEventTimeDefined = fmi2True
+      eventInfo.nextEventTime        = 1 + comp.time 
+
+      comp.parameters["myOutputInteger"].valueI =  comp.parameters["myOutputInteger"].valueI + 1
+      comp.parameters["myOutputBool"].valueB = not comp.parameters["myOutputBool"].valueB
+      #myOutputBool = not myOutputBool
+
+      # Assign each month to the output string
+      if comp.parameters["myOutputInteger"].valueI < 12:
+        comp.parameters["myOutputString"].valueS = months[comp.parameters["myOutputInteger"].valueI]
+
+      # once done, terminate the simulation
       else:
-        return (0.0).fmi2Real
-
-    proc eventUpdate*(comp:ModelInstanceRef; 
-                      eventInfo:ptr fmi2EventInfo;
-                      isTimeEvent:bool;
-                      isNewEventIteration:fmi2Boolean) =
-      if isTimeEvent:
-        # Define next time event in 1s
-        eventInfo.nextEventTimeDefined = fmi2True
-        eventInfo.nextEventTime        = 1 + comp.time 
-
-        myOutputInteger += 1
-        myOutputBool = not myOutputBool
-
-        # Assign each month to the output string
-        if myOutputInteger < 12:
-          myOutputString = months[myOutputInteger]
-
-        # once done, terminate the simulation
-        else:
-          eventInfo.terminateSimulation  = fmi2True
-          eventInfo.nextEventTimeDefined = fmi2False
+        eventInfo.terminateSimulation  = fmi2True
+        eventInfo.nextEventTimeDefined = fmi2False
 
  

@@ -8,47 +8,36 @@
 import lib/defs/[definitions, masks, modelinstance, parameters]
 export definitions, masks, modelinstance, parameters
 
-template model2*(id,guid, outFile, callingFile: string; 
-                 myModel: ModelInstanceRef; 
-                 body:untyped) {.dirty.} =
-    ## organize the code, keeping the required includes at the end
+# import lib/fmu/[model]
+# export model
 
-    {.push exportc, dynlib.}
 
-    body
+template model*(fmu:FmuRef, body:untyped) {.dirty.} =
+  ## organize the code, keeping the required includes at the end
 
-    {.pop.}
+  {.push exportc, dynlib.}
 
-    # FIXME---
-    var NUMBER_OF_STRINGS*:int = 2 # <-- FIXME    
-    #var NUMBER_OF_STATES* {.compileTime.}:int = 1 # <-- FIXME
-    var NUMBER_OF_EVENT_INDICATORS*{.compileTime.}:int = 0
+  body
 
-    include lib/functions/modelexchange
-    include lib/functions/cosimulation
-    include lib/functions/common
-    include lib/functions/setters
-    include lib/functions/instantiate    
-    include lib/functions/freeinstance
-    include lib/functions/debuglogging    
-    include lib/functions/getters
-    include lib/functions/enquire
+  {.pop.}
+
+  fmu.nimFile = instantiationInfo().filename
+  include lib/functions/modelexchange
+  include lib/functions/cosimulation
+  include lib/functions/common
+  include lib/functions/setters
+  include lib/functions/instantiate 
+  genFmi2Instantiate(fmu)   
+  include lib/functions/freeinstance
+  include lib/functions/debuglogging    
+  include lib/functions/getters
+  include lib/functions/enquire
 
 
     # ------- FMU BUILDER----------------------------------------
     # The following is only compiled if called as main module
-    when isMainModule and not compileOption("app", "lib"):
-      import lib/fmubuilder
-      
-      myModel.genFmu2(outFile, callingFile)
-
-template model*(id,guid, outFile: string; 
-                body:untyped) {.dirty.} =
-  #var NUMBER_OF_INTEGERS*:int
-  # needed in order to know the filename calling `genFmu`
-  let pos = instantiationInfo() # https://nim-lang.org/docs/system.html#instantiationInfo%2Cint
-  # FIXME - No es el lugar adecuado para crear la instancia.
-  # La instancia se crea en `instantiate.nim`.
-  # Hay que crear un modelo diferente que el usado para 
-  var myModel* = ModelInstanceRef(id: `id`, guid: `guid`)  
-  model2(id, guid, outFile, pos.filename, myModel, body)
+  when isMainModule and not compileOption("app", "lib"):
+    import lib/fmubuilder
+    
+    #myModel.genFmu2(m.outFile, callingFile)
+    fmu.exportFmu()

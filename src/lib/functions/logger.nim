@@ -3,7 +3,7 @@ import ../defs/[definitions, modelinstance]
 ## Private helpers logger
 ## ---------------------------------------------------------------------------
 
-proc isCategoryLogged*[I:SomeInteger]( comp:ModelInstanceRef, 
+proc isCategoryLogged*[I:SomeInteger]( comp: FmuRef, 
                                        categoryIndex:I): bool  =
     ## return fmi2True if logging category is on. Else return fmi2False.
     if categoryIndex < nCategories and ((comp.logCategories[categoryIndex.int] > 0) or (comp.logCategories[LOG_ALL] > 0)):

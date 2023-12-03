@@ -2,30 +2,56 @@
 Increases a counter every second.
 ]#
 import fmu
+import options
+import std/tables
 
-var 
-  id      = "inc"
-  guid    = "{8c4e810f-3df3-4a00-8276-176fa3c9f008}"
-  outFile = "inc.fmu"
+#[  
+{.experimental: "dotOperators".}  
+Este truco puede servir para trabajar fácilmente con los objectos
 
-model(id, guid, outFile):
-  # Define the variable that we will use for output.
-  var counter*:int = 1
-  
-  param( counter,   # include counter as a variable in the model.
-         cOutput,   # set it as an output variable
-         vDiscrete, # variability: discrete
-         iExact,    # initialized at start
-         "counts the seconds") # description
 
-  # I think this macro is no longer needed (we performed the initialization above)
-  init(counter)  # This macro creates setStartValues() among other things
+echo a.hola 
+]#
 
-  # IMHO, the following should be named: createTimeEvent.
-  # When t = 0s, it creates a time event at t = 1s.
-  # When t= 1s, the state is again=modelInitializationMode, so another time event is set: t = 2s
-  # and so on.
-  proc calculateValues*(comp: ModelInstanceRef) =
+# Define the variables to be used
+# type
+#   Inc = object of FmuRef
+#     counter*:int = 1
+
+#template `.`*(obj: FmuRef; field: untyped):int =
+#  var tmp = obj.parameters[astToStr(field)].startI.get
+
+
+
+var inc = FmuRef( id: "inc",
+               guid: "{8c4e810f-3df3-4a00-8276-176fa3c9f008}",
+               outFile: "inc.fmu" )
+
+inc.sourceFiles = @["data/inc.c"]
+inc.docFiles    = @["data/index.html"]
+inc.icon        = "data/model.png"
+
+
+
+inc.parameters["counter"] = Param(kind: tInteger,
+                     idx: 0,
+                     causality: cOutput, #`causality`.Causality,  set it as an output variable
+                     variability: vDiscrete, #`variability`.Variability,
+                     initial: iExact, #`initial`.Initial, initialized at start
+                     description: "counts the seconds" )
+inc.parameters["counter"].startI = some(1) 
+
+
+# IMHO, the following should be named: createTimeEvent.
+# When t = 0s, it creates a time event at t = 1s.
+# When t= 1s, the state is again=modelInitializationMode, so another time event is set: t = 2s
+# and so on.
+
+# NOTA: Que no esté  embebido en FMU
+
+model(inc):
+  proc calculateValues*(comp: FmuRef) = #ModelInstanceRef) =
+  #inc.calculateValues = proc() =
     ## calculate the values of the FMU (Functional Mock-up Unit) variables 
     ## at a specific time step during simulation.
     if comp.state == modelInitializationMode:
@@ -37,27 +63,17 @@ model(id, guid, outFile):
   # I think this the reason why the call this lazy evaluation
   # The evaluation only takes places during the time events.
   # TODO: to undestand better `eventInfo`
-  proc eventUpdate*(comp:ModelInstanceRef; 
+  proc eventUpdate*(comp: FmuRef; #ModelInstanceRef; 
                     eventInfo:ptr fmi2EventInfo;
                     timeEvent:bool;
                     isNewEventIteration:fmi2Boolean) =
     if timeEvent: 
-        counter += 1
-        if counter == 13: # in this case we finish (even if the simulation time is bigger)
+        #comp.counter += 1
+        comp["counter"] = comp["counter"] + 1
+        #if comp.counter == 13: # in this case we finish (even if the simulation time is bigger)
+        if comp["counter"] == 13: # in this case we finish (even if the simulation time is bigger)
             eventInfo.terminateSimulation  = fmi2True
             eventInfo.nextEventTimeDefined = fmi2False
         else:
             eventInfo.nextEventTimeDefined = fmi2True
             eventInfo.nextEventTime        = 1 + comp.time
-
-
-#[
-The calculateValues function is a member function 
-of the FMU class in the FMUSDK library. 
-
-It is used to advance the simulation by one step and calculate the values of the FMU's output variables for the current simulation time.
-
-// called by fmi2GetReal, fmi2GetInteger, fmi2GetBoolean, fmi2GetString, fmi2ExitInitialization
-// if setStartValues or environment set new values through fmi2SetXXX.
-// Lazy set values for all variable that are computed from other variables.
-]#

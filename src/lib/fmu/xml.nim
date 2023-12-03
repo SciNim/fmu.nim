@@ -1,12 +1,13 @@
-import xmltree
-import strformat
-import std/strtabs
+import std/[xmltree, strformat, strtabs]
 import options
 import ../defs/[modelinstance, parameters]
+import ./model
 
-proc createXml*(myModel: ModelInstanceRef; numberOfEventIndicators:int):string =
+proc createXml*( myModel: Fmu): string =
+  
   var file = newElement("File")
-  file.attrs  = {"name" : "inc.c"}.toXmlAttributes
+  `attrs=`(file, {"name" : "inc.c"}.toXmlAttributes)
+  #file.attrs  = {"name" : "inc.c"}.toXmlAttributes  # FIXME: I don't know why this fails.
   #let fileFinal = newXmlTree( file, @[], fileAtt)
   let sourceFiles = newXmlTree("SourceFiles", [file])
 
@@ -17,7 +18,8 @@ proc createXml*(myModel: ModelInstanceRef; numberOfEventIndicators:int):string =
   var catChildren:seq[XmlNode] = @[]
   for category in categories:
     var cat = newElement("Category")
-    cat.attrs  = {"name" : fmt"{category}"}.toXmlAttributes    
+    `attrs=`(cat, {"name" : fmt"{category}"}.toXmlAttributes)
+    #cat.attrs  = {"name" : fmt"{category}"}.toXmlAttributes    
     catChildren.add(cat)
   let logCategories = newXmlTree("LogCategories", catChildren)  
 
@@ -28,8 +30,8 @@ proc createXml*(myModel: ModelInstanceRef; numberOfEventIndicators:int):string =
   var modelStructureInitialUnknowns:seq[int] = @[] # Ordered list of all outputs
   var modelStructureDerivatives:seq[int] = @[] # Ordered list of all outputs
 
-  for param in myModel.params:
-    var scalarVariableAttrs = { "name" : param.name }.toXmlAttributes
+  for key, param in myModel.parameters.pairs:
+    var scalarVariableAttrs = { "name" : key }.toXmlAttributes
 
     scalarVariableAttrs["causality"] = case param.causality
       of cParameter:           "parameter"
@@ -79,7 +81,8 @@ proc createXml*(myModel: ModelInstanceRef; numberOfEventIndicators:int):string =
     if param.kind == tInteger:
       if param.startI.isSome:
         let initial = newElement("Integer")
-        initial.attrs = { "start" : $param.startI.get}.toXmlAttributes
+        `attrs=`(initial, {"start" : $param.startI.get}.toXmlAttributes)
+        #initial.attrs = { "start" : $param.startI.get}.toXmlAttributes
         scalarVariable = newXmlTree("ScalarVariable", [initial], scalarVariableAttrs)  
       else:
         #let initial = newElement("Integer")
@@ -90,11 +93,13 @@ proc createXml*(myModel: ModelInstanceRef; numberOfEventIndicators:int):string =
       let initial = newElement("Real")
       var flag = false
       if param.startR.isSome:
-        initial.attrs = { "start" : $param.startR.get}.toXmlAttributes
+        `attrs=`(initial, {"start" : $param.startR.get}.toXmlAttributes)
+        #initial.attrs = { "start" : $param.startR.get}.toXmlAttributes
         flag = true
       
       if param.derivative.isSome:
-        initial.attrs = { "derivative" : $param.derivative.get}.toXmlAttributes
+        `attrs=`(initial, {"derivative" : $param.derivative.get}.toXmlAttributes)
+        #initial.attrs = { "derivative" : $param.derivative.get}.toXmlAttributes
         flag = true
         modelStructureDerivatives &= index
         modelStructureInitialUnknowns &= index     
@@ -107,7 +112,8 @@ proc createXml*(myModel: ModelInstanceRef; numberOfEventIndicators:int):string =
     elif param.kind == tBoolean:
       if param.startB.isSome:
         let initial = newElement("Boolean")
-        initial.attrs = { "start" : $param.startB.get}.toXmlAttributes
+        `attrs=`(initial, {"start" : $param.startB.get}.toXmlAttributes)
+        #initial.attrs = { "start" : $param.startB.get}.toXmlAttributes
         scalarVariable = newXmlTree("ScalarVariable", [initial], scalarVariableAttrs)  
       else:
         #let initial = newElement("Boolean")
@@ -117,7 +123,8 @@ proc createXml*(myModel: ModelInstanceRef; numberOfEventIndicators:int):string =
     elif param.kind == tString:
       if param.startS.isSome:
         let initial = newElement("String")
-        initial.attrs = { "start" : $param.startS.get}.toXmlAttributes
+        `attrs=`(initial, {"start" : $param.startS.get}.toXmlAttributes)
+        #initial.attrs = { "start" : $param.startS.get}.toXmlAttributes
         scalarVariable = newXmlTree("ScalarVariable", [initial], scalarVariableAttrs)  
       else:
         #let initial = newElement("String")
@@ -133,7 +140,8 @@ proc createXml*(myModel: ModelInstanceRef; numberOfEventIndicators:int):string =
     var outputs = newElement("Outputs")
     for i in modelStructureOutputs:
       var unknown = newElement("Unknown")
-      unknown.attrs = {"index" : $i }.toXmlAttributes
+      `attrs=`(unknown, {"index" : $i}.toXmlAttributes)
+      #unknown.attrs = {"index" : $i }.toXmlAttributes
       outputs.add unknown
 
     modelStructure.add outputs
@@ -142,7 +150,8 @@ proc createXml*(myModel: ModelInstanceRef; numberOfEventIndicators:int):string =
     var derivatives = newElement("Derivatives")  
     for i in modelStructureDerivatives:
       var unknown = newElement("Unknown")
-      unknown.attrs = {"index" : $i }.toXmlAttributes
+      `attrs=`(unknown, {"index" : $i}.toXmlAttributes)
+      #unknown.attrs = {"index" : $i }.toXmlAttributes
       derivatives.add unknown      
 
     modelStructure.add derivatives      
@@ -151,7 +160,8 @@ proc createXml*(myModel: ModelInstanceRef; numberOfEventIndicators:int):string =
     var initialUnknowns = newElement("InitialUnknowns")
     for i in modelStructureInitialUnknowns:
       var unknown = newElement("Unknown")
-      unknown.attrs = {"index" : $i }.toXmlAttributes
+      `attrs=`(unknown, {"index" : $i}.toXmlAttributes)
+      #unknown.attrs = {"index" : $i }.toXmlAttributes
       initialUnknowns.add unknown      
 
     modelStructure.add initialUnknowns
@@ -159,7 +169,7 @@ proc createXml*(myModel: ModelInstanceRef; numberOfEventIndicators:int):string =
   let att = { "fmiVersion": "2.0", 
               "modelName": fmt"{myModel.id}",
               "guid": fmt"{myModel.guid}",
-              "numberOfEventIndicators" : fmt"{numberOfEventIndicators}"}.toXmlAttributes
+              "numberOfEventIndicators" : fmt"{myModel.nEventIndicators}"}.toXmlAttributes
   let k = newXmlTree("fmiModelDescription", [modelExchange, logCategories, modelVariables, modelStructure], att)
   #let k = newXmlTree("fmiModelDescription", [modelExchange, logCategories, modelVariables, modelStructure], att)
   #echo repr modelVariables

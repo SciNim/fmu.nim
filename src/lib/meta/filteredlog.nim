@@ -5,7 +5,7 @@ import ../defs/[definitions, modelinstance]
 
 
 
-proc isCategoryLogged*(comp: ModelInstanceRef; categoryIndex: LoggingCategories): bool =
+proc isCategoryLogged*(comp: FmuRef; categoryIndex: LoggingCategories): bool =
   # return fmi2True if logging category is on. Else return fmi2False.
   # if categoryIndex > LoggingCategories.high.int:
   #   return false
@@ -16,7 +16,7 @@ proc isCategoryLogged*(comp: ModelInstanceRef; categoryIndex: LoggingCategories)
   return false
 
 
-template filteredLog*(  instance: ModelInstanceRef, 
+template filteredLog*(  instance: FmuRef, 
                         status: fmi2Status, 
                         categoryIndex: LoggingCategories, 
                         message: fmi2String, 
