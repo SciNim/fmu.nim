@@ -98,8 +98,6 @@ proc `$`*(a:fmi2String): string {.borrow.}   # https://forum.nim-lang.org/t/7502
 
 
 
-
-
 type
   fmi2EventInfo* {.bycopy.} = object
     newDiscreteStatesNeeded*: fmi2Boolean

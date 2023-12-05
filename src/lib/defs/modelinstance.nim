@@ -5,12 +5,8 @@ import options
 
 type
   #[
-  typedef void      (*fmi2CallbackLogger)        (
-    fmi2ComponentEnvironment, 
-    fmi2String, 
-    fmi2Status, 
-    fmi2String, 
-    fmi2String, ...);
+   typedef void*           fmi2Component;               /* Pointer to FMU instance       */
+   typedef void*           fmi2ComponentEnvironment;    /* Pointer to FMU environment    */
 
   ]#   
   fmi2CallbackLogger*  = proc( c: fmi2ComponentEnvironment,
@@ -497,7 +493,7 @@ proc `*`*(p:Param; value:int):int =
   return p.valueI * value
 
 proc `/`*(p:Param; value:int):int =
-  return p.valueI / value
+  return (p.valueI / value).int
 
 proc `==`*(p:Param; value:int):bool =
   return p.valueI == value
