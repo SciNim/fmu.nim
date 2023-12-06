@@ -31,8 +31,6 @@ type
   FmuObj* = object of RootObj
     id*: string
     guid*: string
-    #outFile*: string
-    #params*:seq[Param] 
     parameters*:OrderedTable[string, Param]
     sourceFiles*: seq[string]
     docFiles*:seq[string]
@@ -500,7 +498,7 @@ proc `==`*(p:Param; value:int):bool =
 
 proc `+=`*(p:Param; value:int) =
   p.valueI = p.valueI + value
-  
+
 # FIXME: ------------------------------------- 
 
 

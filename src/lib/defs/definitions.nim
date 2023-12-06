@@ -64,7 +64,7 @@ const
   fmi2False* = 0
 
 type
-  fmi2Component*  = pointer
+  fmi2Component*  = pointer #  Pointer to FMU instance
     ##[
     This is a pointer to an FMU specific data structure that contains the information needed to
     process the model equations or to process the co-simulation of the respective slave. This data
@@ -73,8 +73,8 @@ type
     generation environment and must be shipped with the FMU.
     ]##
 
-#  Pointer to FMU instance
-  fmi2ComponentEnvironment* = pointer
+
+  fmi2ComponentEnvironment* = pointer #  Pointer to FMU environment
   ##[
   This is a pointer to a data structure in the simulation environment that calls the FMU. Using this
   pointer, data from the modelDescription.xml file [(for example, mapping of valueReferences to
@@ -82,10 +82,10 @@ type
   (see section 2.1.5).
   ]##
 
-#  Pointer to FMU environment
-  fmi2FMUstate* = pointer
 
-#  Pointer to internal FMU state
+  fmi2FMUstate* = pointer #  Pointer to internal FMU state
+
+
   fmi2ValueReference* = uint32 # unsigned int
   fmi2Real* = float64   # double
   fmi2Integer* = int32  # int

@@ -31,20 +31,15 @@ template useSetStartValues() =
 
 template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
 
-  proc fmi2Instantiate*( instanceName: fmi2String;
-                        fmuType: fmi2Type;
-                        fmuGUID: fmi2String;
-                        fmuResourceLocation: fmi2String;
-                        functions: fmi2CallbackFunctions;
-                        visible: fmi2Boolean;
-                        loggingOn: fmi2Boolean): FmuRef {.exportc:"$1",dynlib,cdecl.} = 
+  proc fmi2Instantiate*( instanceName:        fmi2String;
+                         fmuType:             fmi2Type;
+                         fmuGUID:             fmi2String;
+                         fmuResourceLocation: fmi2String;
+                         functions:           fmi2CallbackFunctions;
+                         visible:             fmi2Boolean;
+                         loggingOn:           fmi2Boolean): FmuRef {.exportc:"$1",dynlib,cdecl.} = 
     ## instantiates a ModelInstance. This is a black box for the simulation
     ## tool; just a pointer will be shared.
-    
-    # ignoring arguments: fmuResourceLocation, visible
-  #   echo "Entering fmi2Instantiate"
-  #   echo repr functions
-  #   echo repr functions.componentEnvironment
 
     # Under the following conditions, it cannot be instantiated. Log details when possible.
     
@@ -53,20 +48,26 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
         return nil
 
     # - If no "allocateMemory" or "freeMemory" functions, return and log.
-    if functions.allocateMemory.isNil or 
-      functions.freeMemory.isNil:
+    if functions.allocateMemory.isNil:
       functions.logger( functions.componentEnvironment, instanceName, fmi2Error, "error".fmi2String,
-                "fmi2Instantiate: Missing callback function.".fmi2String)
+                "fmi2Instantiate: Missing 'allocateMemory' callback function.".fmi2String)
+      return nil
+
+    if functions.freeMemory.isNil:
+      functions.logger( functions.componentEnvironment, instanceName, fmi2Error, "error".fmi2String,
+                "fmi2Instantiate: Missing 'freeMemory' callback function.".fmi2String)
       return nil
 
     # - If instanceName not good, return and log 
     if instanceName.cstring.isNil or instanceName.cstring.len == 0:  # 
+        # functions.componentEnvironment
         functions.logger( functions.componentEnvironment, "?".fmi2String, fmi2Error, "error".fmi2String,
                 "fmi2Instantiate: Missing instance name.".fmi2String)
         return nil
 
     # - If fmuGUID not good, return and log 
     if fmuGUID.cstring.isNil or fmuGUID.cstring.len == 0:
+        # functions.componentEnvironment
         functions.logger( functions.componentEnvironment, instanceName, fmi2Error, "error".fmi2String,
                   "fmi2Instantiate: Missing GUID.".fmi2String)
         return nil
@@ -117,10 +118,6 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
     comp.nStrings  = comp.strings.len
 
 
-    # var comp = ModelInstanceRef( time: 0, 
-    #                              instanceName: instanceName, 
-    #                              `type`: fmuType, 
-    #                              guid: $fmuGUID )
 
     # If loggingOn=fmi2True: set all logging categories to ON.                     
     if not comp.isNil:
@@ -138,8 +135,11 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
     #     echo "WRONG"
     #     return nil
     
-
+    #echo "FUNCTIONS:"
     comp.functions = functions
+
+    if functions.componentEnvironment == nil:
+      echo "WARNING: instantiate.nim > fmi2Instantiate: functions.componentEnvironment == nil"  
 
     comp.componentEnvironment = functions.componentEnvironment
 
