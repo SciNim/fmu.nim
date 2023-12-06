@@ -497,6 +497,10 @@ proc `/`*(p:Param; value:int):int =
 
 proc `==`*(p:Param; value:int):bool =
   return p.valueI == value
+
+proc `+=`*(p:Param; value:int) =
+  p.valueI = p.valueI + value
+  
 # FIXME: ------------------------------------- 
 
 
