@@ -68,6 +68,7 @@ In Linux, open:
 $ OMEdit
 ```
 Then import the created FMU:
+
 ![](https://i.imgur.com/AvVh6mq.png)
 
 ![](https://i.imgur.com/pN7xbqJ.png)
@@ -75,24 +76,29 @@ Then import the created FMU:
 ![](https://i.imgur.com/bqhYm5T.png)
 
 Create a new Model (we will use the imported FMU in it):
+
 ![](https://i.imgur.com/0JEJday.png)
 
 ![](https://i.imgur.com/nLPxsxE.png)
 
 Then drag-n-drop the FMU into the model:
+
 ![](https://i.imgur.com/fm1W72l.png)
 
 ![](https://i.imgur.com/yMy25P5.png)
 
 Add an output for the integer. For that, drag-n-drop `IntegerOutput` on the model:
+
 ![](https://i.imgur.com/L8DU8jV.png)
 
 ![](https://i.imgur.com/DAZibNo.png)
 
 and connect the FMU instance to `IntegerOutput`:
+
 ![](https://i.imgur.com/ElqfXfA.png)
 
 Configure the simulation:
+
 ![](https://i.imgur.com/vtb6EQn.png)
 
 ![](https://i.imgur.com/879tGGo.png)
