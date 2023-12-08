@@ -3,29 +3,44 @@ import std/[macros, tables]
 import options
 
 
-type
-  #[
-   typedef void*           fmi2Component;               /* Pointer to FMU instance       */
-   typedef void*           fmi2ComponentEnvironment;    /* Pointer to FMU environment    */
 
-  ]#   
-  fmi2CallbackLogger*  = proc( c: fmi2ComponentEnvironment,
-                               instanceName: fmi2String,
-                               status: fmi2Status,
-                               category: fmi2String, 
-                               message: fmi2String) {.varargs.}
-  fmi2CallbackAllocateMemory* = proc(a1: cuint, a2: cuint) 
-  fmi2CallbackFreeMemory*  = proc(a1: pointer) 
-  fmi2StepFinished*  = proc(a1: fmi2ComponentEnvironment, a2: fmi2Status) 
 
+#{.push importc:"$1".}
 {.push exportc, dynlib, cdecl.}
+#[ type
+    
+
+
+
 type
-  fmi2CallbackFunctions* = ref object 
+  fmi2CallbackFunctions* {.bycopy.} = object 
     logger*: fmi2CallbackLogger
     allocateMemory*: fmi2CallbackAllocateMemory
     freeMemory*: fmi2CallbackFreeMemory
     stepFinished*: fmi2StepFinished
-    componentEnvironment*: fmi2ComponentEnvironment
+    componentEnvironment*: fmi2ComponentEnvironment ]#
+#{.pop.}
+#{.push exportc, dynlib, cdecl.}
+
+type
+  # Pointer to FMU environment
+  fmi2ComponentEnvironment*  = pointer 
+  fmi2CallbackLogger*        = proc( c: fmi2ComponentEnvironment,
+                                     instanceName: fmi2String,
+                                     status: fmi2Status,
+                                     category: fmi2String, 
+                                     message: fmi2String) {.varargs, cdecl.}
+  fmi2CallbackAllocateMemory* = proc(nobj: cuint, size: cuint) {.cdecl.}
+  fmi2CallbackFreeMemory*  = proc(obj: pointer) {.cdecl.}
+  fmi2StepFinished*  = proc(componentEnvironment: fmi2ComponentEnvironment, 
+                            status: fmi2Status) {.cdecl.}
+  
+  fmi2CallbackFunctions*  {.byref.} = object 
+    logger*: fmi2CallbackLogger
+    allocateMemory*: fmi2CallbackAllocateMemory
+    freeMemory*: fmi2CallbackFreeMemory
+    stepFinished*: fmi2StepFinished
+    componentEnvironment*: fmi2ComponentEnvironment 
 
 type
   FmuObj* = object of RootObj

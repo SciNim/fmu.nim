@@ -35,7 +35,7 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
                          fmuType:             fmi2Type;
                          fmuGUID:             fmi2String;
                          fmuResourceLocation: fmi2String;
-                         functions:           fmi2CallbackFunctions;
+                         functions: fmi2CallBackFunctions,
                          visible:             fmi2Boolean;
                          loggingOn:           fmi2Boolean): FmuRef {.exportc:"$1",dynlib,cdecl.} = 
     ## instantiates a ModelInstance. This is a black box for the simulation
@@ -75,7 +75,7 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
     # Start creating the instance
     var comp = FmuRef() #new typeof(`fmu`) 
     comp.time = 0
-    comp.instanceName = instanceName
+    comp.instanceName = ($instanceName).fmi2String
     comp.`type` = fmuType
     comp.guid = $fmuGUID
     comp.parameters = `fmu`.parameters
@@ -141,7 +141,7 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
     if functions.componentEnvironment == nil:
       echo "WARNING: instantiate.nim > fmi2Instantiate: functions.componentEnvironment == nil"  
 
-    comp.componentEnvironment = functions.componentEnvironment
+    #comp.componentEnvironment = functions.componentEnvironment
 
     comp.loggingOn = loggingOn
 

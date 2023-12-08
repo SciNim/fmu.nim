@@ -8,18 +8,20 @@ This is in an alpha stage.
 
 It is capable of creating a working FMU. It does so by:
 
-1. Creating `inc.so` in almost pure Nim. 
+1. Creating `inc.so` in pure Nim. 
 2. Embedding the `inc.so` within the `.fmu` file. 
-3. Creates the folder structure 
-4. The XML file is taken from the C version.
+3. Creating the folder structure 
+4. Creating the XML file.
+5. Packaging everything in a zip file and changing the extension into .fmu.
 
 ### How to test it?
 Go to the `examples` folder.
 
 The following command will generate `inc.so` and embed it into `inc.fmu`:
 ```
-$ nim c -r inc
+$ nim c -r -d:fmu inc
 ```
+The `-d:fmu` forces the creation of a FMU.
 
 Then test it:
 ```
@@ -32,10 +34,8 @@ $ ./fmusim_me inc.fmu 5 0.1
 > this will simulate during 5seconds using 0.1 second steps. it will create the file `results.csv`.
 
 # TODO
-- [ ] To provide: index.html as an input
-- [ ] To provide: model.png as an input
-- [ ] To provide: mode.c as a an input
-- [ ] To create: modelDescription.xml as an input
+- [ ] Resolve an issue with ComponentEnvironment propagation.
+- [ ] Manage to get it working in OpenModelica
 - [ ] To compile using zigcc providing both linux and windows libraries
 
 
@@ -48,7 +48,6 @@ A new model requires the info such as:
 ```nim
   id      = "inc"
   guid    = "{8c4e810f-3df3-4a00-8276-176fa3c9f008}"
-  outFile = "inc.fmu"
 ```
 
 We will call the `model` template with these values. The `model` template is defined in `src/fmu.nim`. This calls `model2` template (another template within `src/fmu.nim`). They both are responsible for structuring the code: the custom defined functions plus the other functions required by the standard.
@@ -63,7 +62,7 @@ All this will create two modes of operations for the code:
   - Compress everything into a `.fmu` file.
 
 
-At the end of `model2` there are plenty of includes. They implement the interface required by FMU. They depend on the functions that will go within `body`.
+
 
 
 # Simulation sequence for a Model Exchange

@@ -74,7 +74,7 @@ type
     ]##
 
 
-  fmi2ComponentEnvironment* = pointer #  Pointer to FMU environment
+  #fmi2ComponentEnvironment*  = pointer #  Pointer to FMU environment
   ##[
   This is a pointer to a data structure in the simulation environment that calls the FMU. Using this
   pointer, data from the modelDescription.xml file [(for example, mapping of valueReferences to
@@ -256,11 +256,6 @@ uses failed to materialize and the implementations often had issues.
 New in FMI 2.0.2: It is discouraged to use the memory callback functions.]
 
 ]##
-
-
-
-#⨪--------------------------------------
-
 
 
 {.pop.}
