@@ -1,7 +1,8 @@
 import system
 import std/[os, osproc, strformat] #, paths]
-import fmu/[model, folder, compress, xml]
-import ../fmu
+import model, folder, compress, xml
+import ../defs/modelinstance
+#import ../fmu
 import logging
 
 template exportFmu*( fmu:Fmu;
