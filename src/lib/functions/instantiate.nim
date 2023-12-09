@@ -123,31 +123,17 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
           for i in LoggingCategories:
               comp.logCategories.incl( i ) 
 
-
-    # if comp.isNil or comp.r.isNil or comp.i.isNil or comp.b.isNil or comp.s.isNil or comp.isPositive.isNil or
-    #    comp.instanceName.cstring.isNil or comp.GUID.cstring.isNil:
-    #     #functions.logger(functions.componentEnvironment, instanceName, fmi2Error, "error".fmi2String,
-    #     #    "fmi2Instantiate: Out of memory.".fmi2String)
-    #     echo "WRONG"
-    #     return nil
-    
-    #echo "FUNCTIONS:"
     comp.functions = functions
 
     if functions.componentEnvironment == nil:
       echo "WARNING: instantiate.nim > fmi2Instantiate: functions.componentEnvironment == nil"  
 
-    #comp.componentEnvironment = functions.componentEnvironment
 
     comp.loggingOn = loggingOn
 
     comp.state = modelInstantiated   # State changed
-
-
-    #setStartValues( comp )    
+  
     useSetStartValues() # This template just makes sure that `setStartValues` is defined.
-    #setStates( comp )
-
   
     comp.isDirtyValues = fmi2True # because we just called setStartValues
     comp.isNewEventIteration = fmi2False
