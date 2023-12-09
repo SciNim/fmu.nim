@@ -57,10 +57,10 @@ model(inc):
   # I think this the reason why the call this lazy evaluation
   # The evaluation only takes places during the time events.
   # TODO: to undestand better `eventInfo`
-  proc eventUpdate*(comp: FmuRef;
-                    eventInfo:ptr fmi2EventInfo;
-                    timeEvent:bool;
-                    isNewEventIteration:fmi2Boolean) =
+  proc eventUpdate*( comp: FmuRef;
+                     eventInfo:ptr fmi2EventInfo;
+                     timeEvent:bool;
+                     isNewEventIteration:fmi2Boolean) =
     if timeEvent: 
         #comp.counter += 1
         #echo repr comp["counter"]

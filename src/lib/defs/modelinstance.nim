@@ -2,29 +2,9 @@ import definitions, parameters
 import std/[macros, tables]
 import options
 
-
-
-
-#{.push importc:"$1".}
 {.push exportc, dynlib, cdecl.}
-#[ type
-    
-
-
-
 type
-  fmi2CallbackFunctions* {.bycopy.} = object 
-    logger*: fmi2CallbackLogger
-    allocateMemory*: fmi2CallbackAllocateMemory
-    freeMemory*: fmi2CallbackFreeMemory
-    stepFinished*: fmi2StepFinished
-    componentEnvironment*: fmi2ComponentEnvironment ]#
-#{.pop.}
-#{.push exportc, dynlib, cdecl.}
 
-type
-  # Pointer to FMU environment
-  fmi2ComponentEnvironment*  = pointer 
   fmi2CallbackLogger*        = proc( c: fmi2ComponentEnvironment,
                                      instanceName: fmi2String,
                                      status: fmi2Status,
@@ -92,176 +72,8 @@ type
   Fmu* = concept x 
     x of FmuRef
 
-
-
-# type
-#   ModelInstance* = object of FmuObj
-#     #id*: string         # <-- NEW
-#     #params*:seq[Param]  # <--- TODO: esto debería reemplazar a los siguientes.
-#     integerAddr*: seq[ptr int]  # Esta es la nueva alternativa
-#     boolAddr*: seq[ptr bool]    # Esta es la nueva alternativa    
-#     realAddr*: seq[ptr float]   # Esta es la nueva alternativa
-#     stringAddr*: seq[ptr string]
-
-   
-
-#     isPositive*: seq[fmi2Boolean]
-
-
-
-
-# type
-#   ModelInstanceRef* = ref ModelInstance
 {.pop.}
 
-#proc `=destroy`*(o: var ModelInstance) {.exportc,dynlib.} =
-#  echo "destroyed"
-
-# proc `$`*(o: ModelInstanceRef):string =
-#   result = "ref ModelInstance:"
-#   #result &= &"\n- r: {o.r}"
-#   #result &= &"\n- i: {o.i}"
-#   #result &= &"\n- b: {o.b}"
-#   #result &= &"\n- s: {o.s}"
-#   result &= &"\n- isPositive: {o.isPositive}"
-#   result &= &"\n- time: {o.time}"
-#   result &= "\n"
-
-
- 
-
-# template add*(comp: ModelInstanceRef; value:int) {.dirty.} =
-#   #proc setStartValues*(comp: ModelInstanceRef) =    
-#   #  ## used to initialize the variables (integers are stored in the seq `comp.i`)
-#     #comp.i &= 1.fmi2Integer
-#     `value` = value
-#     #echo value.astToStr, ": ", value
-#     #if typeof(value) is int:
-#     comp.integerAddr.add( addr(value) )
-#     #comp.params &= Param(name:value.astToStr, kind: tInteger)
-
-
-# macro init2*(args: varargs[typed]) =
-#   ## creates the setStartValues functions.
-#   ## Initializes and populates the model instance
-#   var body = nnkStmtList.newTree()
-
-#   #var nIntegers: int
-#   for arg in args:
-#     var id = newIdentNode(arg.strVal)
-
-#     # int case
-#     if arg.getType.typeKind == ntyInt:
-#       #nIntegers += 1
-#       let argVal = arg.getImpl[2].intVal.int
-#       body.add quote do:
-#         `id` = `argVal`
-#         comp.integerAddr.add( addr(`id`) )
-
-#     # bool case
-#     elif arg.getType.typeKind == ntyBool:
-#       let argVal = arg.getImpl[2].boolVal.bool
-#       body.add quote do:
-#         `id` = `argVal`
-#         comp.boolAddr.add( addr(`id`) )
-
-#     # real case
-#     elif arg.getType.typeKind == ntyFloat:
-#       var argVal:float
-#       var flag = false
-#       #echo repr arg.getImpl[2].kind
-#       case arg.getImpl[2].kind
-#       of nnkFloatLit:  # The initialization is defined
-#         argVal = arg.getImpl[2].floatVal.float
-#         flag = true
-#       #of nnkEmpty:     # Not initialized
-#       #  echo "nok"
-#       else:
-#         discard
-
-#       body.add quote do:
-#         if `flag`:
-#           `id` = `argVal`  # We do this only for initialization
-#         comp.realAddr.add( addr(`id`) )  # We define this for all floats
-        
-#     # string case
-#     elif arg.getType.typeKind == ntyString:
-#       let argVal = arg.getImpl[2].strVal
-#       body.add quote do:
-#         `id` = `argVal`
-#         comp.stringAddr.add( addr(`id`) )
-
-#   result = quote do:
-#     #NUMBER_OF_INTEGERS = `nIntegers`    
-#     proc setStartValues*(comp {.inject.}: ModelInstanceRef) = 
-#       `body`
-#       comp.states = myModel.states  # FIXME: copies the states from the other model here.
-
-
-
-# macro setStates*(args: varargs[typed]) =
-#   #[
-#     This macro converts things like:
-
-#       var counter:int = 1
-#       init(counter)
-    
-#     into:
-
-#       var counter:int = 1
-#       NUMBER_OF_INTEGERS = 1
-#       proc setStartValues(comp: ModelInstanceRef) {.exportc, dynlib.} =
-#         counter = 1
-#         add(comp.integerAddr, addr(counter))      
-#   ]#
-#   var body = nnkStmtList.newTree()
-
-#   #var nIntegers: int
-#   for arg in args:
-#     var id = newIdentNode(arg.strVal)
-
-#     # int case
-#     if arg.getType.typeKind == ntyInt:
-#       #nIntegers += 1
-#       let argVal = arg.getImpl[2].intVal.int
-#       body.add quote do:
-#         `id` = `argVal`
-#         comp.integerAddr.add( addr(`id`) )
-
-#     # bool case
-#     elif arg.getType.typeKind == ntyBool:
-#       let argVal = arg.getImpl[2].boolVal.bool
-#       body.add quote do:
-#         `id` = `argVal`
-#         comp.boolAddr.add( addr(`id`) )
-
-#     # real case
-#     elif arg.getType.typeKind == ntyFloat:
-#       let argVal = arg.getImpl[2].floatVal.float
-#       body.add quote do:
-#         `id` = `argVal`
-#         comp.realAddr.add( addr(`id`) )
-
-
-#   result = quote do:
-#     #NUMBER_OF_INTEGERS = `nIntegers`    
-#     proc setStates*(comp {.inject.}: ModelInstanceRef) = 
-#       discard
-#       `body`
-
-# ]#
-
-# proc `[]`*(fmu:FmuRef; name:string): int =
-#   fmu.parameters[name].startI.get
-
-# proc `[]=`*(fmu:FmuRef; name:string; val:int) =
-#   fmu.parameters[name].startI = some(val)
-
-# proc getIntegersNumber*(fmu:FmuRef): int =
-#   result = 0
-#   for p in fmu.parameters.values:
-#     if p.kind == tInteger:
-#       result += 1
 
 proc getReal*(fmu: FmuRef; n:int):float =
   fmu.parameters[fmu.reals[n]].valueR
@@ -454,40 +266,6 @@ proc setDescription*(fmu:FmuRef; name, description: string) =
   fmu.parameters[name].description = description
 
 
-
-# Getter
-# template `[]`*(fmu:FmuRef; name:string) =
-#   case `fmu`.parameters[name].kind
-#   of tInteger:
-#     `fmu`.parameters[name].valueI
-#   else:
-#     discard    
-# proc `[]`*(fmu:FmuRef; name:string):int =
-#   return fmu.parameters[name].valueI
-
-# proc `[]`*(fmu:FmuRef; name:string):float =
-#   return fmu.parameters[name].valueR
-
-# proc `[]`*(fmu:FmuRef; name:string):auto =
-#   var p = fmu.parameters[name]
-#   if p.kind == tInteger:
-#     return p.valueI
-#   elif p.kind == tReal:
-#     return p.valueR
-#   # case p.kind
-#   # of tInteger:
-#   #   return p.valueI
-#   # of tReal:
-#   #   return p.valueR
-#   #of tBoolean:
-#   #  return p.valueB
-#   #of tString:
-#   #  return p.valueS
-#   else:
-#     echo "shit"
-
-# proc getInteger*(fmu:FmuRef; name:string):int =
-#   return fmu.parameters[name].valueI
 
 # FIXME: ----- I DON'T LIKE THIS-------------- 
 proc `[]`*(fmu:FmuRef; name:string): Param =

@@ -31,8 +31,6 @@ proc fmi2GetReal*(comp: FmuRef;
                   vr: ptr fmi2ValueReference; 
                   nvr: csize_t;
                   value: ptr fmi2Real): fmi2Status =
-    #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
-    #echo "fmi2GetReal: enter-------"
     if invalidState(comp, "fmi2GetReal", MASK_fmi2GetReal):
         return fmi2Error
     
@@ -73,10 +71,7 @@ proc fmi2GetInteger*( comp: FmuRef;
                       nvr: csize_t;
                       value: ptr fmi2Integer): fmi2Status  =
     ## returns an integer value
-    ## `vr` is a vector and `nvr` its size.
-    ## `value` is another vector with the results (same `nvr` size)
-    #echo ">>>>>>>>>>>>>>>>",comp.integers # [n]
-    #echo "----------------", comp.nIntegers
+
     # Perform a number of checks
     # - check if the model is in an invalid state
     if invalidState(comp, "fmi2GetInteger", MASK_fmi2GetInteger):
@@ -104,8 +99,6 @@ proc fmi2GetInteger*( comp: FmuRef;
             return fmi2Error
 
         # read the value from memory address (vr[i] is the position; `[]`: memory content)
-
-#proc getInteger*[I:int|fmi2ValueReference](fmu: FmuRef; n:I): int =
         
         value[i] = comp.parameters[comp.integers[vr[i]]].valueI.fmi2Integer
         #value[i] = comp.getInteger(vr[i]).fmi2Integer 

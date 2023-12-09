@@ -8,43 +8,23 @@ type
     fmiCall = "logFmiCall",
     event   = "logEvent"
 
-# let # :seq[fmi2String]
-#   logCategoriesNames* = @["logAll", "logError", "logFmiCall", "logEvent"]
-
-
-#proc `[]`*(data:openarray[string]; n:LoggingCategories):string =
-#  data[n.int]
-
-# const
-#   #LOGGING_CATEGORIES* = @[]
-
-#   LOG_ALL* = 0
-#   LOG_ERROR* = 1
-#   fmiCall* = 2
-#   LOG_EVENT* = 3
-#   nCategories* = 4   # Number of logging categorias
-#   NUMBER_OF_CATEGORIES* = 4
-
 const
   DT_EVENT_DETECT* = 1e-10  # It could be modified
 
 type
   ModelState* {.size: sizeof(cint).} = enum
-    modelStartAndEnd        ,#= (1 shl 0),  ##  ME state
-    modelInstantiated       ,#= (1 shl 1),  ##  ME states
-    modelInitializationMode ,#= (1 shl 2),  ##  ME states
-    modelEventMode          ,#= (1 shl 3),  ##  CS states
-    modelContinuousTimeMode ,#= (1 shl 4),  ##  CS states
-    modelStepComplete       ,#= (1 shl 5),
-    modelStepInProgress     ,#= (1 shl 6),
-    modelStepFailed         ,#= (1 shl 7),
-    modelStepCanceled       ,#= (1 shl 8),
-    modelTerminated         ,#= (1 shl 9),
-    modelError              ,#= (1 shl 10),
-    modelFatal              #= (1 shl 11)
-
-# proc `or`*(x, y: ModelState): ModelState =
-#   (x.uint or x.uint).ModelState
+    modelStartAndEnd        , ##  ME state
+    modelInstantiated       , ##  ME states
+    modelInitializationMode , ##  ME states
+    modelEventMode          , ##  CS states
+    modelContinuousTimeMode , ##  CS states
+    modelStepComplete       ,
+    modelStepInProgress     ,
+    modelStepFailed         ,
+    modelStepCanceled       ,
+    modelTerminated         ,
+    modelError              ,
+    modelFatal              
 
 
 type
@@ -73,7 +53,8 @@ type
     generation environment and must be shipped with the FMU.
     ]##
 
-
+  # Pointer to FMU environment
+  fmi2ComponentEnvironment*  = pointer 
   #fmi2ComponentEnvironment*  = pointer #  Pointer to FMU environment
   ##[
   This is a pointer to a data structure in the simulation environment that calls the FMU. Using this

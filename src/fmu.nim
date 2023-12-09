@@ -27,9 +27,3 @@ template model*(fmu:FmuRef, body:untyped) {.dirty.} =
   include lib/functions/enquire
 
 
-    # ------- FMU BUILDER----------------------------------------
-    # The following is only compiled if called as main module
-  # when isMainModule and not compileOption("app", "lib"):
-  #   import lib/fmubuilder
-    
-  #   fmu.exportFmu()

@@ -1,24 +1,10 @@
-#import model
-#import definitions
-#import fmi2TypesPlatform, fmi2type, fmi2callbackfunctions, modelstate, fmi2eventinfo,
-#import logger
 import std/strformat
-#import typetraits
 
 # https://forum.nim-lang.org/t/7182#45378
 # https://forum.nim-lang.org/t/6980#43777mf
 
 
 ##  Creation and destruction of FMU instances and setting debug status
-
-# type
-#   Fmi2InstantiateSignature = proc( instanceName: fmi2String;
-#                         fmuType: fmi2Type;
-#                         fmuGUID: fmi2String;
-#                         fmuResourceLocation: fmi2String;
-#                         functions: fmi2CallbackFunctions;
-#                         visible: fmi2Boolean;
-#                         loggingOn: fmi2Boolean): ModelInstanceRef #{.push exportc:"$1",dynlib,cdecl.} 
 
 # https://forum.nim-lang.org/t/7496
 #template genInstantiate*(inc:Fmu): untyped =
