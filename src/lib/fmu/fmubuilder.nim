@@ -17,18 +17,63 @@ template exportFmu*( fmu:Fmu;
   createStructure(tmpFolder)
 
   # 2. Populate folder content
-  # 2.1 Create the library: inc.so
-  var libFolder:string
-  if defined(linux) and defined(amd64):
-    libFolder = joinPath(tmpFolder, "binaries/linux64", fmu.id & ".so") 
-  elif defined(windows) and defined(amd64):  # x86
-    libFolder = joinPath(tmpFolder, "binaries/windows", fmu.id & ".dll")     
- 
-  var cmdline = "nim c --app:lib -o:" & libFolder & " --mm:orc -f -d:release " & fmu.nimFile
-  # nim c --cpu:arm --os:linux --cc:clang --os:linux  --clang.exe="zigcc" --clang.linkerexe="zigcc" --passC:"-target arm-linux-musleabi -mcpu=arm1176jzf_s -fno-sanitize=undefined" --passL:"-target arm-linux-musleabi -mcpu=arm1176jzf_s" alarma.nim
-  consoleLogger.log(lvlInfo, "fmuBuilder > exportFmu: exporting library using command line:\n" & "   " & cmdline)  
+  # 2.1 Create the library: .so or .dll
+  if not defined(zig):
+    var libFolder:string
+    if defined(linux) and defined(amd64):
+      libFolder = joinPath(tmpFolder, "binaries/linux64", fmu.id & ".so") 
+    elif defined(windows) and defined(amd64):  # x86
+      libFolder = joinPath(tmpFolder, "binaries/windows", fmu.id & ".dll")     
 
-  doAssert execCmdEx( cmdline ).exitCode == QuitSuccess
+    var cmdline = "nim c --app:lib "
+    cmdline &= "-o:" & libFolder & " --mm:orc -f -d:release " & fmu.nimFile
+
+    consoleLogger.log(lvlInfo, "fmuBuilder > exportFmu: exporting library using command line:\n" & "   " & cmdline)  
+
+    doAssert execCmdEx( cmdline ).exitCode == QuitSuccess
+
+  else:
+    var libFolder = joinPath(tmpFolder, "binaries/linux64", fmu.id & ".so") 
+    #var zig = 
+    
+    var cmdline = "nim c --app:lib "
+    var zig = """ --os:linux --cc:clang --cpu:amd64 --os:linux --clang.exe="zigcc" --clang.linkerexe="zigcc" """
+    zig &= """ --passC:"-target x86_64-linux-gnu -fno-sanitize=undefined" """
+    zig &= """ --passL:"-target x86_64-linux-gnu -fno-sanitize=undefined" """
+    cmdline &= zig
+    cmdline &= "-o:" & libFolder & " --mm:orc -f -d:release " & fmu.nimFile
+
+    consoleLogger.log(lvlInfo, "fmuBuilder > exportFmu: exporting library using command line:\n" & "   " & cmdline)  
+
+    doAssert execCmdEx( cmdline ).exitCode == QuitSuccess
+
+
+    libFolder = joinPath(tmpFolder, "binaries/win64", fmu.id & ".dll")
+    cmdline = "nim c --app:lib "   
+    zig = """ --os:windows --cc:clang --cpu:amd64 --os:windows --clang.exe="zigcc" --clang.linkerexe="zigcc" """
+    zig &= """ --passC:"-target x86_64-windows -fno-sanitize=undefined" """
+    zig &= """ --passL:"-target x86_64-windows -fno-sanitize=undefined" """
+    cmdline &= zig
+    cmdline &= "-o:" & libFolder & " --mm:orc -f -d:release " & fmu.nimFile
+
+    consoleLogger.log(lvlInfo, "fmuBuilder > exportFmu: exporting library using command line:\n" & "   " & cmdline)  
+    doAssert execCmdEx( cmdline ).exitCode == QuitSuccess
+  #var cmdline = "nim c --app:lib -o:" & libFolder & " --mm:orc -f -d:release " & fmu.nimFile
+
+  #zig &= """ --passC:"-target x86_64-linux-musl -fno-sanitize=undefined" """
+  #zig &= """ --passL:"-target x86_64-linux-musl -fno-sanitize=undefined" """
+  #zig &= """ --passC:"-target x86_64-linux-gnu -fno-sanitize=undefined" """
+  #zig &= """ --passL:"-target x86_64-linux-gnu -fno-sanitize=undefined" """
+
+
+
+  # x86_64-windows
+  # aarch64-linux
+  # var cmdline = "nim c --app:lib "
+  # cmdline &= zig 
+  # cmdline &= "-o:" & libFolder & " --mm:orc -f -d:release " & fmu.nimFile
+  # nim c --cpu:arm --os:linux --cc:clang --os:linux  --clang.exe="zigcc" --clang.linkerexe="zigcc" --passC:"-target arm-linux-musleabi -mcpu=arm1176jzf_s -fno-sanitize=undefined" --passL:"-target arm-linux-musleabi -mcpu=arm1176jzf_s" alarma.nim
+
 
 
   # 2.2 Documentation into: documentation/ 
@@ -56,3 +101,53 @@ template exportFmu*( fmu:Fmu;
   # 4. Clean
   if clean:
     removeDir(tmpFolder, checkDir = false )
+
+
+#[
+  "aarch64_be-linux-gnu",
+  "aarch64_be-linux-musl",
+  "aarch64_be-windows-gnu",
+  "aarch64-linux-gnu",
+  "aarch64-linux-musl",
+  "aarch64-windows-gnu",
+  "armeb-linux-gnueabi",
+  "armeb-linux-gnueabihf",
+  "armeb-linux-musleabi",
+  "armeb-linux-musleabihf",
+  "armeb-windows-gnu",
+  "arm-linux-gnueabi",
+  "arm-linux-gnueabihf",
+  "arm-linux-musleabi",
+  "arm-linux-musleabihf",
+  "arm-windows-gnu",
+  "i386-linux-gnu",
+  "i386-linux-musl",
+  "i386-windows-gnu",
+  "mips64el-linux-gnuabi64",
+  "mips64el-linux-gnuabin32",
+  "mips64el-linux-musl",
+  "mips64-linux-gnuabi64",
+  "mips64-linux-gnuabin32",
+  "mips64-linux-musl",
+  "mipsel-linux-gnu",
+  "mipsel-linux-musl",
+  "mips-linux-gnu",
+  "mips-linux-musl",
+  "powerpc64le-linux-gnu",
+  "powerpc64le-linux-musl",
+  "powerpc64-linux-gnu",
+  "powerpc64-linux-musl",
+  "powerpc-linux-gnu",
+  "powerpc-linux-musl",
+  "riscv64-linux-gnu",
+  "riscv64-linux-musl",
+  "s390x-linux-gnu",
+  "s390x-linux-musl",
+  "sparc-linux-gnu",
+  "sparcv9-linux-gnu",
+  "wasm32-freestanding-musl",
+  "x86_64-linux-gnu",
+  "x86_64-linux-gnux32",
+  "x86_64-linux-musl",
+  "x86_64-windows-gnu"
+]#
