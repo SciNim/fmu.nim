@@ -9,4 +9,4 @@ license       = "BSD"
 srcDir = "src"
 
 requires "nim >= 2.0.0"
-requires "zippy >= 0.10.11
+requires "zippy >= 0.10.11"
