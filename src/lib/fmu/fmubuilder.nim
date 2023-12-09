@@ -89,16 +89,9 @@ template exportFmu*( fmu:Fmu;
 
   #zig &= """ --passC:"-target x86_64-linux-musl -fno-sanitize=undefined" """
   #zig &= """ --passL:"-target x86_64-linux-musl -fno-sanitize=undefined" """
-  #zig &= """ --passC:"-target x86_64-linux-gnu -fno-sanitize=undefined" """
-  #zig &= """ --passL:"-target x86_64-linux-gnu -fno-sanitize=undefined" """
-
-
 
   # x86_64-windows
   # aarch64-linux
-  # var cmdline = "nim c --app:lib "
-  # cmdline &= zig 
-  # cmdline &= "-o:" & libFolder & " --mm:orc -f -d:release " & fmu.nimFile
   # nim c --cpu:arm --os:linux --cc:clang --os:linux  --clang.exe="zigcc" --clang.linkerexe="zigcc" --passC:"-target arm-linux-musleabi -mcpu=arm1176jzf_s -fno-sanitize=undefined" --passL:"-target arm-linux-musleabi -mcpu=arm1176jzf_s" alarma.nim
 
 
