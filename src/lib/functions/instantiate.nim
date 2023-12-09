@@ -106,10 +106,6 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
       of tString:
         if p.startS.isSome:
           p.valueS = p.startS.get
-        #comp.strings &= key
-      #case p.kind
-      #of tInteger:
-
 
     # Set number of parameters
     comp.nIntegers = comp.integers.len
