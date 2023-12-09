@@ -5,7 +5,7 @@ The purpose of this library is enabling the creation of FMU files that can be la
 This library is heavily based on [fmusdk](https://github.com/qtronic/fmusdk).
 
 ## Status
-This is in an alpha stage. 
+This is in an alpha stage. Nonetheless, in its current state is capable some remarkable features. For example, it can create and FMU that works both in windows and linux.
 
 It is capable of creating a working FMU. It does so by:
 
@@ -34,6 +34,27 @@ $ ./fmusim_me inc.fmu 5 0.1
 ```
 > this will simulate during 5seconds using 0.1 second steps. it will create the file `results.csv`.
 
+### FMU compatible with windows and linux
+If you compile like this:
+```sh
+nim c -r -d:fmu inc
+```
+you will get a FMU that is compatible only with the platform in which it was compile.
+
+But if you compile using `zig`:
+```sh
+nim c -r -d:fmu -d:zig inc
+```
+you will get a FMU compatible with windows and linux (amd64 in both cases).
+
+#### Getting zig
+Install `zig` as you would do in windows or linux. (In windows, you need to have the binary reachable in the path; in Linux your package manager will take care of that).
+
+Then you need to install with `nimble` (Nim package manager) the package: `zigcc`.
+```sh
+nimble install zigcc
+```
+(this is the same for both windows and linux; in windows you might need to install `git`)
 
 
 
