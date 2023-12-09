@@ -5,24 +5,6 @@ import fmu
 import options
 import std/tables
 
-#[  
-{.experimental: "dotOperators".}  
-Este truco puede servir para trabajar fácilmente con los objectos
-
-
-echo a.hola 
-]#
-
-# Define the variables to be used
-# type
-#   Inc = object of FmuRef
-#     counter*:int = 1
-
-#template `.`*(obj: FmuRef; field: untyped):int =
-#  var tmp = obj.parameters[astToStr(field)].startI.get
-
-
-
 var inc = FmuRef( id:   "inc",
                   guid: "{8c4e810f-3df3-4a00-8276-176fa3c9f008}" )
 
@@ -36,12 +18,6 @@ inc.setDiscrete("counter")
 inc.setExact("counter")  
 inc.setDescription("counter", "counts the seconds")  
 inc.parameters["counter"].startI = some(1)
-
-
-# IMHO, the following should be named: createTimeEvent.
-# When t = 0s, it creates a time event at t = 1s.
-# When t= 1s, the state is again=modelInitializationMode, so another time event is set: t = 2s
-# and so on.
 
 
 model(inc):
