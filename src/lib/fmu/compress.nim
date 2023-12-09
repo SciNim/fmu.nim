@@ -1,27 +1,31 @@
-import zip/zipfiles
+#import zip/zipfiles
+import zippy/ziparchives
 import os, strutils, sugar
 
 
 proc compressInto*(folder, filename:string) =
-  #var tmp:string
-  #if origin.endsWith("fmu/"):
-  #  tmp = origin.dup: removeSuffix("fmu/")
-  #echo tmp
-
-
-  var z: ZipArchive
+  var cwd = getCurrentDir()
+  #echo cwd
+  setCurrentDir(folder)
+  #echo getCurrentDir()
+  #echo folder
+  let z = ZipArchive()
+  #var z: ZipArchive
   # add new file
-  discard z.open(filename, fmWrite)
+  #discard z.open(filename, fmWrite)
   #z.addFile("foo.bar")#, newStringStream("content"))
 
-  for path in walkDirRec(folder):# relative = true): #,
+  #for path in walkDirRec(folder):# relative = true): #,
     #if path.startsWith("fmu/"):
-      var dest = path.dup: removePrefix( folder )
-      dest = dest[1 ..< dest.len]
+  #    var dest = path.dup: removePrefix( folder )
+  #    dest = dest[1 ..< dest.len]
 
-      z.addFile(dest, path)
+  #    z.addFile(path)
 
-  z.close()
+  z.addDir("./")
+  setCurrentDir(cwd)
+  z.writeZipArchive(filename)
+
 
 when isMainModule:
   let filename = "prueba.fmu"
