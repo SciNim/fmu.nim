@@ -2,26 +2,13 @@ import system
 import std/[os, osproc, strformat] #, paths]
 import fmu/[model, folder, compress, xml]
 import ../fmu
-
+import logging
 
 template exportFmu*( fmu:Fmu;
                      outFile:string;
                      clean:bool = false) =
-  echo "----------------- Exporting FMU -----------------"
-  #echo repr getCurrentDir()
-  # if compiles(calculateValues):
-  #   echo "definido"
-  #   #var calculateValues = calculaValues
-  # if declared(calculateValues):
-  #   echo "declared"
-  # echo repr instantiationInfo()
-  # echo "holA"
-  # echo repr fmu
-  # echo typeof(fmu)
-  #var cmdline = &"nim c --app:lib -o:./borrame.so --mm:orc -f -d:release inc"
-  #echo cmdLine
-  #doAssert execCmdEx( cmdline ).exitCode == QuitSuccess
-  #export(fmu)
+  consoleLogger.log(lvlInfo, "fmuBuilder > exportFmu: exporting FMU")
+
 
   # 1. Create folder structure
   #var dir = mkdtemp()
@@ -30,15 +17,15 @@ template exportFmu*( fmu:Fmu;
 
   # 2. Populate folder content
   # 2.1 Create the library: inc.so
-  #var nimFile = instantiationInfo().filename#callingFile
-  #echo "Compiling module into a library: ", nimFile
-  var libFolder = joinPath(tmpFolder, "binaries/linux64", fmu.id & ".so") 
-  #echo "Lib folder: ", libFolder
-  #var cmd = 
+  var libFolder:string
+  if defined(linux) and defined(amd64):
+    libFolder = joinPath(tmpFolder, "binaries/linux64", fmu.id & ".so") 
+  elif defined(windows) and defined(amd64):  # x86
+    libFolder = joinPath(tmpFolder, "binaries/windows", fmu.id & ".dll")     
+ 
   var cmdline = "nim c --app:lib -o:" & libFolder & " --mm:orc -f -d:release " & fmu.nimFile
-  echo "Create library:"
-  echo cmdline
-  # echo fmu.nimFile
+  # nim c --cpu:arm --os:linux --cc:clang --os:linux  --clang.exe="zigcc" --clang.linkerexe="zigcc" --passC:"-target arm-linux-musleabi -mcpu=arm1176jzf_s -fno-sanitize=undefined" --passL:"-target arm-linux-musleabi -mcpu=arm1176jzf_s" alarma.nim
+  consoleLogger.log(lvlInfo, "fmuBuilder > exportFmu: exporting library using command line:\n" & "   " & cmdline)  
 
   doAssert execCmdEx( cmdline ).exitCode == QuitSuccess
 
@@ -53,16 +40,17 @@ template exportFmu*( fmu:Fmu;
 
 
   # 2.3 Sources into: sources/  FIXME
+  # Use --nimcache:folder and select all files.
   for sourceFile in fmu.sourceFiles:  
     copyFileToDir( sourceFile, 
-                 joinPath(tmpFolder, "sources") )
+                   joinPath(tmpFolder, "sources") )
 
   # 2.4 XML
   var xmlData = createXml(fmu)#, inc.nEventIndicators)
   writeFile(joinPath(tmpFolder, "modelDescription.xml"), xmlData)
 
   # 3. Compress
-  tmpFolder.compressInto( outFile) #fname )
+  tmpFolder.compressInto( outFile )
 
   # 4. Clean
   if clean:

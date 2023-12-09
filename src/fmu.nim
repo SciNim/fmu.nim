@@ -4,6 +4,10 @@ export definitions, masks, modelinstance, parameters
 import lib/fmubuilder
 export fmubuilder
 
+import std/logging
+
+var consoleLogger* = newConsoleLogger(fmtStr="[$time] - $levelname: ")
+
 
 template model*(fmu:FmuRef, body:untyped) {.dirty.} =
   ## organize the code, keeping the required includes at the end
