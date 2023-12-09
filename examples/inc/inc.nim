@@ -38,10 +38,7 @@ model(inc):
                      timeEvent:bool;
                      isNewEventIteration:fmi2Boolean) =
     if timeEvent: 
-        #comp.counter += 1
-        #echo repr comp["counter"]
         comp["counter"] += 1
-        #if comp.counter == 13: # in this case we finish (even if the simulation time is bigger)
         if comp["counter"] == 13: # in this case we finish (even if the simulation time is bigger)
             eventInfo.terminateSimulation  = fmi2True
             eventInfo.nextEventTimeDefined = fmi2False
