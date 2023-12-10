@@ -75,9 +75,7 @@ model(values):
       return 0.0
 
   proc eventUpdate*(comp:FmuRef; 
-                    #eventInfo:ptr fmi2EventInfo;
-                    isTimeEvent:bool;
-                    isNewEventIteration:fmi2Boolean) =
+                    isTimeEvent:bool ) =
     if isTimeEvent:
       # Define next time event in 1s
       comp.eventInfo.nextEventTimeDefined = fmi2True
