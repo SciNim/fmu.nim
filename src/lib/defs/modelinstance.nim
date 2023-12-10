@@ -320,7 +320,18 @@ proc `==`*(p:Param; value:int):bool =
 proc `+=`*(p:Param; value:int) =
   p.valueI = p.valueI + value
 
-# FIXME: ------------------------------------- 
+# FIXME: I need to add more functions ------- 
+# boolean operations
+proc `not`*(p:Param):bool =
+  not p.valueB
+
+# comparison
+proc `<`*(p:Param; value:int): bool =
+  if p.kind == tInteger:
+    return p.valueI < value
+  elif p.kind == tReal:
+    return p.valueR < value.float
+
 
 
 # Setter

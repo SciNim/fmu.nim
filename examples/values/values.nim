@@ -22,38 +22,38 @@ model(values):
 
   values.states &= values.parameters["myFloat"].idx
   #values.parameters["myFloat"].isState = true
-  values.parameters["myFloat"].startR = some(1.0) 
+  values["myFloat"].startR = some(1.0) 
 
   values.addFloat("myFloatDerivative").setLocal.setContinuous.setCalculated
         .setDescription("time derivative of x")
     
   # indicates this is the derivative for the first param ]#
-  values.parameters["myFloatDerivative"].derivative = 1.uint.some
+  values["myFloatDerivative"].derivative = 1.uint.some
 
   values.addInteger("myInputInteger").setInput.setDiscrete
         .setDescription("integer input")       
-  values.parameters["myInputInteger"].startI = 2.some
+  values["myInputInteger"].startI = 2.some
 
   values.addInteger("myOutputInteger").setOutput.setDiscrete.setExact 
         .setDescription("index in string array 'month'")  
-  values.parameters["myOutputInteger"].startI = 0.some
+  values["myOutputInteger"].startI = 0.some
 
   values.addBoolean("myInputBool").setInput.setDiscrete 
         .setDescription("boolean input")    
-  values.parameters["myInputBool"].startB = true.some
+  values["myInputBool"].startB = true.some
 
   values.addBoolean("myOutputBool").setOutput.setDiscrete.setExact 
         .setDescription("boolean output")    
-  values.parameters["myOutputBool"].startB = true.some
+  values["myOutputBool"].startB = true.some
 
 
   values.addString("myInputString").setInput.setDiscrete
         .setDescription("string input")    
-  values.parameters["myInputString"].startS = "QTronic".some
+  values["myInputString"].startS = "QTronic".some
 
   values.addString("myOutputString").setOutput.setDiscrete.setExact 
         .setDescription("the string month[int_out]" )    
-  values.parameters["myOutputString"].startS = months[0].some # "jan"
+  values["myOutputString"].startS = months[0].some # "jan"
 
 
 
@@ -68,13 +68,14 @@ model(values):
 
 
   proc getReal*(comp: FmuRef;
-                vr:fmi2ValueReference):fmi2Real =
+                vr:fmi2ValueReference):float =
+    # FIXME: it should depend on the name, not in vr
     if vr == 0:  # el primer índice
-      return comp.parameters["myfloat"].valueR.fmi2Real
+      return comp["myfloat"].valueR
     elif vr == 1:
-      return -comp.parameters["myfloat"].valueR.fmi2Real
+      return -comp["myfloat"].valueR
     else:
-      return (0.0).fmi2Real
+      return 0.0
 
   proc eventUpdate*(comp:FmuRef; 
                     eventInfo:ptr fmi2EventInfo;
@@ -85,13 +86,12 @@ model(values):
       eventInfo.nextEventTimeDefined = fmi2True
       eventInfo.nextEventTime        = 1 + comp.time 
 
-      comp.parameters["myOutputInteger"].valueI =  comp.parameters["myOutputInteger"].valueI + 1
-      comp.parameters["myOutputBool"].valueB = not comp.parameters["myOutputBool"].valueB
-      #myOutputBool = not myOutputBool
+      comp["myOutputInteger"] +=  1
+      comp["myOutputBool"] = not comp["myOutputBool"]
 
       # Assign each month to the output string
-      if comp.parameters["myOutputInteger"].valueI < 12:
-        comp.parameters["myOutputString"].valueS = months[comp.parameters["myOutputInteger"].valueI]
+      if comp["myOutputInteger"] < 12:
+        comp["myOutputString"] = months[comp["myOutputInteger"].valueI]
 
       # once done, terminate the simulation
       else:

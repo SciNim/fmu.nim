@@ -14,7 +14,7 @@ template useGetReal():untyped =
          if vrOutOfRange(comp, "fmi2GetReal", vr[i], comp.realAddr.len): #NUMBER_OF_REALS):
              return fmi2Error
          #echo "useGetReal - 1"
-         value[i] = getReal(comp, i.fmi2ValueReference) # <--------to be implemented by the includer of this file
+         value[i] = getReal(comp, i.fmi2ValueReference).fmi2Real # <--------to be implemented by the includer of this file
          #echo "useGetReal - 2"
          filteredLog(comp, fmi2OK, fmiCall, ("fmi2GetReal: #r" & $vr[i] & "# = " & $value[i]).fmi2String )    
 
