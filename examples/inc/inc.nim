@@ -14,7 +14,8 @@ inc.icon        = "data/model.png"
 
 inc.addInteger("counter").setOutput.setDiscrete.setExact
    .setDescription("counts the seconds")  
-inc.parameters["counter"].startI = some(1)
+   .setInitial(1)
+#inc.parameters["counter"].startI = some(1)
 
 
 model(inc):

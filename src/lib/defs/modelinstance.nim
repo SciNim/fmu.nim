@@ -1,5 +1,5 @@
 import definitions, parameters
-import std/[macros, tables]
+import std/[macros, tables, options]
 import options
 
 {.push exportc, dynlib, cdecl.}
@@ -293,6 +293,22 @@ proc setDescription*(p:Param; description: string):Param {.discardable.} =
   return p
 
 
+# Set initial value
+proc setInitial*(p:Param; value:int): Param {.discardable.} =
+  p.startI = value.some
+  return p
+
+proc setInitial*(p:Param; value:float): Param {.discardable.} =
+  p.startR = value.some
+  return p
+
+proc setInitial*(p:Param; value:bool): Param {.discardable.} =
+  p.startB = value.some
+  return p
+
+proc setInitial*(p:Param; value:string): Param {.discardable.} =
+  p.startS = value.some
+  return p
 
 # 
 proc `[]`*(fmu:FmuRef; name:string): Param =

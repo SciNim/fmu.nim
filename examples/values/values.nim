@@ -19,42 +19,39 @@ model(values):
 
   values.addFloat("myFloat").setLocal.setContinuous.setExact
         .setDescription("used as continuous state")
+        .setInitial(1.0)
 
   values.states &= values.parameters["myFloat"].idx
   #values.parameters["myFloat"].isState = true
-  values["myFloat"].startR = some(1.0) 
 
   values.addFloat("myFloatDerivative").setLocal.setContinuous.setCalculated
         .setDescription("time derivative of x")
-    
   # indicates this is the derivative for the first param ]#
   values["myFloatDerivative"].derivative = 1.uint.some
 
   values.addInteger("myInputInteger").setInput.setDiscrete
-        .setDescription("integer input")       
-  values["myInputInteger"].startI = 2.some
+        .setDescription("integer input")
+        .setInitial(2)     
 
   values.addInteger("myOutputInteger").setOutput.setDiscrete.setExact 
         .setDescription("index in string array 'month'")  
-  values["myOutputInteger"].startI = 0.some
+        .setInitial(0)
 
   values.addBoolean("myInputBool").setInput.setDiscrete 
-        .setDescription("boolean input")    
-  values["myInputBool"].startB = true.some
+        .setDescription("boolean input")
+        .setInitial(true)   
 
   values.addBoolean("myOutputBool").setOutput.setDiscrete.setExact 
         .setDescription("boolean output")    
-  values["myOutputBool"].startB = true.some
-
+        .setInitial(true)
 
   values.addString("myInputString").setInput.setDiscrete
-        .setDescription("string input")    
-  values["myInputString"].startS = "QTronic".some
+        .setDescription("string input")  
+        .setInitial("QTronic")  
 
   values.addString("myOutputString").setOutput.setDiscrete.setExact 
-        .setDescription("the string month[int_out]" )    
-  values["myOutputString"].startS = months[0].some # "jan"
-
+        .setDescription("the string month[int_out]" )  
+        .setInitial(months[0])    # "jan"
 
 
   # create time events every second

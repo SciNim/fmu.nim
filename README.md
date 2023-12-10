@@ -164,6 +164,17 @@ Reacts to events. In the `inc.nim` example, the first event was created in `calc
 
 In the `inc.nim` case, `eventUpdate` reacts to the event by creating a new event.
 
+- [ ] TODO: To talk about: 
+```nim
+type
+  fmi2EventInfo* {.bycopy.} = object
+    newDiscreteStatesNeeded*: fmi2Boolean
+    terminateSimulation*: fmi2Boolean
+    nominalsOfContinuousStatesChanged*: fmi2Boolean
+    valuesOfContinuousStatesChanged*: fmi2Boolean
+    nextEventTimeDefined*: fmi2Boolean
+    nextEventTime*: fmi2Real
+```
 
 
 ### getReal
