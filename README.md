@@ -4,6 +4,16 @@ The purpose of this library is enabling the creation of FMU files that can be la
 
 This library is heavily based on [fmusdk](https://github.com/qtronic/fmusdk).
 
+## Installing
+You need nim v2.0. You can use choosenim in order to install Nim. 
+
+As usual, with nimble:
+```sh
+nimble install https://github.com/mantielero/fmu.nim
+```
+
+TODO: to explore `atlas`.
+
 ## Status
 This is in an alpha stage. Nonetheless, in its current state is capable some remarkable features. For example, it can create and FMU that works both in windows and linux.
 
