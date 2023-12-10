@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.3.1"
+version       = "0.3.2"
 author        = "Jose Maria Garcia"
 description   = "FMU exporter tool"
 license       = "MIT"
