@@ -17,62 +17,42 @@ model(values):
     months = @["jan","feb","march","april","may","june","july",
                 "august","sept","october","november","december"]
 
-  values.addFloat("myFloat")
-  values.setLocal("myFloat")
-  values.setContinuous("myFloat")  
-  values.setExact("myFloat")   
-  values.setDescription("myFloat", "used as continuous state" )
+  values.addFloat("myFloat").setLocal.setContinuous.setExact
+        .setDescription("used as continuous state")
 
   values.states &= values.parameters["myFloat"].idx
   #values.parameters["myFloat"].isState = true
   values.parameters["myFloat"].startR = some(1.0) 
 
-  values.addFloat("myFloatDerivative")
-  values.setLocal("myFloatDerivative")
-  values.setContinuous("myFloatDerivative")  
-  values.setCalculated("myFloatDerivative")  
-  values.setDescription("myFloatDerivative", "time derivative of x" )    
+  values.addFloat("myFloatDerivative").setLocal.setContinuous.setCalculated
+        .setDescription("time derivative of x")
+    
   # indicates this is the derivative for the first param ]#
   values.parameters["myFloatDerivative"].derivative = 1.uint.some
 
-  values.addInteger("myInputInteger")
-  values.setInput("myInputInteger") 
-  values.setDiscrete("myInputInteger")  
-  values.setDescription("myInputInteger", "integer input")       
+  values.addInteger("myInputInteger").setInput.setDiscrete
+        .setDescription("integer input")       
   values.parameters["myInputInteger"].startI = 2.some
 
-  values.addInteger("myOutputInteger")
-  values.setOutput("myOutputInteger")     
-  values.setDiscrete("myOutputInteger")
-  values.setExact("myOutputInteger")  
-  values.setDescription("myOutputInteger", "index in string array 'month'")  
+  values.addInteger("myOutputInteger").setOutput.setDiscrete.setExact 
+        .setDescription("index in string array 'month'")  
   values.parameters["myOutputInteger"].startI = 0.some
 
-  values.addBoolean("myInputBool")  
-  values.setInput("myInputBool")    
-  values.setDiscrete("myInputBool")  
-  values.setDescription("myInputBool", "boolean input")    
+  values.addBoolean("myInputBool").setInput.setDiscrete 
+        .setDescription("boolean input")    
   values.parameters["myInputBool"].startB = true.some
 
-  values.addBoolean("myOutputBool")
-  values.setOutput("myOutputBool")    
-  values.setDiscrete("myOutputBool")   
-  values.setExact("myOutputBool")  
-  values.setDescription("myOutputBool", "boolean output")    
+  values.addBoolean("myOutputBool").setOutput.setDiscrete.setExact 
+        .setDescription("boolean output")    
   values.parameters["myOutputBool"].startB = true.some
 
 
-  values.addString("myInputString")
-  values.setInput("myInputString")  
-  values.setDiscrete("myInputString") 
-  values.setDescription("myInputString", "string input")    
+  values.addString("myInputString").setInput.setDiscrete
+        .setDescription("string input")    
   values.parameters["myInputString"].startS = "QTronic".some
 
-  values.addString("myOutputString")
-  values.setOutput("myOutputString")   
-  values.setDiscrete("myOutputString")   
-  values.setExact("myOutputString")   
-  values.setDescription("myOutputString", "the string month[int_out]" )    
+  values.addString("myOutputString").setOutput.setDiscrete.setExact 
+        .setDescription("the string month[int_out]" )    
   values.parameters["myOutputString"].startS = months[0].some # "jan"
 
 

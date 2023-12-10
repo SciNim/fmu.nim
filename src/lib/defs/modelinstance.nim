@@ -101,36 +101,40 @@ proc getString*[I:int|fmi2ValueReference](fmu: FmuRef; n:I): string =
 
 
 # Adding parameters to the model
-proc addFloat*(fmu:FmuRef; name:string) =
+proc addFloat*(fmu:FmuRef; name:string):Param {.discardable.} =
   fmu.parameters[name] = Param(kind: tReal)
   fmu.reals &= name
   fmu.parameters[name].idx = fmu.reals.len - 1
   # Defaults
   fmu.parameters[name].initial = iUnset
+  return fmu.parameters[name]
 
-proc addInteger*(fmu:FmuRef; name:string) =
+proc addInteger*(fmu:FmuRef; name:string):Param {.discardable.} =
   fmu.parameters[name] = Param(kind: tInteger)
   fmu.integers &= name
   fmu.parameters[name].idx = fmu.integers.len - 1
   # Defaults
   fmu.parameters[name].initial = iUnset
+  return fmu.parameters[name]  
 
-proc addBoolean*(fmu:FmuRef; name:string) =
+proc addBoolean*(fmu:FmuRef; name:string):Param {.discardable.} =
   fmu.parameters[name] = Param(kind: tBoolean)
   fmu.booleans &= name
   fmu.parameters[name].idx = fmu.booleans.len - 1
   # Defaults
   fmu.parameters[name].initial = iUnset
+  return fmu.parameters[name] 
 
-proc addString*(fmu:FmuRef; name:string) =
+proc addString*(fmu:FmuRef; name:string):Param {.discardable.}  =
   fmu.parameters[name] = Param(kind: tString)
   fmu.strings &= name
   fmu.parameters[name].idx = fmu.strings.len - 1
   # Defaults
   fmu.parameters[name].initial = iUnset
+  return fmu.parameters[name] 
 
 # Setting causality
-proc setParameter*(fmu:FmuRef; name:string) =
+proc setParameter*(p: Param):Param {.discardable.} =
   ##[
   Independent parameter(a data value that is constant during the simulation and
   is provided by the environment and cannot be used in connections).
@@ -138,41 +142,49 @@ proc setParameter*(fmu:FmuRef; name:string) =
   variability must be "fixed"or "tunable". initial must be exactor not present
   (meaning exact).
   ]##  
-  fmu.parameters[name].causality = cParameter
+  p.causality = cParameter
+  return p
 
-proc setCalculatedParameter*(fmu:FmuRef; name:string) =
+proc setCalculatedParameter*(p: Param):Param {.discardable.} =
   ##[
   A data value that is constant during the simulation and is computed during
   initialization or when tunable parameters change.
   variability must be "fixed"or "tunable". initialmust be "approx",
   "calculated"or not present (meaning calculated).
   ]##  
-  fmu.parameters[name].causality = cCalculatedParameter
+  p.causality = cCalculatedParameter
+  return p
 
-proc setInput*(fmu:FmuRef; name:string) =
+
+proc setInput*(p: Param):Param {.discardable.} =
   ##[
   The variable value can be provided from another modelor slave. It is not
   allowed to define initial.
   ]##  
-  fmu.parameters[name].causality = cInput
+  p.causality = cInput
+  return p
 
-proc setOutput*(fmu:FmuRef; name:string) =
+
+proc setOutput*(p: Param):Param {.discardable.} =
   ##[
   The variable value can be used by another modelor slave. The algebraic
   relationship to the inputs is defined via thedependenciesattribute of
   <fmiModelDescription><ModelStructure><Outputs><Unknown>.
   ]##  
-  fmu.parameters[name].causality = cOutput
+  p.causality = cOutput
+  return p
 
-proc setLocal*(fmu:FmuRef; name:string) =
+proc setLocal*(p:Param):Param {.discardable.} =
   ##[
   Local variable that is calculated from other variables or is a
   continuous-time state(see section2.2.8). It is not allowed to use the
   variable value in another modelor slave.
   ]##
-  fmu.parameters[name].causality = cLocal
+  p.causality = cLocal
+  return p
 
-proc setIndependent*(fmu:FmuRef; name:string) =
+
+proc setIndependent*(p:Param):Param {.discardable.} =
   ##[
   The independent variable (usually “time”). All variables are a function
   of this independent variable. variabilitymust be "continuous". At mostone
@@ -186,23 +198,27 @@ proc setIndependent*(fmu:FmuRef; name:string) =
   communicationStepSizeof fmi2DoStepfor CoSimulation.
   [The actual value can be inquired withfmi2GetReal.]
   ]##
-  fmu.parameters[name].causality = cIndependent
-
+  p.causality = cIndependent
+  return p
 
 # Setting variability
-proc setConstant*(fmu:FmuRef; name:string) =
+proc setConstant*(p:Param):Param {.discardable.} =
   ## "constant": The value of the variable never changes.
-  fmu.parameters[name].variability = vConstant
+  p.variability = vConstant
+  return p
 
-proc setFixed*(fmu:FmuRef; name:string) =
+
+proc setFixed*(p:Param):Param {.discardable.} =
   ##[
   "fixed": The value of the variable is fixedafter initialization, in other
   words,after fmi2ExitInitializationModewas calledthe variable value
   does notchange anymore.
   ]##
-  fmu.parameters[name].variability = vFixed
+  p.variability = vFixed
+  return p
 
-proc setTunable*(fmu:FmuRef; name:string) =
+
+proc setTunable*(p:Param):Param {.discardable.}  =
   ##[
   "tunable": The value of the variable is constant between external
   events(ModelExchange) and between Communication Points(Co-Simulation) due
@@ -213,9 +229,11 @@ proc setTunable*(fmu:FmuRef; name:string) =
   Point (Co-Simulation) and the variables with variability = "tunable" and
   causality = "calculatedParameter"or "output"must be newly computed.
   ]##  
-  fmu.parameters[name].variability = vTunable
+  p.variability = vTunable
+  return p
 
-proc setDiscrete*(fmu:FmuRef; name:string) =
+
+proc setDiscrete*(p:Param):Param {.discardable.} =
   ##[
   "discrete": ModelExchange: The value of the variable is constant between
   external and internalevents(= time, state, step events defined implicitly
@@ -223,52 +241,62 @@ proc setDiscrete*(fmu:FmuRef; name:string) =
   sampled data system and its value is only changed at Communication Points
   (also inside the slave).
   ]##  
-  fmu.parameters[name].variability = vDiscrete
+  p.variability = vDiscrete
+  return p
 
-proc setContinuous*(fmu:FmuRef; name:string) =
+
+proc setContinuous*(p:Param):Param {.discardable.} =
   ##[
   "continuous": Only a variable of type = “Real”
   can be “continuous”. ModelExchange: No restrictions on value changes.
   Co-Simulation: By convention, the variable is from a differential
   ]##  
-  fmu.parameters[name].variability = vContinuous
+  p.variability = vContinuous
+  return p
 
 # Set initial
-proc setUnset*(fmu:FmuRef; name:string) =
+proc setUnset*(p:Param):Param {.discardable.} =
   # I have invented this as default
-  fmu.parameters[name].initial = iUnset  # default
+  p.initial = iUnset  # default
+  return p
 
-proc setExact*(fmu:FmuRef; name:string) =
+
+proc setExact*(p:Param):Param {.discardable.}=
   ##[
   The variable is initialized with the start value(provided under Real,
   Integer, Boolean, String or Enumeration)
   ]##
-  fmu.parameters[name].initial = iExact
+  p.initial = iExact
+  return p
 
-proc setApprox*(fmu:FmuRef; name:string) =
+proc setApprox*(p:Param):Param {.discardable.} =
   ##[
   The variable is an iteration variable of an algebraic loop and the
   iteration at initialization starts with the startvalue.
   ]##
-  fmu.parameters[name].initial = iApprox
+  p.initial = iApprox
+  return p
 
 
-proc setCalculated*(fmu:FmuRef; name:string) =
+proc setCalculated*(p:Param):Param {.discardable.} =
   ##[
   The variable is calculated from other variables during initialization.
   It is not allowed to provide a "start" value.
   ]##
-  fmu.parameters[name].initial = iCalculated
+  p.initial = iCalculated
+  return p
 
 
 # Description
-proc setDescription*(fmu:FmuRef; name, description: string) =
-  fmu.parameters[name].description = description
+proc setDescription*(p:Param; description: string):Param {.discardable.} =
+  p.description = description
+  return p
 
 
 
-# FIXME: ----- I DON'T LIKE THIS-------------- 
+# 
 proc `[]`*(fmu:FmuRef; name:string): Param =
+  ## getting a parameter from the model
   fmu.parameters[name]
 
 proc getReal*(fmu:FmuRef; name:string):float =

@@ -12,11 +12,8 @@ inc.sourceFiles = @["data/inc.c"]
 inc.docFiles    = @["data/index.html"]
 inc.icon        = "data/model.png"
 
-inc.addInteger("counter")
-inc.setOutput("counter")     
-inc.setDiscrete("counter")
-inc.setExact("counter")  
-inc.setDescription("counter", "counts the seconds")  
+inc.addInteger("counter").setOutput.setDiscrete.setExact
+   .setDescription("counts the seconds")  
 inc.parameters["counter"].startI = some(1)
 
 
