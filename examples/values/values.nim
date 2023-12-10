@@ -3,10 +3,10 @@
 
 import fmu
 import std/[tables, options]
-import std/paths
+#import std/paths
 
-var values = FmuRef( id: "values",
-               guid: "{8c4e810f-3df3-4a00-8276-176fa3c9f004}")
+var values = FmuRef( id:   "values",
+                     guid: "{8c4e810f-3df3-4a00-8276-176fa3c9f004}")
 values.sourceFiles = @["data/inc.c"]
 values.docFiles    = @["data/index.html"]
 values.icon        = "data/model.png"
