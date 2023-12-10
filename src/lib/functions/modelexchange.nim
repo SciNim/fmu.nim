@@ -170,7 +170,7 @@ proc fmi2GetContinuousStates*(comp: FmuRef;
         return fmi2Error
     if nullPointer(comp, "fmi2GetContinuousStates", "states[]", states):
         return fmi2Error
-    echo "OK"
+    #echo "OK"
     # when NUMBER_OF_STATES > 0:
     #     for i in 0 ..< nx:
     #         var vr:fmi2ValueReference = vrStates[i]
