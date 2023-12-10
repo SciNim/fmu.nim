@@ -37,7 +37,8 @@ proc fmi2NewDiscreteStates*(comp: FmuRef; #ModelInstanceRef;
     if (comp.eventInfo.nextEventTimeDefined > 0 and comp.eventInfo.nextEventTime <= comp.time):
         timeEvent = true
 
-    eventUpdate(comp, addr(comp.eventInfo), timeEvent, comp.isNewEventIteration)
+    #eventUpdate(comp, addr(comp.eventInfo), timeEvent, comp.isNewEventIteration)
+    eventUpdate(comp, timeEvent, comp.isNewEventIteration)
     comp.isNewEventIteration = fmi2False
 
     # copy internal eventInfo of component to output eventInfo

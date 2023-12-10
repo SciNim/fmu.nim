@@ -32,17 +32,17 @@ model(inc):
   # The evaluation only takes places during the time events.
   # TODO: to undestand better `eventInfo`
   proc eventUpdate*( comp: FmuRef;
-                     eventInfo:ptr fmi2EventInfo;
+                     #eventInfo:ptr fmi2EventInfo;
                      timeEvent:bool;
                      isNewEventIteration:fmi2Boolean) =
     if timeEvent: 
         comp["counter"] += 1
         if comp["counter"] == 13: # in this case we finish (even if the simulation time is bigger)
-            eventInfo.terminateSimulation  = fmi2True
-            eventInfo.nextEventTimeDefined = fmi2False
+            comp.eventInfo.terminateSimulation  = fmi2True
+            comp.eventInfo.nextEventTimeDefined = fmi2False
         else:
-            eventInfo.nextEventTimeDefined = fmi2True
-            eventInfo.nextEventTime        = 1 + comp.time
+            comp.eventInfo.nextEventTimeDefined = fmi2True
+            comp.eventInfo.nextEventTime        = 1 + comp.time
 
 when defined(fmu):
   inc.exportFmu("inc.fmu")

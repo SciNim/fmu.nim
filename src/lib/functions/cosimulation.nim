@@ -163,7 +163,8 @@ proc fmi2DoStep*( comp: FmuRef;
 
 
         if (stateEvent > 0 or timeEvent > 0):
-            eventUpdate(comp, addr( comp.eventInfo ), timeEvent, fmi2True)
+            #eventUpdate(comp, addr( comp.eventInfo ), timeEvent, fmi2True)
+            eventUpdate(comp, timeEvent, fmi2True)
             timeEvent = 0
             stateEvent = 0
 

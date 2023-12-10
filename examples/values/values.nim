@@ -75,13 +75,13 @@ model(values):
       return 0.0
 
   proc eventUpdate*(comp:FmuRef; 
-                    eventInfo:ptr fmi2EventInfo;
+                    #eventInfo:ptr fmi2EventInfo;
                     isTimeEvent:bool;
                     isNewEventIteration:fmi2Boolean) =
     if isTimeEvent:
       # Define next time event in 1s
-      eventInfo.nextEventTimeDefined = fmi2True
-      eventInfo.nextEventTime        = 1 + comp.time 
+      comp.eventInfo.nextEventTimeDefined = fmi2True
+      comp.eventInfo.nextEventTime        = 1 + comp.time 
 
       comp["myOutputInteger"] +=  1
       comp["myOutputBool"] = not comp["myOutputBool"]
@@ -92,8 +92,8 @@ model(values):
 
       # once done, terminate the simulation
       else:
-        eventInfo.terminateSimulation  = fmi2True
-        eventInfo.nextEventTimeDefined = fmi2False
+        comp.eventInfo.terminateSimulation  = fmi2True
+        comp.eventInfo.nextEventTimeDefined = fmi2False
 
 when defined(fmu):
   values.exportFmu("values.fmu")
