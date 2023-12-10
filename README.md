@@ -167,7 +167,7 @@ In the `inc.nim` case, `eventUpdate` reacts to the event by creating a new event
 
 
 ### getReal
-This is a user defined function with signature `proc getReal*(comp: FmuRef; vr:fmi2ValueReference):fmi2Real`. It is called by `getters.nim` in `fmi2GetReal`.
+This is a user defined function with signature `proc getReal*(comp: FmuRef; vr:fmi2ValueReference):float`. It is called by `getters.nim` in `fmi2GetReal`.
 
 It is responsible for calculating the float values.
 
@@ -175,17 +175,16 @@ It is responsible for calculating the float values.
 Defined as:
 ```nim
 proc getReal*(comp: FmuRef;
-              vr:fmi2ValueReference):fmi2Real =
+              vr:fmi2ValueReference):float =
   if vr == 0:  # el primer índice
-    return comp.parameters["myfloat"].valueR.fmi2Real
+    return comp.parameters["myfloat"].valueR
   elif vr == 1:
-    return -comp.parameters["myfloat"].valueR.fmi2Real
+    return -comp.parameters["myfloat"].valueR
   else:
-    return (0.0).fmi2Real
+    return 0.0
 ```
 
 # TODO
-- [ ] To compile using zigcc providing both linux and windows libraries
 - [ ] To simulate within Nim. This would prevent the need for `fmuChecker`.
 
 # Interesting projects related to FMU
