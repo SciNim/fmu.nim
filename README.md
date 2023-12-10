@@ -177,9 +177,9 @@ Defined as:
 proc getReal*(comp: FmuRef;
               vr:fmi2ValueReference):float =
   if vr == 0:  # el primer índice
-    return comp.parameters["myfloat"].valueR
+    return comp["myfloat"].valueR
   elif vr == 1:
-    return -comp.parameters["myfloat"].valueR
+    return -comp["myfloat"].valueR
   else:
     return 0.0
 ```
