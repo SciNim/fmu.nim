@@ -1,4 +1,4 @@
-import std/strformat
+import std/[strformat, tables, options]
 
 # https://forum.nim-lang.org/t/7182#45378
 # https://forum.nim-lang.org/t/6980#43777mf

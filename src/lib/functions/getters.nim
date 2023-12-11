@@ -41,7 +41,8 @@ proc fmi2GetReal*(comp: FmuRef;
         return fmi2Error
 
     if nvr > 0 and comp.isDirtyValues == fmi2True:
-        calculateValues(comp)   # <---------------
+        when defined(calculateValues):
+          calculateValues(comp)   # <---------------
         comp.isDirtyValues = fmi2False
 
     #---- Only compiled if NUMBER_OF_REALS is >0
@@ -88,7 +89,8 @@ proc fmi2GetInteger*( comp: FmuRef;
     # - if isDirtyValues recalculate the values. It seems this is done in a lazy way (by updating
     #   the time; the values are only calculate after a time event -I think-)
     if nvr > 0 and comp.isDirtyValues == fmi2True:       
-        calculateValues(comp) # user defined
+        when defined(calculateValues):
+          calculateValues(comp) # user defined
         comp.isDirtyValues = fmi2False
 
 
@@ -116,7 +118,8 @@ proc fmi2GetBoolean*(comp: FmuRef; vr: ptr fmi2ValueReference; nvr: csize_t;
     if nvr > 0 and nullPointer(comp, "fmi2GetBoolean", "value[]", value):
             return fmi2Error
     if nvr > 0 and comp.isDirtyValues == fmi2True:
-        calculateValues(comp)
+        when defined(calculateValues):
+          calculateValues(comp)
         comp.isDirtyValues = fmi2False
     
     for i in 0 ..< nvr:
@@ -146,7 +149,8 @@ proc fmi2GetString*( comp: FmuRef;
     if nvr > 0 and nullPointer(comp, "fmi2GetString", "value[]", value):
             return fmi2Error
     if nvr > 0 and comp.isDirtyValues == fmi2True:
-        calculateValues(comp)
+        when defined(calculateValues):
+          calculateValues(comp)
         comp.isDirtyValues = fmi2False
 
     # var v = cast[ptr UncheckedArray[fmi2ValueReference]](vr)

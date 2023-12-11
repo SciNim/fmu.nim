@@ -124,6 +124,7 @@ type
       startR*: Option[float]
       derivative*: Option[uint]
       reinit*: Option[bool]
+      state*: bool = false
     of tInteger:
       valueI*: int
       #addressI*: ptr int

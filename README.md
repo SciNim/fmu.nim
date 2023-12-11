@@ -155,6 +155,13 @@ This function is defined by the user and called from `getters.nim` (`fmi2GetReal
 Lazy set values (given it is only called when `isDirtyValues == true` in the model) for all variable that are computed from other variables.
 
 
+// Lazy set values for all variable that are computed from other variables.
+void calculateValues(ModelInstance *comp) {
+    //if (comp->state == modelInitializationMode) {
+    //  initialization code here
+    //  set first time event, if any, using comp->eventInfo.nextEventTime
+    //}
+
 #### Example: `inc.nim`
 Defines:
 ```nim
@@ -169,6 +176,7 @@ In this case, `calculateValues` creates new temporal events. In particular, crea
 
 
 ### eventUpdate
+Used to set the next time event, if any.
 #### Example: `inc.nim`
 Reacts to events. In the `inc.nim` example, the first event was created in `calculateValues`.
 
@@ -207,6 +215,9 @@ proc getReal*(comp: FmuRef;
 ```
 
 # TODO
+- [X] To support states. (derivatives: dq.c)
+- [ ] numberOfEventIndicators
+- [ ] To support co-simulation
 - [ ] To simulate within Nim. This would prevent the need for `fmuChecker`.
 
 # Interesting projects related to FMU

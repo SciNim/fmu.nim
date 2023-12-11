@@ -1,17 +1,4 @@
 import definitions
-#import modelstate
-#import bitops
-#[
-import bitops
-import strformat
-
-var a = (1 shl 0)
-var b = (1 shl 1)
-
-echo fmt"{(a and b):b}"
-]#
-
-#proc `|`(a,b:ModelState):bool =
 
 
 const

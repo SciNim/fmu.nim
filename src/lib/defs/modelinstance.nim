@@ -29,7 +29,7 @@ type
     parameters*:OrderedTable[string, Param]
     sourceFiles*: seq[string]
     docFiles*:seq[string]
-    icon*:string
+    icon*:string = ""
     nEventIndicators*:int
 
     time*: fmi2Real
@@ -58,6 +58,7 @@ type
     nFloats*:int   = 0    
     nBooleans*:int = 0
     nStrings*:int  = 0
+    nStates*:int   = 0
     
     reals*:seq[string]    = @[]
     integers*:seq[string] = @[]
@@ -310,6 +311,19 @@ proc setInitial*(p:Param; value:string): Param {.discardable.} =
   p.startS = value.some
   return p
 
+# States
+proc setState*(p:Param): Param {.discardable.} =
+  #values.states &= values.parameters["myFloat"].idx
+  p.state = true
+  return p
+
+
+# Derivatives
+proc derives*(p,d:Param):Param {.discardable.} =
+  p.derivative = d.idx.uint.some
+  return p
+
+
 # 
 proc `[]`*(fmu:FmuRef; name:string): Param =
   ## getting a parameter from the model
@@ -326,6 +340,10 @@ proc `-`*(p:Param; value:int):int =
 
 proc `*`*(p:Param; value:int):int =
   return p.valueI * value
+
+proc `*`*(p1:Param; p2:Param):float =
+  #if p1.kind == tReal or p2.kind == tReal
+  return p1.valueR * p2.valueR
 
 proc `/`*(p:Param; value:int):int =
   return (p.valueI / value).int

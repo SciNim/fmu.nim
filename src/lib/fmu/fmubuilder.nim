@@ -100,9 +100,10 @@ template exportFmu*( fmu:Fmu;
   for docFile in fmu.docFiles:
     copyFileToDir( docFile, 
                   joinPath(tmpFolder, "documentation") )
-    
-  copyFileToDir( fmu.icon, 
-                 joinPath(tmpFolder, "documentation") )
+  
+  if fmu.icon != "":
+    copyFileToDir( fmu.icon, 
+                  joinPath(tmpFolder, "documentation") )
 
 
   # 2.3 Sources into: sources/  FIXME
@@ -112,6 +113,12 @@ template exportFmu*( fmu:Fmu;
                    joinPath(tmpFolder, "sources") )
 
   # 2.4 XML
+  # 2.4.1 Make sure that the states are updated
+  for p in fmu.parameters.values:
+    if p.state:
+      fmu.states &= p.idx
+      #echo fmu.states
+
   var xmlData = createXml(fmu)#, inc.nEventIndicators)
   writeFile(joinPath(tmpFolder, "modelDescription.xml"), xmlData)
 

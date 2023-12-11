@@ -4,12 +4,13 @@ import ../defs/[modelinstance, parameters]
 import ./model
 
 proc createXml*( myModel: Fmu): string =
-  
-  var file = newElement("File")
-  `attrs=`(file, {"name" : "inc.c"}.toXmlAttributes)
-  #file.attrs  = {"name" : "inc.c"}.toXmlAttributes  # FIXME: I don't know why this fails.
-  #let fileFinal = newXmlTree( file, @[], fileAtt)
-  let sourceFiles = newXmlTree("SourceFiles", [file])
+  var files:seq[XmlNode] = @[]
+  for fname in myModel.sourceFiles:
+    var file = newElement("File")
+    `attrs=`(file, {"name" : fname}.toXmlAttributes)
+    files &= file
+
+  let sourceFiles = newXmlTree("SourceFiles", files) # [file])
 
   let meAtt = { "modelIdentifier" : fmt"{myModel.id}" }.toXmlAttributes
   var modelExchange = newXmlTree("ModelExchange", [sourceFiles], meAtt)
@@ -98,7 +99,7 @@ proc createXml*( myModel: Fmu): string =
         flag = true
       
       if param.derivative.isSome:
-        `attrs=`(initial, {"derivative" : $param.derivative.get}.toXmlAttributes)
+        `attrs=`(initial, {"derivative" : $(param.derivative.get + 1)}.toXmlAttributes)
         #initial.attrs = { "derivative" : $param.derivative.get}.toXmlAttributes
         flag = true
         modelStructureDerivatives &= index

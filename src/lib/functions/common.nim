@@ -2,6 +2,8 @@ import strformat
 
 {.push exportc:"$1",cdecl,dynlib.}
 
+# https://github.com/qtronic/fmusdk/blob/69cea51c40694bc5cab58edf84bd107149ac450b/fmu20/src/models/fmuTemplate.c#L204-L216
+# FIXME
 proc fmi2SetupExperiment*( comp: FmuRef; 
                            toleranceDefined: fmi2Boolean;
                            tolerance: fmi2Real; 
@@ -9,16 +11,14 @@ proc fmi2SetupExperiment*( comp: FmuRef;
                            stopTimeDefined: fmi2Boolean; 
                            stopTime: fmi2Real): fmi2Status =
     # ignore arguments: stopTimeDefined, stopTime
-    # echo "IN: fmi2SetupExperiment"
-    # echo "comp.state: ", $comp.state
-    # echo "mark: ", MASK_fmi2SetupExperiment
-    if invalidState(comp, "fmi2SetupExperiment", MASK_fmi2SetupExperiment):
-    #if invalidState(cast[ptr ModelInstanceRef](c), "fmi2SetupExperiment", MASK_fmi2SetupExperiment):
-        echo "INVALID STATE!!!"
-        return fmi2Error
-    filteredLog( comp, fmi2OK, fmiCall,
-                 fmt"fmi2SetupExperiment: toleranceDefined={toleranceDefined} tolerance={tolerance}".fmi2String)
 
+    if invalidState(comp, "fmi2SetupExperiment", MASK_fmi2SetupExperiment):
+        return fmi2Error
+
+    var tmp = "fmi2SetupExperiment: toleranceDefined=" & $toleranceDefined & " tolerance=" & $tolerance
+    filteredLog( comp, fmi2OK, fmiCall,
+                 tmp.fmi2String)
+    
     comp.time = startTime
     return fmi2OK
 
@@ -41,7 +41,8 @@ proc fmi2ExitInitializationMode*(comp: FmuRef): fmi2Status =
     # if values were set and no fmi2GetXXX triggered update before,
     # ensure calculated values are updated now
     if comp.isDirtyValues > 0:
-        calculateValues(comp)
+        when defined(calculateValues):
+          calculateValues(comp)
         comp.isDirtyValues = fmi2False
 
     if comp.`type` == fmi2ModelExchange:

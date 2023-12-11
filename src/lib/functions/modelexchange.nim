@@ -3,6 +3,10 @@ import ../functions/helpers
 import ../meta/filteredlog
 import strformat
 
+# template useEventUpdate():untyped =
+#     mixin eventUpdate
+
+#     eventUpdate(comp, timeEvent)
 
 ## ---------------------------------------------------------------------------
 ## Functions for FMI2 for Model Exchange
@@ -38,7 +42,11 @@ proc fmi2NewDiscreteStates*(comp: FmuRef; #ModelInstanceRef;
         timeEvent = true
 
     #eventUpdate(comp, addr(comp.eventInfo), timeEvent, comp.isNewEventIteration)
-    eventUpdate(comp, timeEvent) #, comp.isNewEventIteration)
+    #if compiles(useEventUpdate):
+    #  useEventUpdate()
+    when defined(eventUpdate):
+      eventUpdate(comp, timeEvent)
+    #eventUpdate(comp, timeEvent) #, comp.isNewEventIteration)
     comp.isNewEventIteration = fmi2False
 
     # copy internal eventInfo of component to output eventInfo
@@ -111,6 +119,8 @@ proc fmi2SetContinuousStates*(comp: FmuRef;
 
 
 # Evaluation of the model equations
+# FIXME
+# https://github.com/qtronic/fmusdk/blob/69cea51c40694bc5cab58edf84bd107149ac450b/fmu20/src/models/fmuTemplate.c#L856-L873
 proc fmi2GetDerivatives*(comp: FmuRef; 
                          derivatives: ptr fmi2Real; 
                          nx: csize_t): fmi2Status =
@@ -122,11 +132,15 @@ proc fmi2GetDerivatives*(comp: FmuRef;
         return fmi2Error
     if nullPointer(comp, "fmi2GetDerivatives", "derivatives[]", derivatives):
         return fmi2Error
-    # when NUMBER_OF_STATES > 0:
-    #     for i in 0 ..< nx:
-    #         var vr: fmi2ValueReference = vrStates[i] + 1
-    #         derivatives[i] = getReal(comp, vr)  # to be implemented by the includer of this file
-    #         filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetDerivatives: #r{vr}# = {derivatives[i]}" )
+    
+    when defined(getReal):
+      if comp.nStates > 0:
+        for i in 0..< nx:
+          var vr = comp.states[i] + 1  # var vr: fmi2ValueReference = vrStates[i] + 1
+          derivatives[i] = getReal(comp, vr).fmi2Real
+      #         
+      #         derivatives[i] = getReal(comp, vr)  # to be implemented by the includer of this file
+          filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetDerivatives: #r{vr}# = {derivatives[i]}" )
 
     return fmi2OK
 
