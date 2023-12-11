@@ -13,6 +13,10 @@ examples/inc/inc.fmu
 examples/values/tmpFmu/*
 examples/values/values
 examples/values/values.fmu
+examples/dq/dq
+examples/dq/dq.fmu
+examples/dq/tmpFmu/*
+
 
 
 #!examples/*.nim
