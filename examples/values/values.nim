@@ -22,14 +22,10 @@ model(values):
         .setInitial(1.0)
         .setState()
 
-  #values.states &= values.parameters["myFloat"].idx
-  #values.parameters["myFloat"].isState = true
-
   values.addFloat("myFloatDerivative").setLocal.setContinuous.setCalculated
         .setDescription("time derivative of x")
-  # indicates this is the derivative for the first param ]#
         .derives(values["myFloat"])
-  #values["myFloatDerivative"].derivative = 1.uint.some
+
 
   values.addInteger("myInputInteger").setInput.setDiscrete
         .setDescription("integer input")
