@@ -16,7 +16,9 @@ examples/values/values.fmu
 examples/dq/dq
 examples/dq/dq.fmu
 examples/dq/tmpFmu/*
-
+examples/vanDerPol/vanDerPol
+examples/vanDerPol/vanDerPol.fmu
+examples/vanDerPol/tmpFmu/*
 
 
 #!examples/*.nim
