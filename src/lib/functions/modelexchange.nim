@@ -152,13 +152,17 @@ proc fmi2GetEventIndicators*( comp: FmuRef; #ModelInstanceRef;
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     if invalidState(comp, "fmi2GetEventIndicators", MASK_fmi2GetEventIndicators):
         return fmi2Error
+
     if invalidNumber(comp, "fmi2GetEventIndicators", "ni", ni, comp.nEventIndicators): #NUMBER_OF_EVENT_INDICATORS):
         return fmi2Error
-    # FIXME
-    #if NUMBER_OF_EVENT_INDICATORS > 0:
-    #    for i in 0 ..< ni:
-    #        eventIndicators[i] = getEventIndicator(comp, i) # to be implemented by the includer of this file
-    #        filteredLog(comp, fmi2OK, fmiCall, "fmi2GetEventIndicators: z{i} = {eventIndicators[i]}")
+
+    when defined(getEventIndicator):
+      if comp.nEventIndicators > 0:
+        echo "---OK---"
+        for i in 0 ..< ni:
+          eventIndicators[i] = getEventIndicator(comp, i) # to be implemented by the includer of this file
+          filteredLog(comp, fmi2OK, fmiCall, 
+                       "fmi2GetEventIndicators: z{i} = {eventIndicators[i]}")
 
     return fmi2OK
 

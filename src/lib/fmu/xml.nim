@@ -1,4 +1,4 @@
-import std/[xmltree, strformat, strtabs]
+import std/[xmltree, strformat, strtabs, tables, sequtils]
 import options
 import ../defs/[modelinstance, parameters]
 import ./model
@@ -67,17 +67,6 @@ proc createXml*( myModel: Fmu): string =
     elif param.causality == cCalculatedParameter:
       modelStructureInitialUnknowns &= index
 
-    #[
-    ll continuous-time states and all state derivatives (defined with element
-<Derivatives> from <ModelStructure>) with initial="approx" or
-"calculated" [if a Co-Simulation FMU does not define the
-<Derivatives> element, (3) cannot be present.
-    ]#
-
-
-
-
-
     var scalarVariable:XmlNode
     if param.kind == tInteger:
       if param.startI.isSome:
@@ -93,19 +82,35 @@ proc createXml*( myModel: Fmu): string =
     elif param.kind == tReal:
       let initial = newElement("Real")
       var flag = false
+      var tmp = initTable[string, string]()
       if param.startR.isSome:
-        `attrs=`(initial, {"start" : $param.startR.get}.toXmlAttributes)
+        tmp["start"] = $param.startR.get
+        #`attrs=`(initial, {"start" : $param.startR.get}.toXmlAttributes)
         #initial.attrs = { "start" : $param.startR.get}.toXmlAttributes
         flag = true
       
+      if param.reinit:
+        tmp["reinit"] = "true"
+        flag = true
+
+      if param.min.isSome:
+        tmp["min"] = $param.min.get
+        flag = true
+
+      if param.max.isSome:
+        tmp["max"] = $param.max.get
+        flag = true
+
       if param.derivative.isSome:
-        `attrs=`(initial, {"derivative" : $(param.derivative.get + 1)}.toXmlAttributes)
+        tmp["derivative"] = $(param.derivative.get + 1)
+        #`attrs=`(initial, {"derivative" : $(param.derivative.get + 1)}.toXmlAttributes)
         #initial.attrs = { "derivative" : $param.derivative.get}.toXmlAttributes
         flag = true
         modelStructureDerivatives &= index
-        modelStructureInitialUnknowns &= index     
-
+        modelStructureInitialUnknowns &= index  
+      
       if flag:
+        `attrs=`(initial, tmp.pairs.toSeq.toXmlAttributes)
         scalarVariable = newXmlTree("ScalarVariable", [initial], scalarVariableAttrs) 
       else:
         scalarVariable = newXmlTree("ScalarVariable", [], scalarVariableAttrs)
@@ -175,23 +180,3 @@ proc createXml*( myModel: Fmu): string =
   #let k = newXmlTree("fmiModelDescription", [modelExchange, logCategories, modelVariables, modelStructure], att)
   #echo repr modelVariables
   return xmlHeader & $k
-
-
-#[
-<?xml version="1.0" encoding="UTF-8" ?>
-<fmiModelDescription guid="{8c4e810f-3df3-4a00-8276-176fa3c9f008}" numberOfEventIndicators="0" modelName="inc" fmiVersion="2.0">
-
-
-  <ModelVariables>
-    <ScalarVariable variability="discrete" valueReference="0" description="counts the seconds" causality="output" initial="exact" name="counter">
-      <Integer start="1" />
-    </ScalarVariable>
-  </ModelVariables>
-  <ModelStructure>
-    <Outputs>
-      <Unknown index="1" />
-    </Outputs>
-  </ModelStructure>
-</fmiModelDescription>
-
-]#

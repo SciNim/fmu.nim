@@ -10,7 +10,8 @@ template model*(fmu:FmuRef, body:untyped) {.dirty.} =
       `fmu`.states &= p.idx
 
   `fmu`.nStates = `fmu`.states.len
-  
+
+
   {.push exportc, dynlib.}
 
   body

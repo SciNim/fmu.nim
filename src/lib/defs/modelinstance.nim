@@ -27,9 +27,12 @@ type
     id*: string
     guid*: string
     parameters*:OrderedTable[string, Param]
+
     sourceFiles*: seq[string]
     docFiles*:seq[string]
     icon*:string = ""
+
+    isPositive*:OrderedTable[string, bool]
     nEventIndicators*:int
 
     time*: fmi2Real
@@ -296,24 +299,23 @@ proc setDescription*(p:Param; description: string):Param {.discardable.} =
 
 # Set initial value
 proc setInitial*(p:Param; value:int): Param {.discardable.} =
-  p.startI = value.some
+  p.startI = some(value)
   return p
 
 proc setInitial*(p:Param; value:float): Param {.discardable.} =
-  p.startR = value.some
+  p.startR = some(value)
   return p
 
 proc setInitial*(p:Param; value:bool): Param {.discardable.} =
-  p.startB = value.some
+  p.startB = some(value)
   return p
 
 proc setInitial*(p:Param; value:string): Param {.discardable.} =
-  p.startS = value.some
+  p.startS = some(value)
   return p
 
 # States
 proc setState*(p:Param): Param {.discardable.} =
-  #values.states &= values.parameters["myFloat"].idx
   p.state = true
   return p
 
@@ -321,6 +323,20 @@ proc setState*(p:Param): Param {.discardable.} =
 # Derivatives
 proc derives*(p,d:Param):Param {.discardable.} =
   p.derivative = d.idx.uint.some
+  return p
+
+# ---
+proc setReinit*(p:Param): Param {.discardable.} =
+  p.reinit = true
+  return p
+
+# --- min / max
+proc setMin*(p:Param; value: float): Param {.discardable.} =
+  p.min = value.some
+  return p
+
+proc setMax*(p:Param; value: float): Param {.discardable.} =
+  p.max = value.some
   return p
 
 
@@ -338,8 +354,14 @@ proc `+`*(p:Param; value:int):int =
 proc `-`*(p:Param; value:int):int =
   return p.valueI - value
 
+# proc `-`*(p:Param; value:int):int =
+#   return p.valueI - value
+
 proc `*`*(p:Param; value:int):int =
   return p.valueI * value
+
+proc `*`*(p:Param; value:float):float =
+  return p.valueR * value
 
 proc `*`*(p1:Param; p2:Param):float =
   #if p1.kind == tReal or p2.kind == tReal
@@ -366,7 +388,23 @@ proc `<`*(p:Param; value:int): bool =
   elif p.kind == tReal:
     return p.valueR < value.float
 
+proc `<`*(p:Param; value:float): bool =
+  if p.kind == tInteger:
+    return p.valueI.float < value
+  elif p.kind == tReal:
+    return p.valueR < value
 
+proc `>`*(p:Param; value:float): bool =
+  if p.kind == tInteger:
+    return p.valueI.float > value
+  elif p.kind == tReal:
+    return p.valueR > value
+
+proc `>`*(p:Param; value:int): bool =
+  if p.kind == tInteger:
+    return p.valueI > value
+  elif p.kind == tReal:
+    return p.valueR > value.float
 
 # Setter
 proc `[]=`*(fmu:FmuRef; name:string; value:int) =

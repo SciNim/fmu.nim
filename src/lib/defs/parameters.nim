@@ -110,7 +110,7 @@ type
       ]##
 
 
-  ParamObj* = object
+  ParamObj = object
     name*: string
     idx*: int
     causality*: Causality
@@ -123,18 +123,17 @@ type
       valueR*: float
       startR*: Option[float]
       derivative*: Option[uint]
-      reinit*: Option[bool]
+      reinit*: bool = false
       state*: bool = false
+      min*: Option[float]
+      max*: Option[float]
     of tInteger:
       valueI*: int
-      #addressI*: ptr int
       startI*: Option[int]  # Initial value
     of tBoolean:
-      #addressB*: ptr bool
       valueB*: bool
       startB*: Option[bool]
     of tString:
-      #addressS*: ptr string
       valueS*:string
       startS*: Option[string]
 

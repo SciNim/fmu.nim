@@ -71,7 +71,11 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
     comp.reals    = `fmu`.reals
     comp.integers = `fmu`.integers
     comp.booleans = `fmu`.booleans  
-    comp.strings  = `fmu`.strings   
+    comp.strings  = `fmu`.strings  
+
+    comp.isPositive = `fmu`.isPositive
+    comp.nEventIndicators = comp.isPositive.len    
+
     for key,p in comp.parameters.pairs:
       case p.kind
       of tInteger:
@@ -99,8 +103,6 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
     comp.nBooleans = comp.booleans.len     
     comp.nStrings  = comp.strings.len
 
-
-
     # If loggingOn=fmi2True: set all logging categories to ON.                     
     if not comp.isNil:
         # we log all considered categories
@@ -119,6 +121,8 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
 
     comp.state = modelInstantiated   # State changed
   
+
+
     useSetStartValues() # This template just makes sure that `setStartValues` is defined.
   
     comp.isDirtyValues = fmi2True # because we just called setStartValues

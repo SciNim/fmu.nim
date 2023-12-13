@@ -117,7 +117,12 @@ template exportFmu*( fmu:Fmu;
   for p in fmu.parameters.values:
     if p.state:
       fmu.states &= p.idx
-      #echo fmu.states
+  
+  # 2.4.2 Make sure that the events are considered
+  #for p in fmu.isPositive.values:
+  #  if p.state:
+  #    fmu.states &= p.idx
+  fmu.nEventIndicators = fmu.isPositive.len
 
   var xmlData = createXml(fmu)#, inc.nEventIndicators)
   writeFile(joinPath(tmpFolder, "modelDescription.xml"), xmlData)
