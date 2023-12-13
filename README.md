@@ -215,8 +215,9 @@ proc getReal*(comp: FmuRef;
 ```
 
 # TODO
-- [X] To support states. (derivatives: dq.c)
-- [ ] numberOfEventIndicators
+- [ ] unit testing for the examples
+- [ ] avoid using numbers for `getReal`
+- [ ] replace `compiles` with `defined`
 - [ ] To support co-simulation
 - [ ] To simulate within Nim. This would prevent the need for `fmuChecker`.
 
