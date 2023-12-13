@@ -30,7 +30,6 @@ dq.addFloat("k").setParameter.setFixed.setExact
 
 dq.addFloat("der(x)").setLocal.setContinuous.setCalculated
   .setDescription("time derivative of x")
-  .setInitial(1.0)
   .derives(dq["x"])  # Set as derivative of x
 
 # -k * x

@@ -18,7 +18,7 @@ proc fmi2FreeInstance*(comp: FmuRef) =
     and other resources that have been allocated by the functions of the FMU interface. If a null
     pointer is provided for “c”, the function call is ignored (does not have an effect).
     ]##
-    echo "ENTERING: fmi2FreeInstance"
+    #echo "ENTERING: fmi2FreeInstance"
     `=destroy`(comp[])
     GC_fullCollect()
 

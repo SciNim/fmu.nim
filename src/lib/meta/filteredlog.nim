@@ -22,8 +22,6 @@ template filteredLog*(  instance: FmuRef,
                         message: fmi2String, 
                         args: varargs[fmi2String]) =
   # not part of the standard
-  var newArgs:seq[fmi2String]
-  #echo "Entering: filteredLog"
 
   # error and fatal is always logged
   # then it depends on the categories to be logged
@@ -33,5 +31,5 @@ template filteredLog*(  instance: FmuRef,
                               status, # fmi2Status
                               #logCategoriesNames[categoryIndex].fmi2String, # fmi2String
                               ($categoryIndex).fmi2String,
-                              message.fmi2String, # fmi2String
+                              message,
                               args ) # FIXME  # varargs[fmi2String]
