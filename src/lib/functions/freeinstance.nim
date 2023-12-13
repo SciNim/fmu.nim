@@ -2,7 +2,7 @@
 #import definitions
 #import fmi2TypesPlatform, fmi2type, fmi2callbackfunctions, modelstate, fmi2eventinfo,
 #import logger
-import strformat
+#import strformat
 
 
 # https://forum.nim-lang.org/t/7182#45378
@@ -18,7 +18,6 @@ proc fmi2FreeInstance*(comp: FmuRef) =
     and other resources that have been allocated by the functions of the FMU interface. If a null
     pointer is provided for “c”, the function call is ignored (does not have an effect).
     ]##
-    #echo "ENTERING: fmi2FreeInstance"
     `=destroy`(comp[])
     GC_fullCollect()
 
