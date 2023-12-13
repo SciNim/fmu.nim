@@ -54,27 +54,3 @@ Checker reported:
 	0 Warning(s)
 	0 Error(s)
 ```
-
-Differences in the original:
-```txt
-...
-[INFO][FMUCHK] Model name: van der Pol oscillator
-...
-0 constants
-1 parameters
-0 discrete variables
-4 continuous variables
-0 inputs
-0 outputs
-4 local variables
-0 independent variables
-0 calculated parameters
-5 real variables
-0 integer variables
-0 enumeration variables
-0 boolean variables
-0 string variables
-```
-
-
-!! The number of continuous variables is different.

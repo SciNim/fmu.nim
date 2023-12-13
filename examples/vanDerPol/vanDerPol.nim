@@ -14,8 +14,10 @@
 import fmu#sdk
 import std/[tables, options]
 
+# modelName = "van der Pol oscillator"
+
 var vdp = FmuRef( id:   "vanDerPol",
-                 guid: "{8c4e810f-3da3-4a00-8276-176fa3c9f000}" )
+                  guid: "{8c4e810f-3da3-4a00-8276-176fa3c9f000}" )
 
 vdp.sourceFiles = @[] #"data/inc.c"]
 vdp.docFiles    = @[] #"data/index.html"]
@@ -41,7 +43,7 @@ vdp.addFloat("der(x1)").setLocal.setContinuous.setCalculated
    .derives(vdp["x1"])
    #.setInitial(1.0)
 
-vdp.addFloat("mu").setLocal.setContinuous.setExact
+vdp.addFloat("mu").setParameter.setFixed.setExact
    .setDescription("the only state")  
    .setInitial(1.0)
 
