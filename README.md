@@ -155,21 +155,14 @@ This function is defined by the user and called from `getters.nim` (`fmi2GetReal
 Lazy set values (given it is only called when `isDirtyValues == true` in the model) for all variable that are computed from other variables.
 
 
-// Lazy set values for all variable that are computed from other variables.
-void calculateValues(ModelInstance *comp) {
-    //if (comp->state == modelInitializationMode) {
-    //  initialization code here
-    //  set first time event, if any, using comp->eventInfo.nextEventTime
-    //}
-
 #### Example: `inc.nim`
 Defines:
 ```nim
-proc calculateValues*(comp: ModelInstanceRef) =
-  if comp.state == modelInitializationMode:
-      # set first time event
-      comp.eventInfo.nextEventTimeDefined = fmi2True
-      comp.eventInfo.nextEventTime        = 1 + comp.time
+  proc calculateValues*(comp: FmuRef) = 
+    if comp.state == modelInitializationMode:
+        # set first time event
+        comp.eventInfo.nextEventTimeDefined = fmi2True
+        comp.eventInfo.nextEventTime        = 1 + comp.time
 ```
 
 In this case, `calculateValues` creates new temporal events. In particular, creates in the `InitializationMode` state a new event 1s after the start.
@@ -197,21 +190,19 @@ In the `inc.nim` case, `eventUpdate` reacts to the event by creating a new event
 
 
 ### getReal
-This is a user defined function with signature `proc getReal*(comp: FmuRef; vr:fmi2ValueReference):float`. It is called by `getters.nim` in `fmi2GetReal`.
+This is a user defined function with signature `proc getReal*(comp: FmuRef; key: string):float`. It is called by `getters.nim` in `fmi2GetReal`.
 
 It is responsible for calculating the float values.
 
-### Example: `values.nim`
+#### Example: `values.nim`
 Defined as:
 ```nim
-proc getReal*(comp: FmuRef;
-              vr:fmi2ValueReference):float =
-  if vr == 0:  # el primer índice
-    return comp["myfloat"].valueR
-  elif vr == 1:
-    return -comp["myfloat"].valueR
-  else:
-    return 0.0
+  proc getReal*(comp: FmuRef;
+                key: string): float =
+    case key
+    of "myFloat": comp["myfloat"].valueR
+    of "myFloatDerivative": -comp["myfloat"].valueR
+    else: 0.0
 ```
 
 # TODO
