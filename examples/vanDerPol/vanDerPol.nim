@@ -50,20 +50,15 @@ vdp.addFloat("mu").setParameter.setFixed.setExact
 
 model(vdp):
   proc getReal*(comp: FmuRef;
-                vr:fmi2ValueReference):float =
-    # FIXME: it should depend on the name, not in vr
-    if vr == 0:   # 0:"x0"
-      return comp["x0"].valueR
-    elif vr == 1: # 1: "der(x0)"
-      return comp["x1"].valueR
-    elif vr == 2: # 2: "x1"
-      return comp["x1"].valueR
-    elif vr == 3: # 3: "der(x1)"
-      return comp["mu"].valueR * ((1.0-comp["x0"].valueR*comp["x0"].valueR)*comp["x1"].valueR) - comp["x0"].valueR
-    elif vr == 4: # 4: "mu"
-      return comp["mu"].valueR
-    else:
-      return 0.0
+                key:string):float =
+    case key
+    of "x0": comp["x0"].valueR
+    of "der(x0)": comp["x1"].valueR
+    of "x1": comp["x1"].valueR
+    of "der(x1)": comp["mu"].valueR * ((1.0-comp["x0"].valueR*comp["x0"].valueR)*comp["x1"].valueR) - comp["x0"].valueR
+    of "mu": comp["mu"].valueR
+    else: 0.0
+
 
 when defined(fmu):
   vdp.exportFmu("vanDerPol.fmu")

@@ -95,23 +95,16 @@ model(bb):
         comp.isPositive["z=0"] = comp["h"] > 0              # FIXME
           
   proc getReal*(comp: FmuRef;
-                vr:fmi2ValueReference):float =
+                key:string):float =
     # FIXME: it should depend on the name, not in vr
-    if vr == 0:   # 0:"h"
-      return comp["h"].valueR
-    elif vr == 1: # 1: "der(h)"
-      return comp["v"].valueR
-    elif vr == 2: # 2: "v"
-      return comp["v"].valueR
-    elif vr == 3: # 3: "der(v)"
-      return comp["der(v)"].valueR 
-    elif vr == 4: # 4: "g"
-      return comp["g"].valueR
-    elif vr == 5: # 5: "e"
-      return comp["e"].valueR
-    else:
-      return 0.0
-
+    case key
+    of "h": comp["h"].valueR
+    of "der(h)": comp["v"].valueR
+    of "v": comp["v"].valueR
+    of "der(v)": comp["der(v)"].valueR
+    of "g": comp["g"].valueR
+    of "e": comp["e"].valueR
+    else: 0.0
 
   proc eventUpdate*( comp: FmuRef;
                      timeEvent:bool ) =

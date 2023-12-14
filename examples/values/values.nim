@@ -14,7 +14,7 @@ values.icon        = "data/model.png"
 model(values):
   # Define the variables (initialization)
   var
-    months = @["jan","feb","march","april","may","june","july",
+    months = @[ "jan","feb","march","april","may","june","july",
                 "august","sept","october","november","december"]
 
   values.addFloat("myFloat").setLocal.setContinuous.setExact
@@ -63,14 +63,11 @@ model(values):
 
 
   proc getReal*(comp: FmuRef;
-                vr:fmi2ValueReference):float =
-    # FIXME: it should depend on the name, not in vr
-    if vr == 0:  # el primer índice
-      return comp["myfloat"].valueR
-    elif vr == 1:
-      return -comp["myfloat"].valueR
-    else:
-      return 0.0
+                key: string): float =
+    case key
+    of "myFloat": comp["myfloat"].valueR
+    of "myFloatDerivative": -comp["myfloat"].valueR
+    else: 0.0
 
   proc eventUpdate*(comp:FmuRef; 
                     isTimeEvent:bool ) =

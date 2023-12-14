@@ -79,8 +79,8 @@ type
 {.pop.}
 
 
-proc getReal*(fmu: FmuRef; n:int):float =
-  fmu.parameters[fmu.reals[n]].valueR
+# proc getReal*(fmu: FmuRef; n:int):float =
+#   fmu.parameters[fmu.reals[n]].valueR
   #fmu.parameters[name].startI = some(val)
 
 proc setReal*[I:int|fmi2ValueReference](fmu: FmuRef; n:I; value:float) =
@@ -89,19 +89,19 @@ proc setReal*[I:int|fmi2ValueReference](fmu: FmuRef; n:I; value:float) =
 proc setInteger*[I:int|fmi2ValueReference](fmu: FmuRef; n:I; value:int) =
   fmu.parameters[fmu.integers[n]].valueI = value
 
-proc getInteger*[I:int|fmi2ValueReference](fmu: FmuRef; n:I): int =
-  fmu.parameters[fmu.integers[n]].valueI
+# proc getInteger*[I:int|fmi2ValueReference](fmu: FmuRef; n:I): int =
+#   fmu.parameters[fmu.integers[n]].valueI
 
 
-proc getBoolean*[I:int|fmi2ValueReference](fmu: FmuRef; n:I): bool =
-  fmu.parameters[fmu.booleans[n]].valueB
+# proc getBoolean*[I:int|fmi2ValueReference](fmu: FmuRef; n:I): bool =
+#   fmu.parameters[fmu.booleans[n]].valueB
 
 
 proc setBoolean*[I:int|fmi2ValueReference](fmu: FmuRef; n:I; value:bool) =
   fmu.parameters[fmu.booleans[n]].valueB = value  
 
-proc getString*[I:int|fmi2ValueReference](fmu: FmuRef; n:I): string =
-  fmu.parameters[fmu.strings[n]].valueS
+# proc getString*[I:int|fmi2ValueReference](fmu: FmuRef; n:I): string =
+#   fmu.parameters[fmu.strings[n]].valueS
 
 
 # Adding parameters to the model

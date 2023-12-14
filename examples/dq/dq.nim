@@ -8,7 +8,7 @@ Sample implementation of an FMU - the Dahlquist test equation.
  Copyright QTronic GmbH. All rights reserved.
 
 ]#
-import fmu#sdk
+import fmu
 import std/[tables, options]
 
 var dq = FmuRef( id:   "dq",
@@ -32,20 +32,14 @@ dq.addFloat("der(x)").setLocal.setContinuous.setCalculated
   .setDescription("time derivative of x")
   .derives(dq["x"])  # Set as derivative of x
 
-# -k * x
-
 model(dq):
   proc getReal*(comp: FmuRef;
-                vr:fmi2ValueReference):float =
-    # FIXME: it should depend on the name, not in vr
-    if vr == 0:   # 0:"x"
-      return comp["x"].valueR
-    elif vr == 1: # 1: "k"
-      return comp["k"].valueR
-    elif vr == 2: # 2: "x_dot"
-      return -(comp["k"] * comp["x"])
-    else:
-      return 0.0
+                key:string):float =
+    case key
+    of "x": comp["x"].valueR
+    of "k": comp["k"].valueR
+    of "der(x)": -(comp["k"] * comp["x"])
+    else: 0.0
 
 when defined(fmu):
   dq.exportFmu("dq.fmu")

@@ -58,7 +58,10 @@ proc fmi2GetReal*(comp: FmuRef;
         for i in 0 ..< nvr:
             if vrOutOfRange(comp, "fmi2GetReal", vr[i], comp.realAddr.len): #NUMBER_OF_REALS):
                 return fmi2Error
-            value[i] = getReal(comp, i.fmi2ValueReference).fmi2Real # <--------to be implemented by the includer of this file
+            
+            
+            #value[i] = getReal(comp, i.fmi2ValueReference).fmi2Real # <--------to be implemented by the includer of this file
+            value[i] = getReal(comp, comp.reals[i]).fmi2Real # <--------to be implemented by the includer of this file            
             filteredLog(comp, fmi2OK, fmiCall, ("fmi2GetReal: #r" & $vr[i] & "# = " & $value[i]).fmi2String )    
 
     # mixin getReal
@@ -133,7 +136,8 @@ proc fmi2GetBoolean*(comp: FmuRef; vr: ptr fmi2ValueReference; nvr: csize_t;
     for i in 0 ..< nvr:
         if vrOutOfRange(comp, "fmi2GetBoolean", vr[i], comp.nBooleans):#NUMBER_OF_BOOLEANS):
             return fmi2Error
-        value[i] = comp.getBoolean(vr[i]).fmi2Boolean
+        value[i] = comp.parameters[comp.booleans[vr[i]]].valueB.fmi2Boolean
+        #value[i] = comp.getBoolean(vr[i]).fmi2Boolean
         var tmp:string
         if value[i] > 0:
            tmp = "true"
@@ -169,8 +173,9 @@ proc fmi2GetString*( comp: FmuRef;
         if vrOutOfRange(comp, "fmi2GetString", vr[i], comp.nStrings):
             return fmi2Error
 
-        value[i] = comp.getString(vr[i]).fmi2String   # unsafeAddr
-        var tmp = "fmi2GetString: " & $vr[i] & " = '" & comp.getString(vr[i]) & "'"
+        
+        value[i] = comp.parameters[comp.strings[vr[i]]].valueS.fmi2String
+        var tmp = "fmi2GetString: " & $vr[i] & " = '" & $value[i] & "'"
         filteredLog(comp, fmi2OK, fmiCall, tmp.fmi2string)
 
     return fmi2OK
