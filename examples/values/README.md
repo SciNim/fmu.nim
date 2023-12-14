@@ -7,6 +7,8 @@ $ ../fmuCheck.linux64 -h 1 -s 11 -f values.fmu
 
 ## results
 ```txt
+"time","myFloat","myFloatDerivative","myInputInteger","myOutputInteger","myInputBool","myOutputBool","myInputString","myOutputString"
+
 0.0000000000000000E+00,6.9527797889916618E-310,6.9527797889916618E-310,2,0,1,1,"QTronic","jan"
 1.0000000000000000E+00,0.0000000000000000E+00,0.0000000000000000E+00,2,1,1,0,"QTronic","feb"
 2.0000000000000000E+00,0.0000000000000000E+00,0.0000000000000000E+00,2,2,1,1,"QTronic","march"
@@ -24,6 +26,8 @@ $ ../fmuCheck.linux64 -h 1 -s 11 -f values.fmu
 
 ## it should be
 ```txt
+"time","x","der(x)","int_in","int_out","bool_in","bool_out","string_in","string_out"
+
 0.0000000000000000E+00,1.0000000000000000E+00,-1.0000000000000000E+00,2,0,1,0,"QTronic","jan"
 1.0000000000000000E+00,0.0000000000000000E+00,-0.0000000000000000E+00,2,1,1,1,"QTronic","feb"
 2.0000000000000000E+00,0.0000000000000000E+00,-0.0000000000000000E+00,2,2,1,0,"QTronic","march"
