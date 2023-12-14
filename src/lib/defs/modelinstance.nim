@@ -26,6 +26,8 @@ type
   FmuObj* = object of RootObj
     id*: string
     guid*: string
+    instanceName*: fmi2String  # Yo me lo cargaba
+        
     parameters*:OrderedTable[string, Param]
 
     sourceFiles*: seq[string]
@@ -43,7 +45,7 @@ type
     eventInfo*: fmi2EventInfo
 
     `type`*: fmi2Type
-    instanceName*: fmi2String  # Yo me lo cargaba
+
 
     logCategories*: set[LoggingCategories] # bit fields
 
