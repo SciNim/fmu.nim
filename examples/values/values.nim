@@ -1,6 +1,8 @@
-# Example showing the use of all FMU variable types
-# Inspired by: https://github.com/qtronic/fmusdk/blob/master/fmu20/src/models/values/values.c
+#[
+# Based on: https://github.com/qtronic/fmusdk/blob/master/fmu20/src/models/values/values.c
 
+This demonstrates the use of all FMU variable types.
+]#
 import fmu
 import std/[tables, options]
 #import std/paths

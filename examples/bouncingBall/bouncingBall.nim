@@ -1,37 +1,21 @@
-# https://github.com/qtronic/fmusdk/blob/master/fmu20/src/models/vanDerPol/vanDerPol.c
 #[
-/* ---------------------------------------------------------------------------*
- * Sample implementation of an FMU - a bouncing ball. 
- * This demonstrates the use of state events and reinit of states.
- * Equations:
- *  der(h) = v;
- *  der(v) = -g;
- *  when h<0 then v := -e * v;
- *  where
- *    h      height [m], used as state, start = 1
- *    v      velocity of ball [m/s], used as state
- *    der(h) velocity of ball [m/s]
- *    der(v) acceleration of ball [m/s2]
- *    g      acceleration of gravity [m/s2], a parameter, start = 9.81
- *    e      a dimensionless parameter, start = 0.7
- *
- * Copyright QTronic GmbH. All rights reserved.
- * ---------------------------------------------------------------------------*/
+Based on: https://github.com/qtronic/fmusdk/blob/master/fmu20/src/models/vanDerPol/vanDerPol.c
+
+Bouncing ball: this demonstrates the use of state events and reinit of states.
+Equations:
+ 
+  der(h) = v;
+  der(v) = -g;
+when h<0 then v := -e * v;
+
+where:
+  h      height [m], used as state, start = 1
+  v      velocity of ball [m/s], used as state
+  der(h) velocity of ball [m/s]
+  der(v) acceleration of ball [m/s2]
+  g      acceleration of gravity [m/s2], a parameter, start = 9.81
+  e      a dimensionless parameter, start = 0.7
 ]#
-
-#[
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<fmiModelDescription
-  numberOfEventIndicators="1">
-]#
-
-#[
-#define NUMBER_OF_EVENT_INDICATORS 1
-
-
-#define pos(z) comp->isPositive[z]  # qué hago con esto?
-]#
-
 import fmu
 import std/[tables, options]
 
@@ -148,6 +132,3 @@ model(bb):
 
 when defined(fmu):
   bb.exportFmu("bouncingBall.fmu")
-
-
-

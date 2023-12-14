@@ -1,11 +1,10 @@
 #[
-https://github.com/qtronic/fmusdk/blob/master/fmu20/src/models/dq/dq.c
+Based on: https://github.com/qtronic/fmusdk/blob/master/fmu20/src/models/dq/dq.c
 
 Sample implementation of an FMU - the Dahlquist test equation.
 
  der(x) = - k * x and x(0) = 1.
- Analytical solution: x(t) = exp(-k*t).
- Copyright QTronic GmbH. All rights reserved.
+ Analytical solution: x(t) = exp(-k*t)
 
 ]#
 import fmu

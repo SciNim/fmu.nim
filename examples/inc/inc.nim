@@ -1,4 +1,6 @@
 #[
+Based on: https://github.com/qtronic/fmusdk/blob/master/fmu20/src/models/inc/inc.c
+
 Increases a counter every second.
 ]#
 import fmu
@@ -15,8 +17,6 @@ inc.icon        = "data/model.png"
 inc.addInteger("counter").setOutput.setDiscrete.setExact
    .setDescription("counts the seconds")  
    .setInitial(1)
-#inc.parameters["counter"].startI = some(1)
-
 
 model(inc):
   proc calculateValues*(comp: FmuRef) = 

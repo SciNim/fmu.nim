@@ -1,15 +1,11 @@
-# https://github.com/qtronic/fmusdk/blob/master/fmu20/src/models/vanDerPol/vanDerPol.c
 #[
-/* ---------------------------------------------------------------------------*
- * Sample implementation of an FMU - the Van der Pol oscillator.
- * See http://en.wikipedia.org/wiki/Van_der_Pol_oscillator
- *  
- *   der(x0) = x1
- *   der(x1) = mu * ((1 - x0 ^ 2) * x1) - x0;
- *
- *   start values: x0=2, x1=0, mue=1
- * Copyright QTronic GmbH. All rights reserved.
- * ---------------------------------------------------------------------------*/
+Based on: https://github.com/qtronic/fmusdk/blob/master/fmu20/src/models/vanDerPol/vanDerPol.c
+
+The Van der Pol oscillator (http://en.wikipedia.org/wiki/Van_der_Pol_oscillator)
+
+- der(x0) = x1
+- der(x1) = mu * ((1 - x0 ^ 2) * x1) - x0;
+- start values: x0=2, x1=0, mue=1
 ]#
 import fmu#sdk
 import std/[tables, options]
