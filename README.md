@@ -217,7 +217,7 @@ proc getReal*(comp: FmuRef;
 # TODO
 - [ ] unit testing for the examples
 - [ ] avoid using numbers for `getReal`
-- [ ] replace `compiles` with `defined`
+- [X] replace `compiles` with `defined`
 - [ ] To support co-simulation
 - [ ] To simulate within Nim. This would prevent the need for `fmuChecker`.
 

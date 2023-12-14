@@ -4,14 +4,6 @@ import ../defs/[definitions, modelinstance, parameters]
 template model*(fmu:FmuRef, body:untyped) {.dirty.} =
   ## organize the code, keeping the required includes at the end
   
-  # Set states
-  for p in `fmu`.parameters.values:
-    if p.state:
-      `fmu`.states &= p.idx
-
-  `fmu`.nStates = `fmu`.states.len
-
-
   {.push exportc, dynlib.}
 
   body

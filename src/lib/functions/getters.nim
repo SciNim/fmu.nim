@@ -7,16 +7,16 @@ import ../defs/[definitions, modelinstance, masks]
 import helpers
 import ../meta/filteredlog
 
-template useGetReal():untyped =
-    mixin getReal
-    if comp.nFloats > 0:  # when: no puede evaluar en tiempo de compilación
-     for i in 0 ..< nvr:
-         if vrOutOfRange(comp, "fmi2GetReal", vr[i], comp.realAddr.len): #NUMBER_OF_REALS):
-             return fmi2Error
-         #echo "useGetReal - 1"
-         value[i] = getReal(comp, i.fmi2ValueReference).fmi2Real # <--------to be implemented by the includer of this file
-         #echo "useGetReal - 2"
-         filteredLog(comp, fmi2OK, fmiCall, ("fmi2GetReal: #r" & $vr[i] & "# = " & $value[i]).fmi2String )    
+# template useGetReal():untyped =
+#     mixin getReal
+#     if comp.nFloats > 0:  # when: no puede evaluar en tiempo de compilación
+#      for i in 0 ..< nvr:
+#          if vrOutOfRange(comp, "fmi2GetReal", vr[i], comp.realAddr.len): #NUMBER_OF_REALS):
+#              return fmi2Error
+#          #echo "useGetReal - 1"
+#          value[i] = getReal(comp, i.fmi2ValueReference).fmi2Real # <--------to be implemented by the includer of this file
+#          #echo "useGetReal - 2"
+#          filteredLog(comp, fmi2OK, fmiCall, ("fmi2GetReal: #r" & $vr[i] & "# = " & $value[i]).fmi2String )    
 
 {.push exportc: "$1",dynlib,cdecl.}
 
@@ -50,8 +50,16 @@ proc fmi2GetReal*(comp: FmuRef;
     # https://forum.nim-lang.org/t/10272
     # https://forum.nim-lang.org/t/9070
     #echo "\n\n\n===========> NVR: ", nvr
-    when compiles(useGetReal): # Checks if the template compiles
-        useGetReal()
+    # when compiles(useGetReal): # Checks if the template compiles
+    #     useGetReal()
+
+    when defined(getReal):
+      if comp.nFloats > 0:  # when: no puede evaluar en tiempo de compilación
+        for i in 0 ..< nvr:
+            if vrOutOfRange(comp, "fmi2GetReal", vr[i], comp.realAddr.len): #NUMBER_OF_REALS):
+                return fmi2Error
+            value[i] = getReal(comp, i.fmi2ValueReference).fmi2Real # <--------to be implemented by the includer of this file
+            filteredLog(comp, fmi2OK, fmiCall, ("fmi2GetReal: #r" & $vr[i] & "# = " & $value[i]).fmi2String )    
 
     # mixin getReal
     # if comp.realAddr.len > 0:  # when: no puede evaluar en tiempo de compilación

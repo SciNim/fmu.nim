@@ -1,23 +1,23 @@
-template useGetReal():untyped =
-    mixin getReal
+# template useGetReal():untyped =
+#     mixin getReal
 
-    if comp.states.len > 0:  # NUMBER_OF_STATES > 0:
-        for i in 0 ..< comp.states.len: #NUMBER_OF_STATES:
-            prevState[i] = comp.realAddr[comp.states[i]][]
+#     if comp.states.len > 0:  # NUMBER_OF_STATES > 0:
+#         for i in 0 ..< comp.states.len: #NUMBER_OF_STATES:
+#             prevState[i] = comp.realAddr[comp.states[i]][]
 
-        for i in 0 ..< comp.states.len: #NUMBER_OF_STATES:
-            var vr:fmi2ValueReference = comp.states[i].fmi2ValueReference #vrStates[i]
-            echo i, "-->"
-            comp.realAddr[comp.states[i]][] += h * getReal(comp, vr + 1)  # forward Euler step
-            echo "ok"
+#         for i in 0 ..< comp.states.len: #NUMBER_OF_STATES:
+#             var vr:fmi2ValueReference = comp.states[i].fmi2ValueReference #vrStates[i]
+#             echo i, "-->"
+#             comp.realAddr[comp.states[i]][] += h * getReal(comp, vr + 1)  # forward Euler step
+#             echo "ok"
 
-template useGetEventIndicator():untyped =
-    mixin getEventIndicator
+# template useGetEventIndicator():untyped =
+#     mixin getEventIndicator
 
-    if comp.nEventIndicators > 0:
-        # initialize previous event indicators with current values
-        for i in 0 ..< comp.nEventIndicators: #NUMBER_OF_EVENT_INDICATORS:
-           prevEventIndicators[i] = getEventIndicator(comp, i)  # <-- // to be implemented by the includer of this file
+#     if comp.nEventIndicators > 0:
+#         # initialize previous event indicators with current values
+#         for i in 0 ..< comp.nEventIndicators: #NUMBER_OF_EVENT_INDICATORS:
+#            prevEventIndicators[i] = getEventIndicator(comp, i)  # <-- // to be implemented by the includer of this file
 
 template useGetEventIndicator2():untyped =
     mixin getEventIndicator
@@ -115,17 +115,37 @@ proc fmi2DoStep*( comp: FmuRef;
     #     # initialize previous event indicators with current values
     #     for i in 0 ..< comp.nEventIndicators: #NUMBER_OF_EVENT_INDICATORS:
     #        prevEventIndicators[i] = getEventIndicator(comp, i)  # <-- // to be implemented by the includer of this file
-    when compiles(useGetEventIndicator): # Checks if the template compiles
-        useGetEventIndicator() 
+    # when compiles(useGetEventIndicator): # Checks if the template compiles
+    #     useGetEventIndicator() 
+
+    when defined(getEventIndicator): #template useGetEventIndicator():untyped =
+        #mixin getEventIndicator
+
+        if comp.nEventIndicators > 0:
+            # initialize previous event indicators with current values
+            for i in 0 ..< comp.nEventIndicators: #NUMBER_OF_EVENT_INDICATORS:
+              prevEventIndicators[i] = getEventIndicator(comp, i)  # <-- // to be implemented by the includer of this file
+
 
     # break the step into n steps and do forward Euler.
     comp.time = currentCommunicationPoint
     for k in 0 ..< n:
         comp.time += h
     #echo "---------------->", comp.states.len
-    when compiles(useGetReal): # Checks if the template compiles
-        useGetReal()    
-    
+    # when compiles(useGetReal): # Checks if the template compiles
+    #     useGetReal()   
+    when defined(getReal):
+        #mixin getReal
+
+        if comp.states.len > 0:  # NUMBER_OF_STATES > 0:
+            for i in 0 ..< comp.states.len: #NUMBER_OF_STATES:
+                prevState[i] = comp.realAddr[comp.states[i]][]
+
+            for i in 0 ..< comp.states.len: #NUMBER_OF_STATES:
+                var vr:fmi2ValueReference = comp.states[i].fmi2ValueReference #vrStates[i]
+                #echo i, "-->"
+                comp.realAddr[comp.states[i]][] += h * getReal(comp, vr + 1)  # forward Euler step
+                #echo "ok"    
     # if comp.states.len > 0:  # NUMBER_OF_STATES > 0:
 
     #     for i in 0 ..< comp.states.len: #NUMBER_OF_STATES:
@@ -153,8 +173,29 @@ proc fmi2DoStep*( comp: FmuRef;
     #         prevEventIndicators[i] = ei
 
 
-        when compiles(useGetEventIndicator2): # Checks if the template compiles
-            useGetEventIndicator2()  
+        # when compiles(useGetEventIndicator2): # Checks if the template compiles
+        #     useGetEventIndicator2()  
+
+        when defined(getEventIndicator):
+            #mixin getEventIndicator
+
+            if comp.nEventIndicators > 0:
+                # check for state event
+                for i in 0 ..< comp.nEventIndicators: #NUMBER_OF_EVENT_INDICATORS:
+                    var ei:double = getEventIndicator(comp, i)
+                    var ei:float = 0.0  # <---- borrame
+                    if ei * prevEventIndicators[i] < 0 :
+                        var tmp:string
+                        if ei < 0:
+                            tmp = "\\"
+                        else:
+                            tmp = "/"
+                        filteredLog(comp, fmi2OK, LOG_EVENT,
+                            fmt"fmi2DoStep: state event at {comp.time}, z{i} crosses zero -{tmp}-".fmi2String)
+                        inc stateEvent # stateEvent++
+
+                    prevEventIndicators[i] = ei
+
 
         # check for time event
         if (comp.eventInfo.nextEventTimeDefined > 0 and (comp.time - comp.eventInfo.nextEventTime > -DT_EVENT_DETECT)):

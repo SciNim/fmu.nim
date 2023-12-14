@@ -9,11 +9,11 @@ import std/[strformat, tables, options]
 # https://forum.nim-lang.org/t/7496
 #template genInstantiate*(inc:Fmu): untyped =
 
-template useSetStartValues() =
-  mixin setStartValues
+# template useSetStartValues() =
+#   mixin setStartValues
 
-  when compiles(setStartValues):
-    setStartValues(comp)   # <------ to be implemented by the includer of this file
+#   when compiles(setStartValues):
+#     setStartValues(comp)   # <------ to be implemented by the includer of this file
 
 template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
 
@@ -76,6 +76,13 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
     comp.isPositive = `fmu`.isPositive
     comp.nEventIndicators = comp.isPositive.len    
 
+    # for p in `fmu`.parameters.values:
+    #   if p.state:
+    #     `fmu`.states &= p.idx
+
+    # `fmu`.nStates = `fmu`.states.len
+
+
     for key,p in comp.parameters.pairs:
       case p.kind
       of tInteger:
@@ -96,6 +103,11 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
       of tString:
         if p.startS.isSome:
           p.valueS = p.startS.get
+
+      if p.state:
+        comp.states &= p.idx
+
+    comp.nStates = comp.states.len
 
     # Set number of parameters
     comp.nIntegers = comp.integers.len
@@ -121,9 +133,10 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
 
     comp.state = modelInstantiated   # State changed
   
+    when defined(setStartValues):
+      setStartValues(comp)   # <------ to be implemented by the includer of this file
 
-
-    useSetStartValues() # This template just makes sure that `setStartValues` is defined.
+    #useSetStartValues() # This template just makes sure that `setStartValues` is defined.
   
     comp.isDirtyValues = fmi2True # because we just called setStartValues
     comp.isNewEventIteration = fmi2False
