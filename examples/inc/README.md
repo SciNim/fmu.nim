@@ -2,7 +2,7 @@
 ## run.sh
 ```sh
 $ nim c -r -d:fmu inc
-$  ./fmuCheck.linux64 -h 0.2 -s 5 -f inc.fmu 
+$  ../fmuCheck.linux64 -h 0.2 -s 5 -f inc.fmu 
 ```
 
 ## Result values
