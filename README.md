@@ -7,23 +7,23 @@ This library is heavily based on [fmusdk](https://github.com/qtronic/fmusdk).
 ## Installing
 You need nim v2.0. You can use choosenim in order to install Nim. 
 
-As usual, with nimble:
+To intall the `fmu.nim` library, as usual, with nimble:
 ```sh
 nimble install https://github.com/mantielero/fmu.nim
 ```
-
-TODO: to explore `atlas`.
 
 ## Status
 This is in an alpha stage. Nonetheless, in its current state is capable some remarkable features. For example, it can create and FMU that works both in windows and linux.
 
 It is capable of creating a working FMU. It does so by:
 
-1. Creating `inc.so` in pure Nim. 
-2. Embedding the `inc.so` within the `.fmu` file. 
-3. Creating the folder structure 
-4. Creating the XML file.
-5. Packaging everything in a zip file and changing the extension into .fmu.
+## How it works?
+It creates:
+1. the libraries: `.so` and/or `.dll` 
+2. the folder structure as per the specification
+3. the XML with the model details
+
+Then it packs everything in a zip file and changes the extension into `.fmu`.
 
 ### How to test it?
 Go to the `examples` folder.
@@ -36,9 +36,9 @@ The `-d:fmu` forces the creation of a FMU.
 
 Then test it:
 ```
-$ fmuCheck.linux64 ./inc.fmu
+$ ../fmuCheck.linux64 inc.fmu
 ```
-or:
+or (from `fmusdk` package):
 ```
 $ ./fmusim_me inc.fmu 5 0.1
 ```
@@ -216,8 +216,6 @@ proc getReal*(comp: FmuRef;
 
 # TODO
 - [ ] unit testing for the examples
-- [ ] avoid using numbers for `getReal`
-- [X] replace `compiles` with `defined`
 - [ ] To support co-simulation
 - [ ] To simulate within Nim. This would prevent the need for `fmuChecker`.
 
