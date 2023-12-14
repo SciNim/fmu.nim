@@ -15,7 +15,7 @@ nimble install https://github.com/mantielero/fmu.nim
 ## Status
 This is in an alpha stage. Nonetheless, in its current state is capable some remarkable features. For example, it can create and FMU that works both in windows and linux.
 
-It is capable of creating a working FMU. It does so by:
+It is capable of creating a working FMU for integer. **There is a bug affecting floats**.
 
 ## How it works?
 It creates:
@@ -38,7 +38,7 @@ Then test it:
 ```
 $ ../fmuCheck.linux64 inc.fmu
 ```
-or (from `fmusdk` package):
+or with [fmusim](https://github.com/qtronic/fmusdk?tab=readme-ov-file#simulating-an-fmu) (from `fmusdk` package):
 ```
 $ ./fmusim_me inc.fmu 5 0.1
 ```
