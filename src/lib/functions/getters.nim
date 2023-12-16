@@ -42,7 +42,7 @@ proc fmi2GetReal*(comp: FmuRef;
             value[i] = getReal(comp, key).fmi2Real # <--------to be implemented by the includer of this file
             
             #echo "--->", value[i]
-            var tmp = "fmi2GetReal: key=\"" & key & "\"   value = " & $(value[i].float)
+            var tmp = "fmi2GetReal: " & key & "= " & $(value[i].float)
             #echo tmp
             filteredLog(comp, fmi2OK, fmiCall, tmp.fmi2String )    
    

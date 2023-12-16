@@ -41,7 +41,7 @@ proc fmi2ExitInitializationMode*(comp: FmuRef): fmi2Status =
     # if values were set and no fmi2GetXXX triggered update before,
     # ensure calculated values are updated now
     if comp.isDirtyValues > 0:
-        when defined(calculateValues):
+        when declared(calculateValues):
           calculateValues(comp)
         comp.isDirtyValues = fmi2False
 

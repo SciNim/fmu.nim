@@ -59,6 +59,7 @@ model(values):
     ## at a specific time step during simulation.
     if comp.state == modelInitializationMode:
       # set first time event
+      #echo "OK"
       comp.eventInfo.nextEventTimeDefined = fmi2True
       comp.eventInfo.nextEventTime        = 1 + comp.time
 
@@ -73,7 +74,7 @@ model(values):
   proc eventUpdate*(comp:FmuRef; 
                     isTimeEvent:bool ) =
     if isTimeEvent:
-      echo "ok"
+      #echo "ok"
       # Define next time event in 1s
       comp.eventInfo.nextEventTimeDefined = fmi2True
       comp.eventInfo.nextEventTime        = 1 + comp.time 

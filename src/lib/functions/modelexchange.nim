@@ -33,11 +33,16 @@ proc fmi2NewDiscreteStates*(comp: FmuRef;
     comp.eventInfo.nominalsOfContinuousStatesChanged = fmi2False
     comp.eventInfo.valuesOfContinuousStatesChanged = fmi2False
 
-    if (comp.eventInfo.nextEventTimeDefined > 0 and comp.eventInfo.nextEventTime <= comp.time):
+    #[
+        if (comp->eventInfo.nextEventTimeDefined && comp->eventInfo.nextEventTime <= comp->time) {
+        timeEvent = 1;
+    }
+    ]#
+    #echo repr comp.eventInfo
+    #echo ">>>", comp.eventInfo.nextEventTimeDefined.bool
+    if (comp.eventInfo.nextEventTimeDefined.bool and comp.eventInfo.nextEventTime <= comp.time):
         timeEvent = true
 
-
-    #  useEventUpdate()
     when declared(eventUpdate):
       comp.eventUpdate(timeEvent)
 
