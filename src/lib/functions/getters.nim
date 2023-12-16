@@ -7,25 +7,8 @@ import ../defs/[definitions, modelinstance, masks]
 import helpers
 import ../meta/filteredlog
 
-# template useGetReal():untyped =
-#     mixin getReal
-#     if comp.nFloats > 0:  # when: no puede evaluar en tiempo de compilación
-#      for i in 0 ..< nvr:
-#          if vrOutOfRange(comp, "fmi2GetReal", vr[i], comp.realAddr.len): #NUMBER_OF_REALS):
-#              return fmi2Error
-#          #echo "useGetReal - 1"
-#          value[i] = getReal(comp, i.fmi2ValueReference).fmi2Real # <--------to be implemented by the includer of this file
-#          #echo "useGetReal - 2"
-#          filteredLog(comp, fmi2OK, fmiCall, ("fmi2GetReal: #r" & $vr[i] & "# = " & $value[i]).fmi2String )    
 
 {.push exportc: "$1",dynlib,cdecl.}
-
-
-# forward declaration (this needs to be override by the user)
-#proc getReal(comp: FmuRef; vr:ptr fmi2ValueReference):fmi2Real 
-
-# https://forum.nim-lang.org/t/10272#68206
-#var getReal*: proc(comp: FmuRef; vr:ptr fmi2ValueReference):fmi2Real 
 
 proc fmi2GetReal*(comp: FmuRef; 
                   vr: ptr fmi2ValueReference; 
@@ -41,39 +24,28 @@ proc fmi2GetReal*(comp: FmuRef;
         return fmi2Error
 
     if nvr > 0 and comp.isDirtyValues == fmi2True:
-        when defined(calculateValues):
+        when declared(calculateValues):
           calculateValues(comp)   # <---------------
         comp.isDirtyValues = fmi2False
+    # echo "NVR>>", nvr
+    # echo "vr>>>", vr[]
 
-    #---- Only compiled if NUMBER_OF_REALS is >0
-    # inspired by: 
-    # https://forum.nim-lang.org/t/10272
-    # https://forum.nim-lang.org/t/9070
-    #echo "\n\n\n===========> NVR: ", nvr
-    # when compiles(useGetReal): # Checks if the template compiles
-    #     useGetReal()
-
-    when defined(getReal):
+    when declared(getReal):
       if comp.nFloats > 0:  # when: no puede evaluar en tiempo de compilación
         for i in 0 ..< nvr:
-            if vrOutOfRange(comp, "fmi2GetReal", vr[i], comp.realAddr.len): #NUMBER_OF_REALS):
+            if vrOutOfRange(comp, "fmi2GetReal", vr[i], comp.nFloats):
                 return fmi2Error
             
-            
             #value[i] = getReal(comp, i.fmi2ValueReference).fmi2Real # <--------to be implemented by the includer of this file
-            value[i] = getReal(comp, comp.reals[i]).fmi2Real # <--------to be implemented by the includer of this file            
-            filteredLog(comp, fmi2OK, fmiCall, ("fmi2GetReal: #r" & $vr[i] & "# = " & $value[i]).fmi2String )    
 
-    # mixin getReal
-    # if comp.realAddr.len > 0:  # when: no puede evaluar en tiempo de compilación
-    #  for i in 0 ..< nvr:
-    #      if vrOutOfRange(comp, "fmi2GetReal", vr[i], comp.realAddr.len): #NUMBER_OF_REALS):
-    #          return fmi2Error
-    #      value[i] = getReal(comp, i.fmi2ValueReference) # <--------to be implemented by the includer of this file
-    #      #value[i] = comp.r[vr[i]]            
-    #      #value[i] = r[val] #getReal(comp, val)
-    #      filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetReal: #r{vr[i]}# = {value[i]}".fmi2String )
-    #echo "fmi2GetReal: exit-------"    
+            var key = comp.reals[vr[i]]
+            value[i] = getReal(comp, key).fmi2Real # <--------to be implemented by the includer of this file
+            
+            #echo "--->", value[i]
+            var tmp = "fmi2GetReal: key=\"" & key & "\"   value = " & $(value[i].float)
+            #echo tmp
+            filteredLog(comp, fmi2OK, fmiCall, tmp.fmi2String )    
+   
     return fmi2OK
 
 
@@ -100,8 +72,8 @@ proc fmi2GetInteger*( comp: FmuRef;
     # - if isDirtyValues recalculate the values. It seems this is done in a lazy way (by updating
     #   the time; the values are only calculate after a time event -I think-)
     if nvr > 0 and comp.isDirtyValues == fmi2True:       
-        when defined(calculateValues):
-          calculateValues(comp) # user defined
+        when declared(calculateValues):
+          calculateValues(comp) # user declared
         comp.isDirtyValues = fmi2False
 
 
@@ -129,7 +101,7 @@ proc fmi2GetBoolean*(comp: FmuRef; vr: ptr fmi2ValueReference; nvr: csize_t;
     if nvr > 0 and nullPointer(comp, "fmi2GetBoolean", "value[]", value):
             return fmi2Error
     if nvr > 0 and comp.isDirtyValues == fmi2True:
-        when defined(calculateValues):
+        when declared(calculateValues):
           calculateValues(comp)
         comp.isDirtyValues = fmi2False
     
@@ -161,7 +133,7 @@ proc fmi2GetString*( comp: FmuRef;
     if nvr > 0 and nullPointer(comp, "fmi2GetString", "value[]", value):
             return fmi2Error
     if nvr > 0 and comp.isDirtyValues == fmi2True:
-        when defined(calculateValues):
+        when declared(calculateValues):
           calculateValues(comp)
         comp.isDirtyValues = fmi2False
 

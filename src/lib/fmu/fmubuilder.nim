@@ -115,8 +115,9 @@ template exportFmu*( fmu:Fmu;
   # 2.4 XML
   # 2.4.1 Make sure that the states are updated
   for p in fmu.parameters.values:
-    if p.state:
-      fmu.states &= p.idx
+    if p.kind == tReal:
+      if p.state:
+        fmu.states &= p.idx
   
   # 2.4.2 Make sure that the events are considered
   #for p in fmu.isPositive.values:

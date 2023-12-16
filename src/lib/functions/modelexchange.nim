@@ -3,10 +3,6 @@ import ../functions/helpers
 import ../meta/filteredlog
 import strformat
 
-# template useEventUpdate():untyped =
-#     mixin eventUpdate
-
-#     eventUpdate(comp, timeEvent)
 
 ## ---------------------------------------------------------------------------
 ## Functions for FMI2 for Model Exchange
@@ -25,9 +21,8 @@ proc fmi2EnterEventMode*(comp: FmuRef): fmi2Status =
     return fmi2OK
 
 
-proc fmi2NewDiscreteStates*(comp: FmuRef; #ModelInstanceRef; 
+proc fmi2NewDiscreteStates*(comp: FmuRef;
                             eventInfo: ptr fmi2EventInfo): fmi2Status =
-    #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     var timeEvent = false
     if invalidState(comp, "fmi2NewDiscreteStates", MASK_fmi2NewDiscreteStates):
         return fmi2Error
@@ -41,12 +36,11 @@ proc fmi2NewDiscreteStates*(comp: FmuRef; #ModelInstanceRef;
     if (comp.eventInfo.nextEventTimeDefined > 0 and comp.eventInfo.nextEventTime <= comp.time):
         timeEvent = true
 
-    #eventUpdate(comp, addr(comp.eventInfo), timeEvent, comp.isNewEventIteration)
-    #if compiles(useEventUpdate):
+
     #  useEventUpdate()
-    when defined(eventUpdate):
-      eventUpdate(comp, timeEvent)
-    #eventUpdate(comp, timeEvent) #, comp.isNewEventIteration)
+    when declared(eventUpdate):
+      comp.eventUpdate(timeEvent)
+
     comp.isNewEventIteration = fmi2False
 
     # copy internal eventInfo of component to output eventInfo
@@ -61,7 +55,6 @@ proc fmi2NewDiscreteStates*(comp: FmuRef; #ModelInstanceRef;
 
 
 proc fmi2EnterContinuousTimeMode*(comp: FmuRef): fmi2Status =
-    #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     if invalidState(comp, "fmi2EnterContinuousTimeMode", MASK_fmi2EnterContinuousTimeMode):
         return fmi2Error
     filteredLog(comp, fmi2OK, fmiCall,"fmi2EnterContinuousTimeMode".fmi2String)
@@ -101,31 +94,30 @@ proc fmi2SetTime*(comp: FmuRef; time: fmi2Real): fmi2Status = # {.exportc: "$1",
 proc fmi2SetContinuousStates*(comp: FmuRef; 
                               x: ptr fmi2Real; 
                               nx: csize_t): fmi2Status =
-    #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
-    #var i:int
     if invalidState(comp, "fmi2SetContinuousStates", MASK_fmi2SetContinuousStates):
         return fmi2Error
     if invalidNumber(comp, "fmi2SetContinuousStates", "nx", nx, comp.states.len):
         return fmi2Error
     if nullPointer(comp, "fmi2SetContinuousStates", "x[]", x):
         return fmi2Error
-    # if NUMBER_OF_STATES > 0:  # FIXME: era un WHEN
-    #     for i in 0 ..< nx:
-    #         var vr: fmi2ValueReference = vrStates[i]
-    #         filteredLog(comp, fmi2OK, fmiCall, "fmi2SetContinuousStates: #r{vr}#={x[i]}")
-    #         assert(vr.int < nReals)
-    #         comp.r[vr][] = x[i]
+
+    if comp.nStates > 0:
+        for i in 0 ..< nx:
+            var vr = comp.states[i] #vrStates[i]
+            var key = comp.reals[vr]
+            filteredLog(comp, fmi2OK, fmiCall, (&"fmi2SetContinuousStates: #r{vr}#={x[i].float}").fmi2String)
+            #assert(vr.int < nReals)
+            comp[key] = x[i].float
     return fmi2OK
 
 
 # Evaluation of the model equations
-# FIXME
 # https://github.com/qtronic/fmusdk/blob/69cea51c40694bc5cab58edf84bd107149ac450b/fmu20/src/models/fmuTemplate.c#L856-L873
 proc fmi2GetDerivatives*(comp: FmuRef; 
                          derivatives: ptr fmi2Real; 
                          nx: csize_t): fmi2Status =
-    #var i:int
-    #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
+    ## retrieve the derivatives of the continuous states.
+    
     if invalidState(comp, "fmi2GetDerivatives", MASK_fmi2GetDerivatives):
         return fmi2Error
     if invalidNumber(comp, "fmi2GetDerivatives", "nx", nx, comp.states.len):
@@ -133,14 +125,15 @@ proc fmi2GetDerivatives*(comp: FmuRef;
     if nullPointer(comp, "fmi2GetDerivatives", "derivatives[]", derivatives):
         return fmi2Error
     
-    when defined(getReal):
+    when declared(getReal):
       if comp.nStates > 0:
-        for i in 0..< nx:
-          var vr = comp.states[i] + 1  # var vr: fmi2ValueReference = vrStates[i] + 1
-          derivatives[i] = getReal(comp, vr).fmi2Real
-      #         
-      #         derivatives[i] = getReal(comp, vr)  # to be implemented by the includer of this file
-          filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetDerivatives: #r{vr}# = {derivatives[i]}" )
+        for i in 0 ..< nx:  # Number of derivatives
+          var key = comp.derivatives[i]
+        
+          derivatives[i] = getReal(comp, key).fmi2Real
+          #echo "i: ", i, "   key:", key, "   derivative: ", getReal(comp, key)
+          var tmp = &"""fmi2GetDerivatives: "{key}": = {derivatives[i].float}"""
+          filteredLog(comp, fmi2OK, fmiCall, tmp.fmi2String )
 
     return fmi2OK
 
@@ -148,17 +141,14 @@ proc fmi2GetDerivatives*(comp: FmuRef;
 proc fmi2GetEventIndicators*( comp: FmuRef; #ModelInstanceRef; 
                               eventIndicators: ptr fmi2Real;
                               ni: csize_t): fmi2Status =
-    #var i:int
-    #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     if invalidState(comp, "fmi2GetEventIndicators", MASK_fmi2GetEventIndicators):
         return fmi2Error
 
     if invalidNumber(comp, "fmi2GetEventIndicators", "ni", ni, comp.nEventIndicators): #NUMBER_OF_EVENT_INDICATORS):
         return fmi2Error
 
-    when defined(getEventIndicator):
+    when declared(getEventIndicator):
       if comp.nEventIndicators > 0:
-        echo "---OK---"
         for i in 0 ..< ni:
           eventIndicators[i] = getEventIndicator(comp, i) # to be implemented by the includer of this file
           filteredLog(comp, fmi2OK, fmiCall, 
@@ -178,44 +168,23 @@ proc fmi2GetContinuousStates*(comp: FmuRef;
     must be updated. It can be done with this fuction to update all states, or by
     fmi2GetReal on the individual states that have reinit = true.
     ]##
-    #var i:int
-    #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
-    #echo "nx: ", nx
-    #echo "vrStates[0]: ", vrStates[0]
-    #echo "getReal: ", getReal(comp, vrStates[0])#vrStates[0]
+
     if invalidState(comp, "fmi2GetContinuousStates", MASK_fmi2GetContinuousStates):
         return fmi2Error
     if invalidNumber(comp, "fmi2GetContinuousStates", "nx", nx, comp.states.len):      
         return fmi2Error
     if nullPointer(comp, "fmi2GetContinuousStates", "states[]", states):
         return fmi2Error
-    #echo "OK"
-    # when NUMBER_OF_STATES > 0:
-    #     for i in 0 ..< nx:
-    #         var vr:fmi2ValueReference = vrStates[i]
-    #         echo "i: ", i
-    #         states[i] = getReal(comp, vr) # to be implemented by the includer of this file
-    #         filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetContinuousStates: #r{vr}# = {states[i]}" )
+
+    if comp.nStates > 0: # when?
+        for i in 0 ..< nx:
+            var n = comp.states[i]  
+
+            #echo "i: ", i
+            states[i] = getReal(comp, comp.reals[n]) # to be implemented by the includer of this file
+            filteredLog(comp, fmi2OK, fmiCall, (&"fmi2GetContinuousStates: #r{n}# = {states[i]}").fmi2String )
 
     return fmi2OK
-
-
-# proc fmi2GetNominalsOfContinuousStates*(comp: FmuRef; x_nominal: ptr fmi2Real;
-#                                        nx: csize_t): fmi2Status =
-#     #var i: int
-#     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
-#     if invalidState(comp, "fmi2GetNominalsOfContinuousStates", MASK_fmi2GetNominalsOfContinuousStates):
-#         return fmi2Error
-#     if invalidNumber(comp, "fmi2GetNominalContinuousStates", "nx", nx.cint, nStates):
-#         return fmi2Error
-#     if nullPointer(comp, "fmi2GetNominalContinuousStates", "x_nominal[]", x_nominal):
-#         return fmi2Error
-#     filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetNominalContinuousStates: x_nominal[0..{nx-1}] = 1.0")
-#     for i in 0 ..< nx:
-#         x_nominal[i] = 1
-#     return fmi2OK
-
-#import lib/functions/helpers
 
 
 proc fmi2GetNominalsOfContinuousStates*(comp: FmuRef; # ¿Susituir por ModelInstance?

@@ -69,6 +69,7 @@ type
     integers*:seq[string] = @[]
     booleans*:seq[string] = @[]
     strings*:seq[string]  = @[]
+    derivatives*:seq[string] = @[]
 
     # functions
     #calculateValues*: proc(obj: FmuObj) 

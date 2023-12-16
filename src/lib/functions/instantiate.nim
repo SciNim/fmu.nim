@@ -57,17 +57,18 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
         functions.logger( functions.componentEnvironment, instanceName, fmi2Error, "error".fmi2String,
                   "fmi2Instantiate: Missing GUID.".fmi2String)
         return nil
-      
-    # Start creating the instance
+     
+    # Start creating the instance    
     var comp = FmuRef() #new typeof(`fmu`) 
     comp.time = 0
     comp.instanceName = ($instanceName).fmi2String
     comp.`type` = fmuType
     comp.guid = $fmuGUID
     comp.parameters = `fmu`.parameters
-    comp.states = `fmu`.states
+    #comp.states = `fmu`.states
 
     # Set initial values
+  
     comp.reals    = `fmu`.reals
     comp.integers = `fmu`.integers
     comp.booleans = `fmu`.booleans  
@@ -82,18 +83,20 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
 
     # `fmu`.nStates = `fmu`.states.len
 
-
     for key,p in comp.parameters.pairs:
       case p.kind
       of tInteger:
         if p.startI.isSome:
           p.valueI = p.startI.get
-        #comp.integers &= key
+
 
       of tReal:
         if p.startR.isSome:
           p.valueR = p.startR.get
-        #comp.reals &= key
+        if p.state:
+          comp.states &= p.idx
+        if p.derivative.isSome:
+          comp.derivatives &= key
 
       of tBoolean:
         if p.startB.isSome:
@@ -103,9 +106,7 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
       of tString:
         if p.startS.isSome:
           p.valueS = p.startS.get
-
-      if p.state:
-        comp.states &= p.idx
+      
 
     comp.nStates = comp.states.len
 
@@ -114,7 +115,6 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
     comp.nFloats   = comp.reals.len    
     comp.nBooleans = comp.booleans.len     
     comp.nStrings  = comp.strings.len
-
     # If loggingOn=fmi2True: set all logging categories to ON.                     
     if not comp.isNil:
         # we log all considered categories
@@ -132,12 +132,11 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
     comp.loggingOn = loggingOn
 
     comp.state = modelInstantiated   # State changed
-  
+ 
     when defined(setStartValues):
       setStartValues(comp)   # <------ to be implemented by the includer of this file
 
-    #useSetStartValues() # This template just makes sure that `setStartValues` is defined.
-  
+    #useSetStartValues() # This template just makes sure that `setStartValues` is defined. 
     comp.isDirtyValues = fmi2True # because we just called setStartValues
     comp.isNewEventIteration = fmi2False
 

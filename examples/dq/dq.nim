@@ -23,13 +23,15 @@ dq.addFloat("x").setLocal.setContinuous.setExact
   .setInitial(1.0)
   .setState()  # Set as state variable
 
+dq.addFloat("der(x)").setLocal.setContinuous.setCalculated
+  .setDescription("time derivative of x")
+  .derives(dq["x"])  # Set as derivative of x
+
 dq.addFloat("k").setParameter.setFixed.setExact
   .setDescription("")  
   .setInitial(1.0)
 
-dq.addFloat("der(x)").setLocal.setContinuous.setCalculated
-  .setDescription("time derivative of x")
-  .derives(dq["x"])  # Set as derivative of x
+
 
 model(dq):
   proc getReal*(comp: FmuRef;
@@ -37,7 +39,7 @@ model(dq):
     case key
     of "x": comp["x"].valueR
     of "k": comp["k"].valueR
-    of "der(x)": -(comp["k"] * comp["x"])
+    of "der(x)": -(comp["k"].valueR * comp["x"].valueR)
     else: 0.0
 
 when defined(fmu):

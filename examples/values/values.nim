@@ -13,47 +13,46 @@ values.sourceFiles = @["data/inc.c"]
 values.docFiles    = @["data/index.html"]
 values.icon        = "data/model.png"
 
+# Define the variables (initialization)
+var
+  months* = @[ "jan","feb","march","april","may","june","july",
+            "august","sept","october","november","december"]
+
+values.addFloat("x").setLocal.setContinuous.setExact
+      .setDescription("used as continuous state")
+      .setInitial(1.0)
+      .setState()
+
+values.addFloat("der(x)").setLocal.setContinuous.setCalculated
+      .setDescription("time derivative of x")
+      .derives(values["x"])
+
+
+values.addInteger("int_in").setInput.setDiscrete
+      .setDescription("integer input")
+      .setInitial(2)     
+
+values.addInteger("int_out").setOutput.setDiscrete.setExact 
+      .setDescription("index in string array 'month'")  
+      .setInitial(0)
+
+values.addBoolean("bool_in").setInput.setDiscrete 
+      .setDescription("boolean input")
+      .setInitial(true)   
+
+values.addBoolean("bool_out").setOutput.setDiscrete.setExact 
+      .setDescription("boolean output")    
+      .setInitial(true)
+
+values.addString("string_in").setInput.setDiscrete
+      .setDescription("string input")  
+      .setInitial("QTronic")  
+
+values.addString("string_out").setOutput.setDiscrete.setExact 
+      .setDescription("the string month[int_out]" )  
+      .setInitial(months[0])    # "jan"
+
 model(values):
-  # Define the variables (initialization)
-  var
-    months = @[ "jan","feb","march","april","may","june","july",
-                "august","sept","october","november","december"]
-
-  values.addFloat("myFloat").setLocal.setContinuous.setExact
-        .setDescription("used as continuous state")
-        .setInitial(1.0)
-        .setState()
-
-  values.addFloat("myFloatDerivative").setLocal.setContinuous.setCalculated
-        .setDescription("time derivative of x")
-        .derives(values["myFloat"])
-
-
-  values.addInteger("myInputInteger").setInput.setDiscrete
-        .setDescription("integer input")
-        .setInitial(2)     
-
-  values.addInteger("myOutputInteger").setOutput.setDiscrete.setExact 
-        .setDescription("index in string array 'month'")  
-        .setInitial(0)
-
-  values.addBoolean("myInputBool").setInput.setDiscrete 
-        .setDescription("boolean input")
-        .setInitial(true)   
-
-  values.addBoolean("myOutputBool").setOutput.setDiscrete.setExact 
-        .setDescription("boolean output")    
-        .setInitial(true)
-
-  values.addString("myInputString").setInput.setDiscrete
-        .setDescription("string input")  
-        .setInitial("QTronic")  
-
-  values.addString("myOutputString").setOutput.setDiscrete.setExact 
-        .setDescription("the string month[int_out]" )  
-        .setInitial(months[0])    # "jan"
-
-
   # create time events every second
   proc calculateValues*(comp: FmuRef) =
     ## calculate the values of the FMU (Functional Mock-up Unit) variables 
@@ -67,23 +66,24 @@ model(values):
   proc getReal*(comp: FmuRef;
                 key: string): float =
     case key
-    of "myFloat": comp["myfloat"].valueR
-    of "myFloatDerivative": -comp["myfloat"].valueR
+    of "x": comp["x"].valueR
+    of "der(x)": -comp["x"].valueR
     else: 0.0
 
   proc eventUpdate*(comp:FmuRef; 
                     isTimeEvent:bool ) =
     if isTimeEvent:
+      echo "ok"
       # Define next time event in 1s
       comp.eventInfo.nextEventTimeDefined = fmi2True
       comp.eventInfo.nextEventTime        = 1 + comp.time 
 
-      comp["myOutputInteger"] +=  1
-      comp["myOutputBool"] = not comp["myOutputBool"]
+      comp["int_out"] +=  1
+      comp["bool_out"] = not comp["bool_out"]
 
       # Assign each month to the output string
-      if comp["myOutputInteger"] < 12:
-        comp["myOutputString"] = months[comp["myOutputInteger"].valueI]
+      if comp["int_out"] < 12:
+        comp["string_out"] = months[comp["int_out"].valueI]
 
       # once done, terminate the simulation
       else:
