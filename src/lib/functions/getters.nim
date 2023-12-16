@@ -27,23 +27,16 @@ proc fmi2GetReal*(comp: FmuRef;
         when declared(calculateValues):
           calculateValues(comp)   # <---------------
         comp.isDirtyValues = fmi2False
-    # echo "NVR>>", nvr
-    # echo "vr>>>", vr[]
 
     when declared(getReal):
       if comp.nFloats > 0:  # when: no puede evaluar en tiempo de compilación
         for i in 0 ..< nvr:
             if vrOutOfRange(comp, "fmi2GetReal", vr[i], comp.nFloats):
                 return fmi2Error
-            
-            #value[i] = getReal(comp, i.fmi2ValueReference).fmi2Real # <--------to be implemented by the includer of this file
 
             var key = comp.reals[vr[i]]
             value[i] = getReal(comp, key).fmi2Real # <--------to be implemented by the includer of this file
-            
-            #echo "--->", value[i]
             var tmp = "fmi2GetReal: " & key & "= " & $(value[i].float)
-            #echo tmp
             filteredLog(comp, fmi2OK, fmiCall, tmp.fmi2String )    
    
     return fmi2OK
@@ -86,7 +79,7 @@ proc fmi2GetInteger*( comp: FmuRef;
         # read the value from memory address (vr[i] is the position; `[]`: memory content)
         
         value[i] = comp.parameters[comp.integers[vr[i]]].valueI.fmi2Integer
-        #value[i] = comp.getInteger(vr[i]).fmi2Integer 
+
         filteredLog(comp, fmi2OK, fmiCall, fmt"fmi2GetInteger: #i{vr[i]}# = {value[i]}".fmi2String )
     
     return fmi2OK
@@ -108,7 +101,7 @@ proc fmi2GetBoolean*(comp: FmuRef; vr: ptr fmi2ValueReference; nvr: csize_t;
     for i in 0 ..< nvr:
         if vrOutOfRange(comp, "fmi2GetBoolean", vr[i], comp.nBooleans):#NUMBER_OF_BOOLEANS):
             return fmi2Error
-        value[i] = comp.parameters[comp.booleans[vr[i]]].valueB.fmi2Boolean
+        value[i] = comp[comp.booleans[vr[i]]].valueB.fmi2Boolean
         #value[i] = comp.getBoolean(vr[i]).fmi2Boolean
         var tmp:string
         if value[i] > 0:

@@ -7,7 +7,7 @@
 [INFO][FMUCHK] Will process FMU values.fmu
 [VERBOSE][FMILIB] Allocating FMIL context
 [VERBOSE][FMILIB] Detecting FMI standard version
-[VERBOSE][FMIZIP] Unpacking FMU into /tmp/fmucktmp8mmLm1
+[VERBOSE][FMIZIP] Unpacking FMU into /tmp/fmucktmpf9PtKF
 [VERBOSE][FMIXML] Parsing XML to detect FMI standard version
 [VERBOSE][FMIXML] XML specifies FMI 2.0
 [INFO][FMILIB] XML specifies FMI standard version 2.0
@@ -46,7 +46,7 @@
 [INFO][FMUCHK] Printing output file header
 [INFO][FMUCHK] Model identifier for ModelExchange: values
 [INFO][FMILIB] Loading 'linux64' binary with 'default' platform types
-[VERBOSE][FMICAPI] Loaded FMU binary from /tmp/fmucktmp8mmLm1/binaries/linux64/values.so
+[VERBOSE][FMICAPI] Loaded FMU binary from /tmp/fmucktmpf9PtKF/binaries/linux64/values.so
 [VERBOSE][FMICAPI] Loading functions for the model exchange interface
 [VERBOSE][FMILIB] Successfully loaded all the interface functions
 [INFO][FMUCHK] Version returned from ME FMU: '2.0'
@@ -71,7 +71,7 @@
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 0
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
-	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
+	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'jan'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -1.0
@@ -91,7 +91,7 @@
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 1
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
-	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
+	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'feb'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
@@ -111,7 +111,7 @@
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
-	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
+	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'march'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
@@ -131,7 +131,7 @@
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 3
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
-	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
+	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'april'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
@@ -151,7 +151,7 @@
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 4
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
-	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
+	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'may'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
@@ -171,7 +171,7 @@
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 5
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
-	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
+	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'june'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
@@ -191,7 +191,7 @@
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 6
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
-	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
+	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'july'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
@@ -211,7 +211,7 @@
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 7
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
-	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
+	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'august'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
@@ -231,7 +231,7 @@
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 8
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
-	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
+	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'sept'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
@@ -251,7 +251,7 @@
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 9
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
-	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
+	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'october'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
@@ -271,7 +271,7 @@
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 10
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
-	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
+	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'november'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
@@ -291,7 +291,7 @@
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 11
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
-	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
+	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'december'
 [INFO][FMUCHK] Simulation finished successfully at time 11
@@ -299,7 +299,7 @@
 [VERBOSE][FMILIB] Releasing allocated library resources
 [VERBOSE][FMILIB] Releasing FMU CAPI interface
 [VERBOSE][FMICAPI] Successfully unloaded FMU binary
-[VERBOSE][JMPRT] Removing /tmp/fmucktmp8mmLm1
+[VERBOSE][JMPRT] Removing /tmp/fmucktmpf9PtKF
 FMU check summary:
 FMU reported:
 	0 warning(s) and error(s)

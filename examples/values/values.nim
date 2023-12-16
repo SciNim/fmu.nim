@@ -42,7 +42,7 @@ values.addBoolean("bool_in").setInput.setDiscrete
 
 values.addBoolean("bool_out").setOutput.setDiscrete.setExact 
       .setDescription("boolean output")    
-      .setInitial(true)
+      .setInitial(false)
 
 values.addString("string_in").setInput.setDiscrete
       .setDescription("string input")  
