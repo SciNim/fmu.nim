@@ -5,7 +5,7 @@ The purpose of this library is enabling the creation of FMU files that can be la
 This library is heavily based on [fmusdk](https://github.com/qtronic/fmusdk).
 
 ## Installing
-You need nim v2.0. You can use choosenim in order to install Nim. 
+You need [Nim](https://nim-lang.org/) v2.0. You can use [choosenim](https://github.com/dom96/choosenim) in order to install Nim. 
 
 To intall the `fmu.nim` library, as usual, with nimble:
 ```sh
@@ -13,11 +13,11 @@ nimble install https://github.com/mantielero/fmu.nim
 ```
 
 ## Status
-This is in an beta stage. 
+Right now, you can create both Model Exchange and Co-Simulation models using FMI2.0. 
 
 The five examples from `fmusdk` are working. 
 
-It can create multiplatform FMU's (they can work both in windows and linux).
+Besides, it can create easily multiplatform FMU's (they can work both in windows and linux).
 
 ## How it works?
 It creates:
@@ -27,19 +27,35 @@ It creates:
 
 Then it packs everything in a zip file and changes the extension into `.fmu`.
 
-### How to test it?
+### How to use it?
 Go to the `examples` folder.
 
-The following command will generate `inc.so` and embed it into `inc.fmu`:
+The following command will generate `inc.so` (in Linux) and embed it into `inc.fmu` as a Model Exchange:
 ```
-$ nim c -r -d:fmu inc
+$ nim c -r -d:fmu2me inc
 ```
-The `-d:fmu` forces the creation of a FMU.
+> In order to create a co-simulation replace `-d:fmu2me` with `-d:fmu2cs`. The source code using one or the other looks like:
+```nim
+when defined(fmu2me):
+  values.exportFmu("values.fmu")
 
-Then test it:
+when defined(fmu2cs):
+  values.exportFmu("values.fmu", fmi2CoSimulation)
+``` 
+
+
+In order to test the models, one can use [FMUComplianceChecker](https://github.com/modelica-tools/FMUComplianceChecker):
 ```
-$ ../fmuCheck.linux64 inc.fmu
+$ .../fmuCheck.linux64 -h 1 -s 11 -f -l 6 -e values.log values.fmu
 ```
+where:
+- `-h 1`: steps every second
+- `-s 11`: during 11 seconds
+- `-f`: forces showing all the values (inputs, outputs, locals)
+- `-l 6`: logs every detail
+- `-e values.log`: stores the logging under `values.log`
+- `values.fmu`: selects the FMU to be used 
+
 or with [fmusim](https://github.com/qtronic/fmusdk?tab=readme-ov-file#simulating-an-fmu) (from `fmusdk` package):
 ```
 $ ./fmusim_me inc.fmu 5 0.1
@@ -49,13 +65,13 @@ $ ./fmusim_me inc.fmu 5 0.1
 ### FMU compatible with windows and linux
 If you compile like this:
 ```sh
-nim c -r -d:fmu inc
+nim c -r -d:fmu2me inc
 ```
 you will get a FMU that is compatible only with the platform in which it was compile.
 
 But if you compile using `zig`:
 ```sh
-nim c -r -d:fmu -d:zig inc
+nim c -r -d:fmu2me -d:zig inc
 ```
 you will get a FMU compatible with windows and linux (amd64 in both cases).
 
@@ -72,24 +88,6 @@ nimble install zigcc
 # Details
 ## Intro
 In general terms, we are making Nim to export C functions fulfilling the naming conventions of the FMU standard.
-
-## Model
-A new model requires the info such as:
-```nim
-  id      = "inc"
-  guid    = "{8c4e810f-3df3-4a00-8276-176fa3c9f008}"
-```
-
-We will call the `model` template with these values. The `model` template is defined in `src/fmu.nim`. This calls `model2` template (another template within `src/fmu.nim`). They both are responsible for structuring the code: the custom defined functions plus the other functions required by the standard.
-
-All this will create two modes of operations for the code:
-
-1. When compiled as a library, it will create a library such as `inc.so`.
-2. When compiled as an app it uses `src/lib/fmubuilder.nim`:
-  
-  - Creates the folder structure
-  - Creates the XML
-  - Compress everything into a `.fmu` file.
 
 
 # Importing an FMU in OpenModelica
@@ -140,6 +138,23 @@ At this point, OpenModelica ask you to store the model somewhere (`example.mo` f
 ![](https://i.imgur.com/mtXbQsn.png)
 
 
+## Model
+A new model requires the info such as:
+```nim
+  id      = "inc"
+  guid    = "{8c4e810f-3df3-4a00-8276-176fa3c9f008}"
+```
+
+We will call the `model` template with these values. The `model` template is defined in `src/fmu.nim`. This calls `model2` template (another template within `src/fmu.nim`). They both are responsible for structuring the code: the custom defined functions plus the other functions required by the standard.
+
+All this will create two modes of operations for the code:
+
+1. When compiled as a library, it will create a library such as `inc.so`.
+2. When compiled as an app it uses `src/lib/fmubuilder.nim`:
+  
+  - Creates the folder structure
+  - Creates the XML
+  - Compress everything into a `.fmu` file.
 
 ## Manual
 ### `setStartValues`
@@ -207,7 +222,6 @@ Defined as:
 ```
 
 # TODO
-- [ ] To support co-simulation
 - [ ] unit testing for the examples
 - [ ] To simulate within Nim. This would prevent the need for `fmuChecker`.
 
