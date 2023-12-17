@@ -3,11 +3,11 @@
  Reconfigure with FMUCHK_ENABLE_LOG_LEVEL_DEBUG=ON and rebuild to enable debug level logging
 [INFO][FMUCHK] FMI compliance checker Test [FMILibrary: Test] build date: Jun  4 2023
 [INFO][FMUCHK] Called with following options:
-[INFO][FMUCHK] ../fmuCheck.linux64 -h 1 -s 11 -f -l 6 -e values.log values.fmu
+[INFO][FMUCHK] ../fmuCheck.linux64 -h 1 -s 14 -f -l 6 -e values.log values.fmu
 [INFO][FMUCHK] Will process FMU values.fmu
 [VERBOSE][FMILIB] Allocating FMIL context
 [VERBOSE][FMILIB] Detecting FMI standard version
-[VERBOSE][FMIZIP] Unpacking FMU into /tmp/fmucktmpbFO52H
+[VERBOSE][FMIZIP] Unpacking FMU into /tmp/fmucktmps0Parq
 [VERBOSE][FMIXML] Parsing XML to detect FMI standard version
 [VERBOSE][FMIXML] XML specifies FMI 2.0
 [INFO][FMILIB] XML specifies FMI standard version 2.0
@@ -46,7 +46,7 @@
 [INFO][FMUCHK] Printing output file header
 [INFO][FMUCHK] Model identifier for ModelExchange: values
 [INFO][FMILIB] Loading 'linux64' binary with 'default' platform types
-[VERBOSE][FMICAPI] Loaded FMU binary from /tmp/fmucktmpbFO52H/binaries/linux64/values.so
+[VERBOSE][FMICAPI] Loaded FMU binary from /tmp/fmucktmps0Parq/binaries/linux64/values.so
 [VERBOSE][FMICAPI] Loading functions for the model exchange interface
 [VERBOSE][FMILIB] Successfully loaded all the interface functions
 [INFO][FMUCHK] Version returned from ME FMU: '2.0'
@@ -294,12 +294,33 @@
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'december'
-[INFO][FMUCHK] Simulation finished successfully at time 11
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
+[VERBOSE][FMUCHK] Simulation time: 12
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.0
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+[VERBOSE][FMUCHK] Handling a time event
+[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
+[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
+[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x= 0.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)= -0.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
+	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 12
+	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
+	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
+	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
+	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'december'
+[INFO][FMUCHK] FMU requested simulation termination
+[INFO][FMUCHK] Simulation finished successfully at time 12
 	[FMU][logFmiCall][FMU status:OK] fmi2Terminate
 [VERBOSE][FMILIB] Releasing allocated library resources
 [VERBOSE][FMILIB] Releasing FMU CAPI interface
 [VERBOSE][FMICAPI] Successfully unloaded FMU binary
-[VERBOSE][JMPRT] Removing /tmp/fmucktmpbFO52H
+[VERBOSE][JMPRT] Removing /tmp/fmucktmps0Parq
 FMU check summary:
 FMU reported:
 	0 warning(s) and error(s)
