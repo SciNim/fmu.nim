@@ -45,6 +45,7 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
       return nil
 
     # - If instanceName not good, return and log 
+    #echo "INICIALIZACIÓN: ", instanceName
     if instanceName.cstring.isNil or instanceName.cstring.len == 0:  # 
         # functions.componentEnvironment
         functions.logger( functions.componentEnvironment, "?".fmi2String, fmi2Error, "error".fmi2String,
@@ -61,7 +62,7 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
     # Start creating the instance    
     var comp = FmuRef() #new typeof(`fmu`) 
     comp.time = 0
-    comp.instanceName = ($instanceName).fmi2String
+    comp.instanceName = $instanceName
     comp.`type` = fmuType
     comp.guid = $fmuGUID
     comp.parameters = `fmu`.parameters

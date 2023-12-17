@@ -49,7 +49,7 @@ proc fmi2SetDebugLogging*( comp: FmuRef;
             if not flagFound:
                 comp.functions.logger( 
                     comp.componentEnvironment, 
-                    comp.instanceName, 
+                    comp.instanceName.fmi2String, 
                     fmi2Warning,
                     ($error).fmi2String, 
                     fmt"logging category '{categories[i]}' is not supported by model".fmi2String )

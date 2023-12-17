@@ -13,9 +13,11 @@ nimble install https://github.com/mantielero/fmu.nim
 ```
 
 ## Status
-This is in an alpha stage. Nonetheless, in its current state is capable some remarkable features. For example, it can create and FMU that works both in windows and linux.
+This is in an beta stage. 
 
-It is capable of creating a working FMU for integer. **There is a bug affecting floats**.
+The five examples from `fmusdk` are working. 
+
+It can create multiplatform FMU's (they can work both in windows and linux).
 
 ## How it works?
 It creates:
@@ -65,7 +67,6 @@ Then you need to install with `nimble` (Nim package manager) the package: `zigcc
 nimble install zigcc
 ```
 (this is the same for both windows and linux; in windows you might need to install `git`)
-
 
 
 # Details
@@ -206,7 +207,6 @@ Defined as:
 ```
 
 # TODO
-- [ ] Error: `[ERROR][FMUCHK] FMU does not utilize provided instance name (Test FMI 2.0 ME != fmi2GetReal: x= 1.0)`
 - [ ] unit testing for the examples
 - [ ] To support co-simulation
 - [ ] To simulate within Nim. This would prevent the need for `fmuChecker`.

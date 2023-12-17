@@ -26,7 +26,7 @@ type
   FmuObj* = object of RootObj
     id*: string
     guid*: string
-    instanceName*: fmi2String  # Yo me lo cargaba
+    instanceName*: string
         
     parameters*:OrderedTable[string, Param]
 

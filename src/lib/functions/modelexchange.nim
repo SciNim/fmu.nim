@@ -42,7 +42,7 @@ proc fmi2NewDiscreteStates*(comp: FmuRef;
         comp.eventInfo.nextEventTime.float <= comp.time.float):
         timeEvent = true
         #filteredLog(comp, fmi2OK, fmiCall, "    timeEvent=true".fmi2String)
-    else:
+    #else:
         #filteredLog(comp, fmi2OK, fmiCall, "    timeEvent=false".fmi2String)
 
     when declared(eventUpdate):
@@ -142,7 +142,7 @@ proc fmi2GetDerivatives*(comp: FmuRef;
         
           derivatives[i] = getReal(comp, key).fmi2Real
           #echo "i: ", i, "   key:", key, "   derivative: ", getReal(comp, key)
-          var tmp = &"""fmi2GetDerivatives: "{key}": = {derivatives[i].float}"""
+          var tmp = &"fmi2GetDerivatives: {key}= {derivatives[i].float}"
           filteredLog(comp, fmi2OK, fmiCall, tmp.fmi2String )
 
     return fmi2OK
@@ -160,9 +160,11 @@ proc fmi2GetEventIndicators*( comp: FmuRef; #ModelInstanceRef;
     when declared(getEventIndicator):
       if comp.nEventIndicators > 0:
         for i in 0 ..< ni.int:
-          eventIndicators[i] = comp.getEventIndicator(i).fmi2Real # to be implemented by the includer of this file
+          var val = comp.getEventIndicator(i)
+          eventIndicators[i] = val.fmi2Real # to be implemented by the includer of this file
+
           filteredLog(comp, fmi2OK, fmiCall, 
-                       (&"fmi2GetEventIndicators: z{i} = {comp.getEventIndicator(i)}").fmi2String)
+                       (&"fmi2GetEventIndicators: z{i}={val}").fmi2String)
 
     return fmi2OK
 
@@ -187,12 +189,12 @@ proc fmi2GetContinuousStates*(comp: FmuRef;
         return fmi2Error
 
     if comp.nStates > 0: # when?
-        #echo "---OK---"
         for i in 0 ..< nx:
-            var n = comp.states[i]  
-
-            states[i] = comp.getReal(comp.reals[n]) # to be implemented by the includer of this file
-            filteredLog(comp, fmi2OK, fmiCall, (&"fmi2GetContinuousStates: #r{n}# = {states[i]}").fmi2String )
+            var n = comp.states[i]
+            var key = comp.reals[n]
+            var val = comp.getReal(key)
+            states[i] = val.fmi2Real # to be implemented by the includer of this file
+            filteredLog(comp, fmi2OK, fmiCall, (&"fmi2GetContinuousStates: {key}={val}").fmi2String )
 
     return fmi2OK
 

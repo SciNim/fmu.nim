@@ -2,7 +2,7 @@
 ## FMI functions: logging control, setters and getters for Real, Integer,
 ## Boolean, String
 ## ---------------------------------------------------------------------------
-import strformat
+import std/strformat
 import ../defs/[definitions, modelinstance, masks]
 import helpers
 import ../meta/filteredlog
@@ -35,8 +35,9 @@ proc fmi2GetReal*(comp: FmuRef;
                 return fmi2Error
 
             var key = comp.reals[vr[i]]
-            value[i] = getReal(comp, key).fmi2Real # <--------to be implemented by the includer of this file
-            var tmp = "fmi2GetReal: " & key & "= " & $(value[i].float)
+            var val = comp.getReal(key) # implemented by the user
+            value[i] = val.fmi2Real 
+            var tmp = &"fmi2GetReal: {key}={val}"
             filteredLog(comp, fmi2OK, fmiCall, tmp.fmi2String )    
    
     return fmi2OK

@@ -16,18 +16,18 @@ proc isCategoryLogged*(comp: FmuRef; categoryIndex: LoggingCategories): bool =
   return false
 
 
-template filteredLog*(  instance: FmuRef, 
-                        status: fmi2Status, 
-                        categoryIndex: LoggingCategories, 
-                        message: fmi2String, 
-                        args: varargs[fmi2String]) =
+proc filteredLog*(  instance: FmuRef, 
+                    status: fmi2Status, 
+                    categoryIndex: LoggingCategories, 
+                    message: fmi2String, 
+                    args: varargs[fmi2String]) =
   # not part of the standard
-
+  #echo "Instance name: ", $instance.instanceName
   # error and fatal is always logged
   # then it depends on the categories to be logged
   if status == fmi2Error or status == fmi2Fatal or isCategoryLogged(instance, categoryIndex).bool:
     instance.functions.logger(instance.functions.componentEnvironment, # fmi2ComponentEnvironment
-                              instance.instanceName, # fmi2String
+                              instance.instanceName.fmi2String, # fmi2String
                               status, # fmi2Status
                               #logCategoriesNames[categoryIndex].fmi2String, # fmi2String
                               ($categoryIndex).fmi2String,
