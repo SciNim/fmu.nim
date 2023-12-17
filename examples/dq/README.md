@@ -4,7 +4,7 @@
 nim c -r -d:fmu dq.nim
 ```
 
-## Result
+## Testing
 
 ```sh
 ../fmuCheck.linux64 -h 0.2 -s 5 -f -l 6 -e dq.log dq.fmu
