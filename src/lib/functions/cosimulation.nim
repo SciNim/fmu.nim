@@ -186,7 +186,7 @@ proc fmi2DoStep*( comp: FmuRef;
                             tmp = "\\"
                         else:
                             tmp = "/"
-                        filteredLog(comp, fmi2OK, LOG_EVENT,
+                        filteredLog(comp, fmi2OK, event,
                             fmt"fmi2DoStep: state event at {comp.time}, z{i} crosses zero -{tmp}-".fmi2String)
                         inc stateEvent # stateEvent++
 

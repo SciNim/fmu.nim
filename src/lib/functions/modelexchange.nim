@@ -28,34 +28,37 @@ proc fmi2NewDiscreteStates*(comp: FmuRef;
         return fmi2Error
     filteredLog(comp, fmi2OK, fmiCall, "fmi2NewDiscreteStates".fmi2String)
 
-    comp.eventInfo.newDiscreteStatesNeeded = fmi2False
-    comp.eventInfo.terminateSimulation = fmi2False
+    comp.eventInfo.newDiscreteStatesNeeded           = fmi2False
+    comp.eventInfo.terminateSimulation               = fmi2False
     comp.eventInfo.nominalsOfContinuousStatesChanged = fmi2False
-    comp.eventInfo.valuesOfContinuousStatesChanged = fmi2False
-
-    #[
-        if (comp->eventInfo.nextEventTimeDefined && comp->eventInfo.nextEventTime <= comp->time) {
-        timeEvent = 1;
-    }
-    ]#
-    #echo repr comp.eventInfo
-    #echo ">>>", comp.eventInfo.nextEventTimeDefined.bool
-    if (comp.eventInfo.nextEventTimeDefined.bool and comp.eventInfo.nextEventTime <= comp.time):
+    comp.eventInfo.valuesOfContinuousStatesChanged   = fmi2False
+ 
+    #filteredLog(comp, fmi2OK, fmiCall, (&"    comp.eventInfo.nextEventTimeDefined: {comp.eventInfo.nextEventTimeDefined.bool}").fmi2String)
+    #filteredLog(comp, fmi2OK, fmiCall, (&"    comp.eventInfo.nextEventTime: {comp.eventInfo.nextEventTime.float}").fmi2String)
+    #filteredLog(comp, fmi2OK, fmiCall, (&"    comp.time: {comp.time.float}").fmi2String)
+        
+    
+    if (comp.eventInfo.nextEventTimeDefined.bool and
+        comp.eventInfo.nextEventTime.float <= comp.time.float):
         timeEvent = true
+        #filteredLog(comp, fmi2OK, fmiCall, "    timeEvent=true".fmi2String)
+    else:
+        #filteredLog(comp, fmi2OK, fmiCall, "    timeEvent=false".fmi2String)
 
     when declared(eventUpdate):
+      #filteredLog(comp, fmi2OK, fmiCall, "    calling eventUpdate".fmi2String)
       comp.eventUpdate(timeEvent)
-
+    #filteredLog(comp, fmi2OK, fmiCall, "    calling eventUpdate DONE".fmi2String)
     comp.isNewEventIteration = fmi2False
-
+    #filteredLog(comp, fmi2OK, fmiCall, (&"    comp.isNewEventIteration: {comp.isNewEventIteration.bool}").fmi2String)
     # copy internal eventInfo of component to output eventInfo
-    eventInfo.newDiscreteStatesNeeded = comp.eventInfo.newDiscreteStatesNeeded
-    eventInfo.terminateSimulation = comp.eventInfo.terminateSimulation
+    eventInfo.newDiscreteStatesNeeded  = comp.eventInfo.newDiscreteStatesNeeded
+    eventInfo.terminateSimulation      = comp.eventInfo.terminateSimulation
     eventInfo.nominalsOfContinuousStatesChanged = comp.eventInfo.nominalsOfContinuousStatesChanged
-    eventInfo.valuesOfContinuousStatesChanged = comp.eventInfo.valuesOfContinuousStatesChanged
+    eventInfo.valuesOfContinuousStatesChanged   = comp.eventInfo.valuesOfContinuousStatesChanged
     eventInfo.nextEventTimeDefined = comp.eventInfo.nextEventTimeDefined
-    eventInfo.nextEventTime = comp.eventInfo.nextEventTime
-
+    eventInfo.nextEventTime        = comp.eventInfo.nextEventTime
+    #filteredLog(comp, fmi2OK, fmiCall, (&"    eventInfo: {repr eventInfo}").fmi2String)
     return fmi2OK
 
 
@@ -91,7 +94,9 @@ proc fmi2SetTime*(comp: FmuRef; time: fmi2Real): fmi2Status = # {.exportc: "$1",
     #var comp: ptr ModelInstance = cast[ptr ModelInstance](c)
     if invalidState(comp, "fmi2SetTime", MASK_fmi2SetTime):
         return fmi2Error
-    filteredLog(comp, fmi2OK, fmiCall, "fmi2SetTime: time={time:%.16g}".fmi2String)
+    var tmp = &"fmi2SetTime: time={time.float:0.2f}" # :%.16g
+    #echo tmp
+    filteredLog(comp, fmi2OK, fmiCall, tmp.fmi2String)
     comp.time = time
     return fmi2OK
 
@@ -154,10 +159,10 @@ proc fmi2GetEventIndicators*( comp: FmuRef; #ModelInstanceRef;
 
     when declared(getEventIndicator):
       if comp.nEventIndicators > 0:
-        for i in 0 ..< ni:
-          eventIndicators[i] = getEventIndicator(comp, i) # to be implemented by the includer of this file
+        for i in 0 ..< ni.int:
+          eventIndicators[i] = comp.getEventIndicator(i).fmi2Real # to be implemented by the includer of this file
           filteredLog(comp, fmi2OK, fmiCall, 
-                       "fmi2GetEventIndicators: z{i} = {eventIndicators[i]}")
+                       (&"fmi2GetEventIndicators: z{i} = {comp.getEventIndicator(i)}").fmi2String)
 
     return fmi2OK
 
@@ -173,7 +178,7 @@ proc fmi2GetContinuousStates*(comp: FmuRef;
     must be updated. It can be done with this fuction to update all states, or by
     fmi2GetReal on the individual states that have reinit = true.
     ]##
-
+    filteredLog(comp, fmi2OK, fmiCall, "fmi2GetContinuousStates: Entering".fmi2String)
     if invalidState(comp, "fmi2GetContinuousStates", MASK_fmi2GetContinuousStates):
         return fmi2Error
     if invalidNumber(comp, "fmi2GetContinuousStates", "nx", nx, comp.states.len):      
@@ -182,11 +187,11 @@ proc fmi2GetContinuousStates*(comp: FmuRef;
         return fmi2Error
 
     if comp.nStates > 0: # when?
+        #echo "---OK---"
         for i in 0 ..< nx:
             var n = comp.states[i]  
 
-            #echo "i: ", i
-            states[i] = getReal(comp, comp.reals[n]) # to be implemented by the includer of this file
+            states[i] = comp.getReal(comp.reals[n]) # to be implemented by the includer of this file
             filteredLog(comp, fmi2OK, fmiCall, (&"fmi2GetContinuousStates: #r{n}# = {states[i]}").fmi2String )
 
     return fmi2OK

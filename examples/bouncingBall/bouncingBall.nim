@@ -76,47 +76,52 @@ model(bb):
     if comp.state == modelInitializationMode:
         # set first time event
         comp["der(v)"] = comp["g"] * (-1.0)
-        comp.isPositive["z=0"] = comp["h"] > 0              # FIXME
+        comp.isPositive["z=0"] = comp["h"] > 0 
           
   proc getReal*(comp: FmuRef;
                 key:string):float =
-    # FIXME: it should depend on the name, not in vr
     case key
-    of "h": comp["h"].valueR
+    of "h":      comp["h"].valueR
     of "der(h)": comp["v"].valueR
-    of "v": comp["v"].valueR
+    of "v":      comp["v"].valueR
     of "der(v)": comp["der(v)"].valueR
-    of "g": comp["g"].valueR
-    of "e": comp["e"].valueR
-    else: 0.0
+    of "g":      comp["g"].valueR
+    of "e":      comp["e"].valueR
+    else:        0.0
 
   proc eventUpdate*( comp: FmuRef;
                      timeEvent:bool ) =
-    comp.eventInfo.newDiscreteStatesNeeded = fmi2False
-    comp.eventInfo.terminateSimulation = fmi2False
+    #echo "eventUpdate: Entering"
+    comp.eventInfo.newDiscreteStatesNeeded           = fmi2False
+    comp.eventInfo.terminateSimulation               = fmi2False
     comp.eventInfo.nominalsOfContinuousStatesChanged = fmi2False
-    comp.eventInfo.valuesOfContinuousStatesChanged = fmi2False
-    comp.eventInfo.nextEventTimeDefined = fmi2False
+    comp.eventInfo.valuesOfContinuousStatesChanged   = fmi2False
+    comp.eventInfo.nextEventTimeDefined              = fmi2False
 
     if comp.isNewEventIteration.bool:
       prevV = comp["v"].valueR
-    
-    comp.isPositive["z=0"] = comp["h"] > 0
 
-
-    if not comp["z=0"]:
+    comp.isPositive["z=0"] = comp["h"] > 0  # positive while h>0
+    if comp.isPositive["z=0"] == false:    # What to do when h <= 0
       var tempV:float = -comp["e"].valueR * prevV
-
+      #echo "ok1"
       if comp["v"].valueR != tempV:
-        comp["h"] = 0
+        #echo "ok2"
+        comp["h"] = 0.0
+        #echo "ok3"        
         comp["v"] = tempV
+        #echo "ok4"        
         comp.eventInfo.valuesOfContinuousStatesChanged = fmi2True
-
-
-          # avoid fall-through effect. The ball will not jump high enough, so v and der_v is set to 0 at this surface impact.
-      if comp["v"] < 1e-3:
+        #echo "ok5"
+      # avoid fall-through effect. The ball will not jump high 
+      # enough, so v and der_v is set to 0 at this surface impact.
+      if comp["v"].valueR < 1e-3:
+        #echo "ok6"        
         comp["v"] = 0
         comp["der(v)"] = 0  # turn off gravity.
+        #echo "ok7"        
+    #echo "eventUpdate: Ending"
+
 
   proc getEventIndicator*(comp:FmuRef; z:int):float =
     if z == 0:

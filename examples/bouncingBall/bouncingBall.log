@@ -1,0 +1,576 @@
+[VERBOSE][FMUCHK] Setting log level to [DEBUG]
+[VERBOSE][FMUCHK] This binary is build without debug log messages.
+ Reconfigure with FMUCHK_ENABLE_LOG_LEVEL_DEBUG=ON and rebuild to enable debug level logging
+[INFO][FMUCHK] FMI compliance checker Test [FMILibrary: Test] build date: Jun  4 2023
+[INFO][FMUCHK] Called with following options:
+[INFO][FMUCHK] ../fmuCheck.linux64 -h 0.2 -s 5 -f -l 6 -e bouncingBall.log bouncingBall.fmu
+[INFO][FMUCHK] Will process FMU bouncingBall.fmu
+[VERBOSE][FMILIB] Allocating FMIL context
+[VERBOSE][FMILIB] Detecting FMI standard version
+[VERBOSE][FMIZIP] Unpacking FMU into /tmp/fmucktmpfWP2aO
+[VERBOSE][FMIXML] Parsing XML to detect FMI standard version
+[VERBOSE][FMIXML] XML specifies FMI 2.0
+[INFO][FMILIB] XML specifies FMI standard version 2.0
+[VERBOSE][FMILIB] Parsing model description XML
+[VERBOSE][FMI2XML] Parsing XML element fmiModelDescription
+[VERBOSE][FMI2XML] Parsing XML element ModelExchange
+[VERBOSE][FMI2XML] Parsing XML element LogCategories
+[VERBOSE][FMI2XML] Parsing XML element ModelVariables
+[VERBOSE][FMI2XML] Building alias index
+[VERBOSE][FMI2XML] Parsing XML element ModelStructure
+[VERBOSE][FMI2XML] Parsing XML element Derivatives
+[VERBOSE][FMI2XML] Parsing XML element InitialUnknowns
+[VERBOSE][FMILIB] Parsing finished successfully
+[INFO][FMUCHK] Model name: bouncingBall
+[INFO][FMUCHK] Model GUID: {8c4e810f-3df3-4a00-8276-176fa3c9f003}
+[INFO][FMUCHK] Model version: 
+[INFO][FMUCHK] FMU kind: ModelExchange
+[INFO][FMUCHK] The FMU contains:
+0 constants
+2 parameters
+0 discrete variables
+4 continuous variables
+0 inputs
+0 outputs
+4 local variables
+0 independent variables
+0 calculated parameters
+6 real variables
+0 integer variables
+0 enumeration variables
+0 boolean variables
+0 string variables
+
+[INFO][FMUCHK] Printing output file header
+[INFO][FMUCHK] Model identifier for ModelExchange: bouncingBall
+[INFO][FMILIB] Loading 'linux64' binary with 'default' platform types
+[VERBOSE][FMICAPI] Loaded FMU binary from /tmp/fmucktmpfWP2aO/binaries/linux64/bouncingBall.so
+[VERBOSE][FMICAPI] Loading functions for the model exchange interface
+[VERBOSE][FMILIB] Successfully loaded all the interface functions
+[INFO][FMUCHK] Version returned from ME FMU: '2.0'
+
+[VERBOSE][FMICAPI] Calling fmi2GetModelTypesPlatform
+	[FMU][logFmiCall][FMU status:OK] fmi2Instantiate: GUID={8c4e810f-3df3-4a00-8276-176fa3c9f003}
+[VERBOSE][FMICAPI] Calling fmi2SetupExperiment
+	[FMU][logFmiCall][FMU status:OK] fmi2SetupExperiment: toleranceDefined=0 tolerance=0.0001
+[VERBOSE][FMICAPI] Calling fmi2EnterInitializationMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterInitializationMode
+[VERBOSE][FMICAPI] Calling fmi2ExitInitializationMode
+	[FMU][logFmiCall][FMU status:OK] fmi2ExitInitializationMode
+[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK]     comp.eventInfo.nextEventTimeDefined: false
+	[FMU][logFmiCall][FMU status:OK]     comp.eventInfo.nextEventTime: 0.0
+	[FMU][logFmiCall][FMU status:OK]     comp.time: 0.0
+	[FMU][logFmiCall][FMU status:OK]     timeEvent=false
+	[FMU][logFmiCall][FMU status:OK]     calling eventUpdate
+	[FMU][logFmiCall][FMU status:OK]     calling eventUpdate DONE
+	[FMU][logFmiCall][FMU status:OK]     comp.isNewEventIteration: false
+[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2GetContinuousStates: Entering
+	[FMU][logFmiCall][FMU status:OK] fmi2GetContinuousStates: h = 1.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetContinuousStates: v = 0.0
+[ERROR][FMUCHK] FMU does not utilize provided instance name (Test FMI 2.0 ME != 1.00000000000001)
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 1.00000000000001
+[INFO][FMUCHK] Initialized FMU for simulation starting at time 0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 1.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= 0.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= 0.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = 0.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 0.2
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=0.20
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=1.0
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=-1.962
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 1.00000000000001
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 1.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= -1.962
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= -1.962
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = -1.962
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 0.4
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=0.40
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=0.6075999999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=-3.924
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 0.6076000000000099
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 0.6075999999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= -3.924
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= -3.924
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = -3.924
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 0.6
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=0.60
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=-0.1772000000000005
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=-5.886000000000001
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = -0.1771999999999905
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+[VERBOSE][FMUCHK] Handling a state event
+[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
+[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK]     comp.eventInfo.nextEventTimeDefined: false
+	[FMU][logFmiCall][FMU status:OK]     comp.eventInfo.nextEventTime: 0.0
+	[FMU][logFmiCall][FMU status:OK]     comp.time: 0.6000000000000001
+	[FMU][logFmiCall][FMU status:OK]     timeEvent=false
+	[FMU][logFmiCall][FMU status:OK]     calling eventUpdate
+	[FMU][logFmiCall][FMU status:OK]     calling eventUpdate DONE
+	[FMU][logFmiCall][FMU status:OK]     comp.isNewEventIteration: false
+	[FMU][logFmiCall][FMU status:OK] fmi2GetContinuousStates: Entering
+	[FMU][logFmiCall][FMU status:OK] fmi2GetContinuousStates: h = 0.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetContinuousStates: v = 4.120200000000001
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = -1e-14
+[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 0.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= 4.120200000000001
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= 4.120200000000001
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = 4.120200000000001
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 0.8
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=0.80
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=0.8240399999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=2.158200000000001
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 0.8240399999999899
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+[VERBOSE][FMUCHK] Handling a state event
+[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
+[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK]     comp.eventInfo.nextEventTimeDefined: false
+	[FMU][logFmiCall][FMU status:OK]     comp.eventInfo.nextEventTime: 0.0
+	[FMU][logFmiCall][FMU status:OK]     comp.time: 0.8
+	[FMU][logFmiCall][FMU status:OK]     timeEvent=false
+	[FMU][logFmiCall][FMU status:OK]     calling eventUpdate
+	[FMU][logFmiCall][FMU status:OK]     calling eventUpdate DONE
+	[FMU][logFmiCall][FMU status:OK]     comp.isNewEventIteration: false
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 0.8240400000000099
+[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 0.8240399999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= 2.158200000000001
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= 2.158200000000001
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = 2.158200000000001
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 1
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=1.00
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=1.25568
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=0.196200000000001
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 1.25568000000001
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 1.25568
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= 0.196200000000001
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= 0.196200000000001
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = 0.196200000000001
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 1.2
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=1.20
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=1.29492
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=-1.765799999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 1.29492000000001
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 1.29492
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= -1.765799999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= -1.765799999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = -1.765799999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 1.4
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=1.40
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=0.9417600000000004
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=-3.727799999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 0.9417600000000104
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 0.9417600000000004
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= -3.727799999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= -3.727799999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = -3.727799999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 1.6
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=1.60
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=0.1962000000000008
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=-5.689799999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 0.1962000000000108
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 0.1962000000000008
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= -5.689799999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= -5.689799999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = -5.689799999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 1.8
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=1.80
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=-0.9417599999999986
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=-7.651799999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = -0.9417599999999886
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+[VERBOSE][FMUCHK] Handling a state event
+[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
+[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK]     comp.eventInfo.nextEventTimeDefined: false
+	[FMU][logFmiCall][FMU status:OK]     comp.eventInfo.nextEventTime: 0.0
+	[FMU][logFmiCall][FMU status:OK]     comp.time: 1.8
+	[FMU][logFmiCall][FMU status:OK]     timeEvent=false
+	[FMU][logFmiCall][FMU status:OK]     calling eventUpdate
+	[FMU][logFmiCall][FMU status:OK]     calling eventUpdate DONE
+	[FMU][logFmiCall][FMU status:OK]     comp.isNewEventIteration: false
+	[FMU][logFmiCall][FMU status:OK] fmi2GetContinuousStates: Entering
+	[FMU][logFmiCall][FMU status:OK] fmi2GetContinuousStates: h = 0.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetContinuousStates: v = 5.356259999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = -1e-14
+[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 0.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= 5.356259999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= 5.356259999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = 5.356259999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 2
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=2.00
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=1.071251999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=3.394259999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 1.071251999999989
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+[VERBOSE][FMUCHK] Handling a state event
+[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
+[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK]     comp.eventInfo.nextEventTimeDefined: false
+	[FMU][logFmiCall][FMU status:OK]     comp.eventInfo.nextEventTime: 0.0
+	[FMU][logFmiCall][FMU status:OK]     comp.time: 2.0
+	[FMU][logFmiCall][FMU status:OK]     timeEvent=false
+	[FMU][logFmiCall][FMU status:OK]     calling eventUpdate
+	[FMU][logFmiCall][FMU status:OK]     calling eventUpdate DONE
+	[FMU][logFmiCall][FMU status:OK]     comp.isNewEventIteration: false
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 1.071252000000009
+[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 1.071251999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= 3.394259999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= 3.394259999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = 3.394259999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 2.2
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=2.20
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=1.750103999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=1.432259999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 1.750104000000009
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 1.750103999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= 1.432259999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= 1.432259999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = 1.432259999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 2.4
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=2.40
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=2.036555999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=-0.5297400000000032
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 2.036556000000009
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 2.036555999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= -0.5297400000000032
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= -0.5297400000000032
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = -0.5297400000000032
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 2.6
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=2.60
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=1.930607999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=-2.491740000000005
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 1.930608000000008
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 1.930607999999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= -2.491740000000005
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= -2.491740000000005
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = -2.491740000000005
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 2.8
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=2.80
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=1.432259999999997
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=-4.453740000000007
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 1.432260000000007
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 1.432259999999997
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= -4.453740000000007
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= -4.453740000000007
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = -4.453740000000007
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 3
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=3.00
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=0.5415119999999946
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=-6.415740000000008
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 0.5415120000000045
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 0.5415119999999946
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= -6.415740000000008
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= -6.415740000000008
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = -6.415740000000008
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 3.2
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=3.20
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=-0.7416360000000083
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=-8.37774000000001
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = -0.7416359999999983
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+[VERBOSE][FMUCHK] Handling a state event
+[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
+[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK]     comp.eventInfo.nextEventTimeDefined: false
+	[FMU][logFmiCall][FMU status:OK]     comp.eventInfo.nextEventTime: 0.0
+	[FMU][logFmiCall][FMU status:OK]     comp.time: 3.200000000000001
+	[FMU][logFmiCall][FMU status:OK]     timeEvent=false
+	[FMU][logFmiCall][FMU status:OK]     calling eventUpdate
+	[FMU][logFmiCall][FMU status:OK]     calling eventUpdate DONE
+	[FMU][logFmiCall][FMU status:OK]     comp.isNewEventIteration: false
+	[FMU][logFmiCall][FMU status:OK] fmi2GetContinuousStates: Entering
+	[FMU][logFmiCall][FMU status:OK] fmi2GetContinuousStates: h = 0.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetContinuousStates: v = 5.864418000000007
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = -1e-14
+[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 0.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= 5.864418000000007
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= 5.864418000000007
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = 5.864418000000007
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 3.4
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=3.40
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=1.172883600000002
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=3.902418000000005
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 1.172883599999992
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+[VERBOSE][FMUCHK] Handling a state event
+[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
+[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK]     comp.eventInfo.nextEventTimeDefined: false
+	[FMU][logFmiCall][FMU status:OK]     comp.eventInfo.nextEventTime: 0.0
+	[FMU][logFmiCall][FMU status:OK]     comp.time: 3.400000000000001
+	[FMU][logFmiCall][FMU status:OK]     timeEvent=false
+	[FMU][logFmiCall][FMU status:OK]     calling eventUpdate
+	[FMU][logFmiCall][FMU status:OK]     calling eventUpdate DONE
+	[FMU][logFmiCall][FMU status:OK]     comp.isNewEventIteration: false
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 1.172883600000012
+[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 1.172883600000002
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= 3.902418000000005
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= 3.902418000000005
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = 3.902418000000005
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 3.6
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=3.60
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=1.953367200000004
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=1.940418000000004
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 1.953367200000014
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 1.953367200000004
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= 1.940418000000004
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= 1.940418000000004
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = 1.940418000000004
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 3.8
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=3.80
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=2.341450800000005
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=-0.02158199999999821
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 2.341450800000016
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 2.341450800000005
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= -0.02158199999999821
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= -0.02158199999999821
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = -0.02158199999999821
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 4
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=4.00
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=2.337134400000006
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=-1.983581999999996
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 2.337134400000016
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 2.337134400000006
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= -1.983581999999996
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= -1.983581999999996
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = -1.983581999999996
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 4.2
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=4.20
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=1.940418000000006
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=-3.945581999999997
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 1.940418000000016
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 1.940418000000006
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= -3.945581999999997
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= -3.945581999999997
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = -3.945581999999997
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 4.4
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=4.40
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=1.151301600000006
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=-5.907581999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 1.151301600000016
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 1.151301600000006
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= -5.907581999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= -5.907581999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = -5.907581999999999
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 4.6
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=4.60
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=-0.03021479999999466
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=-7.869582
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = -0.03021479999998466
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+[VERBOSE][FMUCHK] Handling a state event
+[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
+[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK]     comp.eventInfo.nextEventTimeDefined: false
+	[FMU][logFmiCall][FMU status:OK]     comp.eventInfo.nextEventTime: 0.0
+	[FMU][logFmiCall][FMU status:OK]     comp.time: 4.600000000000001
+	[FMU][logFmiCall][FMU status:OK]     timeEvent=false
+	[FMU][logFmiCall][FMU status:OK]     calling eventUpdate
+	[FMU][logFmiCall][FMU status:OK]     calling eventUpdate DONE
+	[FMU][logFmiCall][FMU status:OK]     comp.isNewEventIteration: false
+	[FMU][logFmiCall][FMU status:OK] fmi2GetContinuousStates: Entering
+	[FMU][logFmiCall][FMU status:OK] fmi2GetContinuousStates: h = 0.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetContinuousStates: v = 5.5087074
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = -1e-14
+[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 0.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= 5.5087074
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= 5.5087074
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = 5.5087074
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 4.8
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=4.80
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=1.101741480000001
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=3.546707399999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 1.101741479999991
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+[VERBOSE][FMUCHK] Handling a state event
+[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
+[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
+	[FMU][logFmiCall][FMU status:OK]     comp.eventInfo.nextEventTimeDefined: false
+	[FMU][logFmiCall][FMU status:OK]     comp.eventInfo.nextEventTime: 0.0
+	[FMU][logFmiCall][FMU status:OK]     comp.time: 4.800000000000002
+	[FMU][logFmiCall][FMU status:OK]     timeEvent=false
+	[FMU][logFmiCall][FMU status:OK]     calling eventUpdate
+	[FMU][logFmiCall][FMU status:OK]     calling eventUpdate DONE
+	[FMU][logFmiCall][FMU status:OK]     comp.isNewEventIteration: false
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 1.101741480000011
+[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 1.101741480000001
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= 3.546707399999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= 3.546707399999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(h)": = 3.546707399999998
+	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(v)": = -9.81
+[VERBOSE][FMUCHK] Simulation time: 5
+	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time=5.00
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: h=1.811082959999995
+	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: v=1.584707400000014
+	[FMU][logFmiCall][FMU status:OK] fmi2GetEventIndicators: z0 = 1.811082960000005
+	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: h= 1.811082959999995
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(h)= 1.584707400000014
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: v= 1.584707400000014
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(v)= -9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: g= 9.81
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: e= 0.7
+[INFO][FMUCHK] Simulation finished successfully at time 5
+	[FMU][logFmiCall][FMU status:OK] fmi2Terminate
+[VERBOSE][FMILIB] Releasing allocated library resources
+[VERBOSE][FMILIB] Releasing FMU CAPI interface
+[VERBOSE][FMICAPI] Successfully unloaded FMU binary
+[VERBOSE][JMPRT] Removing /tmp/fmucktmpfWP2aO
+FMU check summary:
+FMU reported:
+	0 warning(s) and error(s)
+Checker reported:
+	0 Warning(s)
+	1 Error(s)
