@@ -207,8 +207,8 @@ Defined as:
 ```
 
 # TODO
-- [ ] unit testing for the examples
 - [ ] To support co-simulation
+- [ ] unit testing for the examples
 - [ ] To simulate within Nim. This would prevent the need for `fmuChecker`.
 
 # Interesting projects related to FMU
