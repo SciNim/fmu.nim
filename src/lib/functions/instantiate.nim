@@ -139,7 +139,7 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
 
     #useSetStartValues() # This template just makes sure that `setStartValues` is defined. 
     comp.isDirtyValues = fmi2True # because we just called setStartValues
-    comp.isNewEventIteration = fmi2False
+    comp.isNewEventIteration = false
 
     comp.eventInfo.newDiscreteStatesNeeded = fmi2False
     comp.eventInfo.terminateSimulation = fmi2False

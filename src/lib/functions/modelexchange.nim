@@ -17,7 +17,7 @@ proc fmi2EnterEventMode*(comp: FmuRef): fmi2Status =
     filteredLog(comp, fmi2OK, fmiCall, "fmi2EnterEventMode".fmi2String)
 
     comp.state = modelEventMode
-    comp.isNewEventIteration = fmi2True
+    comp.isNewEventIteration = true
     return fmi2OK
 
 
@@ -49,7 +49,7 @@ proc fmi2NewDiscreteStates*(comp: FmuRef;
       #filteredLog(comp, fmi2OK, fmiCall, "    calling eventUpdate".fmi2String)
       comp.eventUpdate(timeEvent)
     #filteredLog(comp, fmi2OK, fmiCall, "    calling eventUpdate DONE".fmi2String)
-    comp.isNewEventIteration = fmi2False
+    comp.isNewEventIteration = false
     #filteredLog(comp, fmi2OK, fmiCall, (&"    comp.isNewEventIteration: {comp.isNewEventIteration.bool}").fmi2String)
     # copy internal eventInfo of component to output eventInfo
     eventInfo.newDiscreteStatesNeeded  = comp.eventInfo.newDiscreteStatesNeeded

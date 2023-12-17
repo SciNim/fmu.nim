@@ -42,5 +42,8 @@ model(inc):
             comp.eventInfo.nextEventTimeDefined = fmi2True
             comp.eventInfo.nextEventTime        = 1 + comp.time
 
-when defined(fmu):
+when defined(fmu2me):
   inc.exportFmu("inc.fmu")
+
+when defined(fmu2cs):
+  inc.exportFmu("inc.fmu", fmi2CoSimulation)

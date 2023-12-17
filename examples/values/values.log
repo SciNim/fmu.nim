@@ -3,17 +3,17 @@
  Reconfigure with FMUCHK_ENABLE_LOG_LEVEL_DEBUG=ON and rebuild to enable debug level logging
 [INFO][FMUCHK] FMI compliance checker Test [FMILibrary: Test] build date: Jun  4 2023
 [INFO][FMUCHK] Called with following options:
-[INFO][FMUCHK] ../fmuCheck.linux64 -h 1 -s 14 -f -l 6 -e values.log values.fmu
+[INFO][FMUCHK] ../fmuCheck.linux64 -h 1 -s 11 -f -l 6 -e values.log values.fmu
 [INFO][FMUCHK] Will process FMU values.fmu
 [VERBOSE][FMILIB] Allocating FMIL context
 [VERBOSE][FMILIB] Detecting FMI standard version
-[VERBOSE][FMIZIP] Unpacking FMU into /tmp/fmucktmps0Parq
+[VERBOSE][FMIZIP] Unpacking FMU into /tmp/fmucktmpYPV3M1
 [VERBOSE][FMIXML] Parsing XML to detect FMI standard version
 [VERBOSE][FMIXML] XML specifies FMI 2.0
 [INFO][FMILIB] XML specifies FMI standard version 2.0
 [VERBOSE][FMILIB] Parsing model description XML
 [VERBOSE][FMI2XML] Parsing XML element fmiModelDescription
-[VERBOSE][FMI2XML] Parsing XML element ModelExchange
+[VERBOSE][FMI2XML] Parsing XML element CoSimulation
 [VERBOSE][FMI2XML] Parsing XML element LogCategories
 [VERBOSE][FMI2XML] Parsing XML element ModelVariables
 [VERBOSE][FMI2XML] Building alias index
@@ -25,7 +25,7 @@
 [INFO][FMUCHK] Model name: values
 [INFO][FMUCHK] Model GUID: {8c4e810f-3df3-4a00-8276-176fa3c9f004}
 [INFO][FMUCHK] Model version: 
-[INFO][FMUCHK] FMU kind: ModelExchange
+[INFO][FMUCHK] FMU kind: CoSimulation
 [INFO][FMUCHK] The FMU contains:
 0 constants
 0 parameters
@@ -44,13 +44,12 @@
 
 [INFO][FMUCHK] No input data provided. In case of simulation initial values from FMU will be used.
 [INFO][FMUCHK] Printing output file header
-[INFO][FMUCHK] Model identifier for ModelExchange: values
+[INFO][FMUCHK] Model identifier for CoSimulation: values
 [INFO][FMILIB] Loading 'linux64' binary with 'default' platform types
-[VERBOSE][FMICAPI] Loaded FMU binary from /tmp/fmucktmps0Parq/binaries/linux64/values.so
-[VERBOSE][FMICAPI] Loading functions for the model exchange interface
+[VERBOSE][FMICAPI] Loaded FMU binary from /tmp/fmucktmpYPV3M1/binaries/linux64/values.so
+[VERBOSE][FMICAPI] Loading functions for the co-simulation interface
 [VERBOSE][FMILIB] Successfully loaded all the interface functions
-[INFO][FMUCHK] Version returned from ME FMU: '2.0'
-
+[INFO][FMUCHK] Version returned from CS FMU:   2.0
 [VERBOSE][FMICAPI] Calling fmi2GetModelTypesPlatform
 	[FMU][logFmiCall][FMU status:OK] fmi2Instantiate: GUID={8c4e810f-3df3-4a00-8276-176fa3c9f004}
 [VERBOSE][FMICAPI] Calling fmi2SetupExperiment
@@ -59,271 +58,146 @@
 	[FMU][logFmiCall][FMU status:OK] fmi2EnterInitializationMode
 [VERBOSE][FMICAPI] Calling fmi2ExitInitializationMode
 	[FMU][logFmiCall][FMU status:OK] fmi2ExitInitializationMode
-[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
-	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
-[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2GetContinuousStates: x = 1.0
 [INFO][FMUCHK] Initialized FMU for simulation starting at time 0
-[ERROR][FMUCHK] FMU does not utilize provided instance name (Test FMI 2.0 ME != fmi2GetReal: x= 1.0)
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x= 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)= -1.0
+[VERBOSE][FMUCHK] Writing simulation output for start time
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=1.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-1.0
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 0
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'jan'
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -1.0
-[VERBOSE][FMUCHK] Simulation time: 1
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-[VERBOSE][FMUCHK] Handling a time event
-[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
-[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
-	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
-[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x= 0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)= -0.0
+[VERBOSE][FMUCHK] Simulation step from time: 0 until: 1
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 0.0 communicationStepSize = 1.0 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logEvent][FMU status:OK] fmi2DoStep: time event detected at 1.00
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.3486784401
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.3486784401
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 1
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'feb'
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
-[VERBOSE][FMUCHK] Simulation time: 2
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-[VERBOSE][FMUCHK] Handling a time event
-[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
-[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
-	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
-[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x= 0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)= -0.0
+[VERBOSE][FMUCHK] Simulation step from time: 1 until: 2
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 1.0 communicationStepSize = 1.0 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logEvent][FMU status:OK] fmi2DoStep: time event detected at 2.00
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.1215766545905693
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.1215766545905693
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'march'
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
-[VERBOSE][FMUCHK] Simulation time: 3
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-[VERBOSE][FMUCHK] Handling a time event
-[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
-[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
-	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
-[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x= 0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)= -0.0
+[VERBOSE][FMUCHK] Simulation step from time: 2 until: 3
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 2.0 communicationStepSize = 1.0 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logEvent][FMU status:OK] fmi2DoStep: time event detected at 3.00
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.0423911582752162
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.0423911582752162
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 3
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'april'
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
-[VERBOSE][FMUCHK] Simulation time: 4
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-[VERBOSE][FMUCHK] Handling a time event
-[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
-[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
-	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
-[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x= 0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)= -0.0
+[VERBOSE][FMUCHK] Simulation step from time: 3 until: 4
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 3.0 communicationStepSize = 1.0 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logEvent][FMU status:OK] fmi2DoStep: time event detected at 4.00
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.01478088294143459
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.01478088294143459
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 4
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'may'
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
-[VERBOSE][FMUCHK] Simulation time: 5
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-[VERBOSE][FMUCHK] Handling a time event
-[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
-[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
-	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
-[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x= 0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)= -0.0
+[VERBOSE][FMUCHK] Simulation step from time: 4 until: 5
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 4.0 communicationStepSize = 1.0 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logEvent][FMU status:OK] fmi2DoStep: time event detected at 5.00
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.005153775207320112
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.005153775207320112
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 5
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'june'
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
-[VERBOSE][FMUCHK] Simulation time: 6
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-[VERBOSE][FMUCHK] Handling a time event
-[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
-[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
-	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
-[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x= 0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)= -0.0
+[VERBOSE][FMUCHK] Simulation step from time: 5 until: 6
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 5.0 communicationStepSize = 1.0 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logEvent][FMU status:OK] fmi2DoStep: time event detected at 6.00
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.001797010299914431
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.001797010299914431
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 6
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'july'
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
-[VERBOSE][FMUCHK] Simulation time: 7
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-[VERBOSE][FMUCHK] Handling a time event
-[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
-[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
-	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
-[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x= 0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)= -0.0
+[VERBOSE][FMUCHK] Simulation step from time: 6 until: 7
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 6.0 communicationStepSize = 1.0 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logEvent][FMU status:OK] fmi2DoStep: time event detected at 7.00
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.0006265787482177969
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.0006265787482177969
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 7
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'august'
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
-[VERBOSE][FMUCHK] Simulation time: 8
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-[VERBOSE][FMUCHK] Handling a time event
-[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
-[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
-	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
-[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x= 0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)= -0.0
+[VERBOSE][FMUCHK] Simulation step from time: 7 until: 8
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 7.0 communicationStepSize = 1.0 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logEvent][FMU status:OK] fmi2DoStep: time event detected at 8.00
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.000218474500528392
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.000218474500528392
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 8
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'sept'
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
-[VERBOSE][FMUCHK] Simulation time: 9
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-[VERBOSE][FMUCHK] Handling a time event
-[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
-[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
-	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
-[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x= 0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)= -0.0
+[VERBOSE][FMUCHK] Simulation step from time: 8 until: 9
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 8.0 communicationStepSize = 1.0 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logEvent][FMU status:OK] fmi2DoStep: time event detected at 9.00
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=7.617734804586634e-05
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-7.617734804586634e-05
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 9
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'october'
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
-[VERBOSE][FMUCHK] Simulation time: 10
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-[VERBOSE][FMUCHK] Handling a time event
-[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
-[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
-	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
-[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x= 0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)= -0.0
+[VERBOSE][FMUCHK] Simulation step from time: 9 until: 10
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 9.0 communicationStepSize = 1.0 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logEvent][FMU status:OK] fmi2DoStep: time event detected at 10.00
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=2.656139888758746e-05
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-2.656139888758746e-05
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 10
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'november'
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
-[VERBOSE][FMUCHK] Simulation time: 11
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-[VERBOSE][FMUCHK] Handling a time event
-[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
-[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
-	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
-[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x= 0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)= -0.0
+[VERBOSE][FMUCHK] Simulation step from time: 10 until: 11
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 10.0 communicationStepSize = 1.0 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logEvent][FMU status:OK] fmi2DoStep: time event detected at 11.00
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=9.261387130997869e-06
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-9.261387130997869e-06
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
 	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 11
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = true
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
 	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'december'
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.0
-[VERBOSE][FMUCHK] Simulation time: 12
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-[VERBOSE][FMUCHK] Handling a time event
-[VERBOSE][FMICAPI] Calling fmi2EnterEventMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterEventMode
-[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
-	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
-[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x= 0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)= -0.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_in = 2
-	[FMU][logFmiCall][FMU status:OK] fmi2GetInteger: int_out = 12
-	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_in = true
-	[FMU][logFmiCall][FMU status:OK] fmi2GetBoolean: bool_out = false
-	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 0 = 'QTronic'
-	[FMU][logFmiCall][FMU status:OK] fmi2GetString: 1 = 'december'
-[INFO][FMUCHK] FMU requested simulation termination
-[INFO][FMUCHK] Simulation finished successfully at time 12
+[INFO][FMUCHK] Simulation finished successfully at time 11
 	[FMU][logFmiCall][FMU status:OK] fmi2Terminate
 [VERBOSE][FMILIB] Releasing allocated library resources
 [VERBOSE][FMILIB] Releasing FMU CAPI interface
 [VERBOSE][FMICAPI] Successfully unloaded FMU binary
-[VERBOSE][JMPRT] Removing /tmp/fmucktmps0Parq
+[VERBOSE][JMPRT] Removing /tmp/fmucktmpYPV3M1
 FMU check summary:
 FMU reported:
 	0 warning(s) and error(s)
 Checker reported:
 	0 Warning(s)
-	1 Error(s)
+	0 Error(s)

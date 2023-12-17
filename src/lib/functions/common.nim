@@ -47,7 +47,7 @@ proc fmi2ExitInitializationMode*(comp: FmuRef): fmi2Status =
 
     if comp.`type` == fmi2ModelExchange:
         comp.state = modelEventMode
-        comp.isNewEventIteration = fmi2True
+        comp.isNewEventIteration = true
 
     else:
         comp.state = modelStepComplete

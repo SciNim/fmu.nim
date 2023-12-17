@@ -9,7 +9,7 @@ type
     event   = "logEvent"
 
 const
-  DT_EVENT_DETECT* = 1e-10  # It could be modified
+  DT_EVENT_DETECT*:float = 1e-10  # It could be modified
 
 type
   ModelState* {.size: sizeof(cint).} = enum

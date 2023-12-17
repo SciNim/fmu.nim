@@ -1,7 +1,7 @@
 # inc.nim
-## Compilation
+## Compilation as FMI 2.0 Model Exchange
 ```sh
-nim c -r -d:fmu inc.nim
+nim c -r -d:fmu2me inc.nim
 ```
 
 ## Testing

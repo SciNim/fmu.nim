@@ -42,5 +42,8 @@ model(dq):
     of "der(x)": -(comp["k"].valueR * comp["x"].valueR)
     else: 0.0
 
-when defined(fmu):
+when defined(fmu2me):
   dq.exportFmu("dq.fmu")
+
+when defined(fmu2cs):
+  dq.exportFmu("dq.fmu", fmi2CoSimulation)

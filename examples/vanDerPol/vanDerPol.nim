@@ -56,6 +56,8 @@ model(vdp):
     else: 0.0
 
 
-when defined(fmu):
+when defined(fmu2me):
   vdp.exportFmu("vanDerPol.fmu")
 
+when defined(fmu2cs):
+  vdp.exportFmu("vanDerPol.fmu", fmi2CoSimulation)

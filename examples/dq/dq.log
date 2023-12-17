@@ -7,13 +7,13 @@
 [INFO][FMUCHK] Will process FMU dq.fmu
 [VERBOSE][FMILIB] Allocating FMIL context
 [VERBOSE][FMILIB] Detecting FMI standard version
-[VERBOSE][FMIZIP] Unpacking FMU into /tmp/fmucktmpd9KvYj
+[VERBOSE][FMIZIP] Unpacking FMU into /tmp/fmucktmpEZkblw
 [VERBOSE][FMIXML] Parsing XML to detect FMI standard version
 [VERBOSE][FMIXML] XML specifies FMI 2.0
 [INFO][FMILIB] XML specifies FMI standard version 2.0
 [VERBOSE][FMILIB] Parsing model description XML
 [VERBOSE][FMI2XML] Parsing XML element fmiModelDescription
-[VERBOSE][FMI2XML] Parsing XML element ModelExchange
+[VERBOSE][FMI2XML] Parsing XML element CoSimulation
 [VERBOSE][FMI2XML] Parsing XML element LogCategories
 [VERBOSE][FMI2XML] Parsing XML element ModelVariables
 [VERBOSE][FMI2XML] Building alias index
@@ -24,7 +24,7 @@
 [INFO][FMUCHK] Model name: dq
 [INFO][FMUCHK] Model GUID: {8c4e810f-3df3-4a00-8276-176fa3c9f000}
 [INFO][FMUCHK] Model version: 
-[INFO][FMUCHK] FMU kind: ModelExchange
+[INFO][FMUCHK] FMU kind: CoSimulation
 [INFO][FMUCHK] The FMU contains:
 0 constants
 1 parameters
@@ -42,13 +42,12 @@
 0 string variables
 
 [INFO][FMUCHK] Printing output file header
-[INFO][FMUCHK] Model identifier for ModelExchange: dq
+[INFO][FMUCHK] Model identifier for CoSimulation: dq
 [INFO][FMILIB] Loading 'linux64' binary with 'default' platform types
-[VERBOSE][FMICAPI] Loaded FMU binary from /tmp/fmucktmpd9KvYj/binaries/linux64/dq.so
-[VERBOSE][FMICAPI] Loading functions for the model exchange interface
+[VERBOSE][FMICAPI] Loaded FMU binary from /tmp/fmucktmpEZkblw/binaries/linux64/dq.so
+[VERBOSE][FMICAPI] Loading functions for the co-simulation interface
 [VERBOSE][FMILIB] Successfully loaded all the interface functions
-[INFO][FMUCHK] Version returned from ME FMU: '2.0'
-
+[INFO][FMUCHK] Version returned from CS FMU:   2.0
 [VERBOSE][FMICAPI] Calling fmi2GetModelTypesPlatform
 	[FMU][logFmiCall][FMU status:OK] fmi2Instantiate: GUID={8c4e810f-3df3-4a00-8276-176fa3c9f000}
 [VERBOSE][FMICAPI] Calling fmi2SetupExperiment
@@ -57,225 +56,145 @@
 	[FMU][logFmiCall][FMU status:OK] fmi2EnterInitializationMode
 [VERBOSE][FMICAPI] Calling fmi2ExitInitializationMode
 	[FMU][logFmiCall][FMU status:OK] fmi2ExitInitializationMode
-[VERBOSE][FMICAPI] Calling fmi2NewDiscreteStates
-	[FMU][logFmiCall][FMU status:OK] fmi2NewDiscreteStates
-[VERBOSE][FMICAPI] Calling fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2EnterContinuousTimeMode
-	[FMU][logFmiCall][FMU status:OK] fmi2GetContinuousStates: x = 1.0
 [INFO][FMUCHK] Initialized FMU for simulation starting at time 0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -1.0
-[VERBOSE][FMUCHK] Simulation time: 0.2
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.8
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.8
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.8
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.8
-[VERBOSE][FMUCHK] Simulation time: 0.4
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.64
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.64
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.64
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.64
-[VERBOSE][FMUCHK] Simulation time: 0.6
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.512
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.512
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.512
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.512
-[VERBOSE][FMUCHK] Simulation time: 0.8
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.4096
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.4096
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.4096
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.4096
-[VERBOSE][FMUCHK] Simulation time: 1
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.32768
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.32768
-[ERROR][FMUCHK] FMU does not utilize provided instance name (Test FMI 2.0 ME != -0.32768)
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.32768
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.32768
-[VERBOSE][FMUCHK] Simulation time: 1.2
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.262144
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.262144
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.262144
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.262144
-[VERBOSE][FMUCHK] Simulation time: 1.4
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.2097152
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.2097152
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.2097152
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.2097152
-[VERBOSE][FMUCHK] Simulation time: 1.6
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.1677721600000001
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.1677721600000001
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.1677721600000001
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.1677721600000001
-[VERBOSE][FMUCHK] Simulation time: 1.8
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.1342177280000001
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.1342177280000001
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.1342177280000001
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.1342177280000001
-[VERBOSE][FMUCHK] Simulation time: 2
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.1073741824000001
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.1073741824000001
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.1073741824000001
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.1073741824000001
-[VERBOSE][FMUCHK] Simulation time: 2.2
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.08589934592000005
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.08589934592000005
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.08589934592000005
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.08589934592000005
-[VERBOSE][FMUCHK] Simulation time: 2.4
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.06871947673600003
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.06871947673600003
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.06871947673600003
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.06871947673600003
-[VERBOSE][FMUCHK] Simulation time: 2.6
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.05497558138880001
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.05497558138880001
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.05497558138880001
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.05497558138880001
-[VERBOSE][FMUCHK] Simulation time: 2.8
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.04398046511103999
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.04398046511103999
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.04398046511103999
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.04398046511103999
-[VERBOSE][FMUCHK] Simulation time: 3
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.03518437208883199
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.03518437208883199
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.03518437208883199
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.03518437208883199
-[VERBOSE][FMUCHK] Simulation time: 3.2
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.02814749767106559
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.02814749767106559
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.02814749767106559
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.02814749767106559
-[VERBOSE][FMUCHK] Simulation time: 3.4
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.02251799813685246
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.02251799813685246
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.02251799813685246
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.02251799813685246
-[VERBOSE][FMUCHK] Simulation time: 3.6
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.01801439850948197
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.01801439850948197
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.01801439850948197
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.01801439850948197
-[VERBOSE][FMUCHK] Simulation time: 3.8
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.01441151880758557
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.01441151880758557
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.01441151880758557
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.01441151880758557
-[VERBOSE][FMUCHK] Simulation time: 4
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.01152921504606846
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.01152921504606846
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.01152921504606846
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.01152921504606846
-[VERBOSE][FMUCHK] Simulation time: 4.2
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.009223372036854766
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.009223372036854766
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.009223372036854766
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.009223372036854766
-[VERBOSE][FMUCHK] Simulation time: 4.4
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.007378697629483811
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.007378697629483811
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.007378697629483811
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.007378697629483811
-[VERBOSE][FMUCHK] Simulation time: 4.6
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.005902958103587048
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.005902958103587048
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.005902958103587048
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.005902958103587048
-[VERBOSE][FMUCHK] Simulation time: 4.8
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.004722366482869637
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.004722366482869637
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.004722366482869637
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
-	[FMU][logFmiCall][FMU status:OK] fmi2GetDerivatives: "der(x)": = -0.004722366482869637
-[VERBOSE][FMUCHK] Simulation time: 5
-	[FMU][logFmiCall][FMU status:OK] fmi2SetTime: time={time:0}
-	[FMU][logFmiCall][FMU status:OK] fmi2SetContinuousStates: x=0.003777893186295717
-	[FMU][logFmiCall][FMU status:OK] fmi2CompletedIntegratorStep
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="x"   value = 0.003777893186295717
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="der(x)"   value = -0.003777893186295717
-	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: key="k"   value = 1.0
+[VERBOSE][FMUCHK] Writing simulation output for start time
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=1.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-1.0
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 0 until: 0.2
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 0.0 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.8170728068875469
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.8170728068875469
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 0.2 until: 0.4
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 0.2 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.6676079717550945
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.6676079717550945
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 0.4 until: 0.6
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 0.4 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.5454843193824371
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.5454843193824371
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 0.6 until: 0.8
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 0.6000000000000001 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.445700403950951
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.445700403950951
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 0.8 until: 1
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 0.8 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.364169680087117
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.364169680087117
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 1 until: 1.2
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 1.0 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.2975531426921207
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.2975531426921207
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 1.2 until: 1.4
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 1.2 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.2431225814976619
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.2431225814976619
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 1.4 until: 1.6
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 1.4 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.1986488500820409
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.1986488500820409
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 1.6 until: 1.8
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 1.6 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.1623105735215167
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.1623105735215167
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 1.8 until: 2
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 1.8 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.1326195558947532
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.1326195558947532
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 2 until: 2.2
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 2.0 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.1083598327831059
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.1083598327831059
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 2.2 until: 2.4
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 2.2 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.08853787272595755
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.08853787272595755
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 2.4 until: 2.6
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 2.4 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.07234188818405052
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.07234188818405052
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 2.6 until: 2.8
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 2.6 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.05910858963408721
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.05910858963408721
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 2.8 until: 3
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 2.8 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.04829602124348779
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.04829602124348779
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 3 until: 3.2
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 3.0 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.03946136563891716
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.03946136563891716
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 3.2 until: 3.4
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 3.200000000000001 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.03224280878620584
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.03224280878620584
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 3.4 until: 3.6
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 3.400000000000001 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.02634472227688367
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.02634472227688367
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 3.6 until: 3.8
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 3.600000000000001 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.02152555617744622
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.02152555617744622
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 3.8 until: 4
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 3.800000000000001 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.01758794660572156
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.01758794660572156
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 4 until: 4.2
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 4.000000000000001 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.01437063290052522
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.01437063290052522
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 4.2 until: 4.4
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 4.200000000000001 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.01174185336078267
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.01174185336078267
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 4.4 until: 4.6
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 4.400000000000001 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.009593949083556668
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.009593949083556668
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 4.6 until: 4.8
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 4.600000000000001 communicationStepSize = 0.2 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.007838954906837857
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.007838954906837857
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
+[VERBOSE][FMUCHK] Simulation step from time: 4.8 until: 5
+	[FMU][logFmiCall][FMU status:OK] fmi2DoStep: currentCommunicationPoint = 4.800000000000002 communicationStepSize = 0.1999999999999984 noSetFMUStatePriorToCurrentPoint = true 
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: x=0.006404996888794926
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: der(x)=-0.006404996888794926
+	[FMU][logFmiCall][FMU status:OK] fmi2GetReal: k=1.0
 [INFO][FMUCHK] Simulation finished successfully at time 5
 	[FMU][logFmiCall][FMU status:OK] fmi2Terminate
 [VERBOSE][FMILIB] Releasing allocated library resources
 [VERBOSE][FMILIB] Releasing FMU CAPI interface
 [VERBOSE][FMICAPI] Successfully unloaded FMU binary
-[VERBOSE][JMPRT] Removing /tmp/fmucktmpd9KvYj
+[VERBOSE][JMPRT] Removing /tmp/fmucktmpEZkblw
 FMU check summary:
 FMU reported:
 	0 warning(s) and error(s)
 Checker reported:
 	0 Warning(s)
-	1 Error(s)
+	0 Error(s)

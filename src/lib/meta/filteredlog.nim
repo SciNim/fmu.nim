@@ -26,6 +26,8 @@ proc filteredLog*(  instance: FmuRef,
   # error and fatal is always logged
   # then it depends on the categories to be logged
   if status == fmi2Error or status == fmi2Fatal or isCategoryLogged(instance, categoryIndex).bool:
+    if len(args ) > 1:
+      echo args
     instance.functions.logger(instance.functions.componentEnvironment, # fmi2ComponentEnvironment
                               instance.instanceName.fmi2String, # fmi2String
                               status, # fmi2Status

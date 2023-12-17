@@ -1,12 +1,13 @@
 import system
 import std/[os, osproc, strformat] #, paths]
 import model, folder, compress, xml
-import ../defs/modelinstance
+import ../defs/[definitions, modelinstance]
 #import ../fmu
 import logging
 
 template exportFmu*( fmu:Fmu;
                      outFile:string;
+                     typ:fmi2Type = fmi2ModelExchange;
                      clean:bool = false) =
   consoleLogger.log(lvlInfo, "fmuBuilder > exportFmu: exporting FMU")
 
@@ -125,7 +126,7 @@ template exportFmu*( fmu:Fmu;
   #    fmu.states &= p.idx
   fmu.nEventIndicators = fmu.isPositive.len
 
-  var xmlData = createXml(fmu)#, inc.nEventIndicators)
+  var xmlData = fmu.createXml(typ)
   writeFile(joinPath(tmpFolder, "modelDescription.xml"), xmlData)
 
   # 3. Compress

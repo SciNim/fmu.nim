@@ -1,19 +1,28 @@
 import std/[xmltree, strformat, strtabs, tables, sequtils]
 import options
-import ../defs/[modelinstance, parameters]
+import ../defs/[definitions, modelinstance, parameters]
 import ./model
 
-proc createXml*( myModel: Fmu): string =
+proc createXml*( myModel: Fmu; typ:fmi2Type = fmi2ModelExchange): string =
   var files:seq[XmlNode] = @[]
   for fname in myModel.sourceFiles:
     var file = newElement("File")
     `attrs=`(file, {"name" : fname}.toXmlAttributes)
     files &= file
 
+  # Model
+  var model:XmlNode
+
   let sourceFiles = newXmlTree("SourceFiles", files) # [file])
 
   let meAtt = { "modelIdentifier" : fmt"{myModel.id}" }.toXmlAttributes
-  var modelExchange = newXmlTree("ModelExchange", [sourceFiles], meAtt)
+
+  case typ
+  of fmi2ModelExchange:
+    model = newXmlTree("ModelExchange", [sourceFiles], meAtt)
+  of fmi2CoSimulation:
+    meAtt["canHandleVariableCommunicationStepSize"] = "true"
+    model = newXmlTree("CoSimulation", [sourceFiles], meAtt)
 
   var categories = @["logAll", "logError", "logFmiCall", "logEvent"]  # FIXME
   var catChildren:seq[XmlNode] = @[]
@@ -176,7 +185,7 @@ proc createXml*( myModel: Fmu): string =
               "modelName": fmt"{myModel.id}",
               "guid": fmt"{myModel.guid}",
               "numberOfEventIndicators" : fmt"{myModel.nEventIndicators}"}.toXmlAttributes
-  let k = newXmlTree("fmiModelDescription", [modelExchange, logCategories, modelVariables, modelStructure], att)
+  let k = newXmlTree("fmiModelDescription", [model, logCategories, modelVariables, modelStructure], att)
   #let k = newXmlTree("fmiModelDescription", [modelExchange, logCategories, modelVariables, modelStructure], att)
   #echo repr modelVariables
   return xmlHeader & $k

@@ -91,5 +91,8 @@ model(values):
         comp.eventInfo.terminateSimulation  = fmi2True
         comp.eventInfo.nextEventTimeDefined = fmi2False
 
-when defined(fmu):
+when defined(fmu2me):
   values.exportFmu("values.fmu")
+
+when defined(fmu2cs):
+  values.exportFmu("values.fmu", fmi2CoSimulation)

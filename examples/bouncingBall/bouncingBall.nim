@@ -91,40 +91,32 @@ model(bb):
 
   proc eventUpdate*( comp: FmuRef;
                      timeEvent:bool ) =
-    #echo "eventUpdate: Entering"
     comp.eventInfo.newDiscreteStatesNeeded           = fmi2False
     comp.eventInfo.terminateSimulation               = fmi2False
     comp.eventInfo.nominalsOfContinuousStatesChanged = fmi2False
     comp.eventInfo.valuesOfContinuousStatesChanged   = fmi2False
     comp.eventInfo.nextEventTimeDefined              = fmi2False
 
-    if comp.isNewEventIteration.bool:
+    if comp.isNewEventIteration:
       prevV = comp["v"].valueR
+      comp.isNewEventIteration = false
 
     comp.isPositive["z=0"] = comp["h"] > 0  # positive while h>0
     if comp.isPositive["z=0"] == false:    # What to do when h <= 0
       var tempV:float = -comp["e"].valueR * prevV
-      #echo "ok1"
       if comp["v"].valueR != tempV:
-        #echo "ok2"
         comp["h"] = 0.0
-        #echo "ok3"        
-        comp["v"] = tempV
-        #echo "ok4"        
+        comp["v"] = tempV    
         comp.eventInfo.valuesOfContinuousStatesChanged = fmi2True
-        #echo "ok5"
       # avoid fall-through effect. The ball will not jump high 
       # enough, so v and der_v is set to 0 at this surface impact.
-      if comp["v"].valueR < 1e-3:
-        #echo "ok6"        
+      if comp["v"].valueR < 1e-3:        
         comp["v"] = 0
         comp["der(v)"] = 0  # turn off gravity.
-        #echo "ok7"        
-    #echo "eventUpdate: Ending"
 
 
   proc getEventIndicator*(comp:FmuRef; z:int):float =
-    if z == 0:
+    if z == 0:  # FIXME: to change into something more friendly
       var tmp = if comp.isPositive["z=0"]:
                   EPS_INDICATORS
                 else:
@@ -135,5 +127,8 @@ model(bb):
       return 0.0
 
 
-when defined(fmu):
+when defined(fmu2me):
   bb.exportFmu("bouncingBall.fmu")
+
+when defined(fmu2cs):
+  bb.exportFmu("bouncingBall.fmu", fmi2CoSimulation)

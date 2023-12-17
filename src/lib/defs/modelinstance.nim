@@ -55,7 +55,7 @@ type
 
     isDirtyValues*: fmi2Boolean
 
-    isNewEventIteration*: fmi2Boolean
+    isNewEventIteration*: bool
 
     nimFile*:string # Stores the filename of the model
     # values
