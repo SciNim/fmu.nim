@@ -54,9 +54,9 @@ jobs:
       - name: Test inc.fmu
         run: |  
           if [ "$RUNNER_OS" == "Linux" ]; then
-                /opt/hostedtoolcache/modelica-tools/FMUComplianceChecker/2.0.4/linux-x64/fmuCheck.linux64 -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
+                /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64 -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
           elif [ "$RUNNER_OS" == "Windows" ]; then
-                ../fmuCheck.win64 -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
+                /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64 -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
           else
                 echo "$RUNNER_OS not supported"
                 exit 1
@@ -71,4 +71,5 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
+
       - run: echo "🍏 This job's status is ${{ job.status }}."
