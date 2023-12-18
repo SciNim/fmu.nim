@@ -57,21 +57,12 @@ jobs:
         run: |
           cd examples/inc
           nim c -r -d:fmu2me inc
-          if [ "$RUNNER_OS" == "Linux" ]; then  
-                /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64 -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
-          elif [ "$RUNNER_OS" == "Windows" ]; then
-                /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64 -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
-          else
-                echo "$RUNNER_OS not supported"
-                exit 1
-          fi
-          ls -la
 
-      - name: List FMU checker files
-        run: |
-          ls ${{ github.workspace }}
+      # - name: List FMU checker files
+      #   run: |
+      #     ls ${{ github.workspace }}
 
-      - name: Test inc.fmu 
+      - name: Execute FMU checker over inc.fmu 
         run: |  
           cd examples/inc        
           if [ "$RUNNER_OS" == "Linux" ]; then  
@@ -82,6 +73,20 @@ jobs:
                 echo "$RUNNER_OS not supported"
                 exit 1
           fi          
+      
+      # https://github.com/marketplace/actions/smart-diff
+      
+      - name: Compare the result file
+        uses: LouisBrunner/diff-action@v0.2.0
+        with:
+          old: examples/inc/inc_me.csv
+          new: examples/inc/inc.csv
+          mode: addition
+          tolerance: better
+
+
+      #- name: Compare result files
+        
       #- run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       #- run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       #- run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
