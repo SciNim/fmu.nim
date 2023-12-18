@@ -15,15 +15,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: iffy/install-nim@v5
-          with:
-            nim-version: ${{ matrix.nimversion }}
+        with:
+          nim-version: ${{ matrix.nimversion }}
           repo-token: ${{ secrets.GITHUB_TOKEN }} 
           #env:
-          #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       
-      - name: Test
+          #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+      - uses: goto-bus-stop/setup-zig@v2
+      #- run: zig build test               
+      #- name: Test
+      #  run: |
+      #    nimble install -y
+      #    nimble test             
+      - name: inc
         run: |
-          nimble install -y
-          nimble test             
+          cd examples/inc
+          nim c -r -d:fmu2me inc
       #- run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       #- run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       #- run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
