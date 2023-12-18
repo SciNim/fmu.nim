@@ -1,4 +1,4 @@
-name: GitHub Actions Demo
+name: Testing examples with FMU Checker
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
@@ -42,7 +42,10 @@ jobs:
           tag: "2.0.4"
           fileName: "FMUChecker-2.0.4-win64.zip"
           extract: true
-
+      - name: Make FMUChecker executable
+        run: |
+          chmod +x /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64
+          chmod +x /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.win64
       - name: Install fmu.nim
         run: |
           nimble install -y
