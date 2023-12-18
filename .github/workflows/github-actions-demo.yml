@@ -64,8 +64,9 @@ jobs:
           else
                 echo "$RUNNER_OS not supported"
                 exit 1
-          fi 
-          
+          fi
+          ls -la
+
       - name: List FMU checker files
         run: |
           ls ${{ github.workspace }}
