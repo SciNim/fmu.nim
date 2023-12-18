@@ -15,8 +15,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: iffy/install-nim@v5
-          with:
-            nim-version: ${{ matrix.nimversion }}
+        with:
+          nim-version: ${{ matrix.nimversion }}
           repo-token: ${{ secrets.GITHUB_TOKEN }} 
           #env:
           #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       
