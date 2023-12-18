@@ -56,10 +56,10 @@ jobs:
         run: |
           ls ${{ github.workspace }}
 
-      - name: Test inc.fmu  # FMUChecker-2.0.4-linux64/
+      - name: Test inc.fmu 
         run: |  
           if [ "$RUNNER_OS" == "Linux" ]; then  
-                /home/runner/work/fmu.nim/fmu.nim/fmuCheck.linux64 -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
+                /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64 -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
           elif [ "$RUNNER_OS" == "Windows" ]; then
                 /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64 -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
           else
