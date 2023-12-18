@@ -75,14 +75,14 @@ jobs:
           fi          
       
       # https://github.com/marketplace/actions/smart-diff
-      
+
       - name: Compare the result file
         uses: LouisBrunner/diff-action@v0.2.0
         with:
           old: examples/inc/inc_me.csv
           new: examples/inc/inc.csv
           mode: addition
-          tolerance: better
+          #tolerance: better
 
 
       #- name: Compare result files
