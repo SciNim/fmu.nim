@@ -79,7 +79,7 @@ jobs:
         #shell: cmd
         run: |
           cd examples/inc
-          D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
+          D:\\a\\fmu.nim\\fmu.nim\\FMUChecker-2.0.4-win64\\fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
         if: runner.os == 'Windows'      
       
       # https://github.com/marketplace/actions/smart-diff
