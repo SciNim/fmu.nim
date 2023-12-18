@@ -23,3 +23,18 @@ proc fmi2FreeInstance*(comp: FmuRef) =
 
 
 {.pop.}
+
+
+
+#[
+In addition to GC_ref and GC_unref you can avoid the garbage collector 
+by manually allocating memory with procs like:
+  alloc, alloc0, allocShared, allocShared0 or allocCStringArray. 
+  
+The garbage collector won't try to free them, you need to call their 
+respective dealloc pairs (dealloc, deallocShared, deallocCStringArray, etc) 
+when you are done with them or they will leak.
+]#
+
+
+

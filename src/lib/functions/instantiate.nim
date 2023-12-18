@@ -9,11 +9,6 @@ import std/[strformat, tables, options]
 # https://forum.nim-lang.org/t/7496
 #template genInstantiate*(inc:Fmu): untyped =
 
-# template useSetStartValues() =
-#   mixin setStartValues
-
-#   when compiles(setStartValues):
-#     setStartValues(comp)   # <------ to be implemented by the includer of this file
 
 template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
 
@@ -134,10 +129,9 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
 
     comp.state = modelInstantiated   # State changed
  
-    when defined(setStartValues):
-      setStartValues(comp)   # <------ to be implemented by the includer of this file
-
-    #useSetStartValues() # This template just makes sure that `setStartValues` is defined. 
+    # when declared(setStartValues):
+    #   setStartValues(comp)   # <------ to be implemented by the includer of this file
+ 
     comp.isDirtyValues = fmi2True # because we just called setStartValues
     comp.isNewEventIteration = false
 
@@ -153,18 +147,4 @@ template genFmi2Instantiate(fmu:FmuRef) {.dirty.} =
                   ("fmi2Instantiate: GUID=" & $fmuGUID).fmi2String)#, fmuGUID)
 
     return comp  
-
-
-
-#[
-In addition to GC_ref and GC_unref you can avoid the garbage collector 
-by manually allocating memory with procs like:
-  alloc, alloc0, allocShared, allocShared0 or allocCStringArray. 
-  
-The garbage collector won't try to free them, you need to call their 
-respective dealloc pairs (dealloc, deallocShared, deallocCStringArray, etc) 
-when you are done with them or they will leak.
-]#
-
-
 
