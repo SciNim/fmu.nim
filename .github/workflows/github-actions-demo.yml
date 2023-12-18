@@ -62,11 +62,11 @@ jobs:
         run: |
           ls ${{ github.workspace }}
 
-      - name: test inc.fmu in Linux
-        runs-on: 'ubuntu-latest'
-        steps:
-          run: |
-            /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64 -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
+      - name: Test inc.fmu
+        run:
+        if: runner.os == 'Linux'
+        run: |
+          /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64 -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
 
       - name: Test inc.fmu 
         run: |  
