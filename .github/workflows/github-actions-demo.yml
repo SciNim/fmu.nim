@@ -26,6 +26,12 @@ jobs:
       #  run: |
       #    nimble install -y
       #    nimble test 
+
+      - name: Install FMU Compliance Checker
+        uses: jaxxstorm/action-install-gh-release@v1.10.0
+        with: # Grab a specific tag
+          repo: modelica-tools/FMUComplianceChecker
+          tag: 2.0.4      
       - name: Install fmu.nim
         run: |
           nimble install -y
@@ -37,7 +43,7 @@ jobs:
       - name: Test inc.fmu
         run: |  
           if [ "$RUNNER_OS" == "Linux" ]; then
-                ../fmuCheck.linux64 -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
+                fmuCheck.linux64 -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
           elif [ "$RUNNER_OS" == "Windows" ]; then
                 ../fmuCheck.win64 -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
           else
