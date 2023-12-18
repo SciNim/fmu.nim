@@ -64,10 +64,6 @@ jobs:
           cd examples/inc
           nim c -r -d:fmu2me inc
 
-      # - name: List FMU checker files
-      #   run: |
-      #     ls ${{ github.workspace }}
-
       - name: Execute FMU checker over inc.fmu in Linux
         run: |  
           cd examples/inc          
@@ -78,10 +74,13 @@ jobs:
         #shell: bash      
         #shell: cmd
         run: |
+          echo "::add-path::${env:GITHUB_WORKSPACE}"
           cd examples/inc
-          D:\\a\\fmu.nim\\fmu.nim\\FMUChecker-2.0.4-win64\\fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
+          fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
         if: runner.os == 'Windows'      
-      
+
+      #D:\\a\\fmu.nim\\fmu.nim\\FMUChecker-2.0.4-win64\\fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
+   
       # https://github.com/marketplace/actions/smart-diff
 
       - name: Compare the result file
