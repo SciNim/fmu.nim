@@ -1,0 +1,52 @@
+{
+  "cacheVersion": "D20210525T193831",
+  "outputFile": "/home/jose/src/nimlang/fmu.nim/tests/test0",
+  "compile": [
+    [
+      "/home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@ssystem@sexceptions.nim.c",
+      "gcc -c  -w -fmax-errors=3 -pthread   -I/home/jose/.choosenim/toolchains/nim-2.0.0/lib -I/home/jose/src/nimlang/fmu.nim/tests -o /home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@ssystem@sexceptions.nim.c.o /home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@ssystem@sexceptions.nim.c"
+    ],
+    [
+      "/home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@sstd@sprivate@sdigitsutils.nim.c",
+      "gcc -c  -w -fmax-errors=3 -pthread   -I/home/jose/.choosenim/toolchains/nim-2.0.0/lib -I/home/jose/src/nimlang/fmu.nim/tests -o /home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@sstd@sprivate@sdigitsutils.nim.c.o /home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@sstd@sprivate@sdigitsutils.nim.c"
+    ],
+    [
+      "/home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@sstd@sassertions.nim.c",
+      "gcc -c  -w -fmax-errors=3 -pthread   -I/home/jose/.choosenim/toolchains/nim-2.0.0/lib -I/home/jose/src/nimlang/fmu.nim/tests -o /home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@sstd@sassertions.nim.c.o /home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@sstd@sassertions.nim.c"
+    ],
+    [
+      "/home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@ssystem@sdollars.nim.c",
+      "gcc -c  -w -fmax-errors=3 -pthread   -I/home/jose/.choosenim/toolchains/nim-2.0.0/lib -I/home/jose/src/nimlang/fmu.nim/tests -o /home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@ssystem@sdollars.nim.c.o /home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@ssystem@sdollars.nim.c"
+    ],
+    [
+      "/home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@ssystem.nim.c",
+      "gcc -c  -w -fmax-errors=3 -pthread   -I/home/jose/.choosenim/toolchains/nim-2.0.0/lib -I/home/jose/src/nimlang/fmu.nim/tests -o /home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@ssystem.nim.c.o /home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@ssystem.nim.c"
+    ],
+    [
+      "/home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@mtest0.nim.c",
+      "gcc -c  -w -fmax-errors=3 -pthread   -I/home/jose/.choosenim/toolchains/nim-2.0.0/lib -I/home/jose/src/nimlang/fmu.nim/tests -o /home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@mtest0.nim.c.o /home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@mtest0.nim.c"
+    ]
+  ],
+  "link": [
+    "/home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@ssystem@sexceptions.nim.c.o",
+    "/home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@sstd@sprivate@sdigitsutils.nim.c.o",
+    "/home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@sstd@sassertions.nim.c.o",
+    "/home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@ssystem@sdollars.nim.c.o",
+    "/home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@ssystem.nim.c.o",
+    "/home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@mtest0.nim.c.o"
+  ],
+  "linkcmd": "gcc   -o /home/jose/src/nimlang/fmu.nim/tests/test0 /home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@ssystem@sexceptions.nim.c.o /home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@sstd@sprivate@sdigitsutils.nim.c.o /home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@sstd@sassertions.nim.c.o /home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@ssystem@sdollars.nim.c.o /home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@m..@s..@s..@s..@s.choosenim@stoolchains@snim-2.0.0@slib@ssystem.nim.c.o /home/jose/src/nimlang/fmu.nim/nimcache/tests/test0.nim_4a8a08f09d37b73795649038408b5f33/@mtest0.nim.c.o  -pthread -pthread   -ldl",
+  "extraCmds": [],
+  "configFiles": [
+    "/home/jose/.choosenim/toolchains/nim-2.0.0/config/nim.cfg",
+    "/home/jose/.choosenim/toolchains/nim-2.0.0/config/config.nims",
+    "/home/jose/src/nimlang/fmu.nim/tests/config.nims"
+  ],
+  "stdinInput": false,
+  "projectIsCmd": false,
+  "cmdInput": "",
+  "currentDir": "/home/jose/src/nimlang/fmu.nim",
+  "cmdline": "",
+  "depfiles": [],
+  "nimexe": ""
+}

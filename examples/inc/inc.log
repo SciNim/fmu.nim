@@ -3,11 +3,11 @@
  Reconfigure with FMUCHK_ENABLE_LOG_LEVEL_DEBUG=ON and rebuild to enable debug level logging
 [INFO][FMUCHK] FMI compliance checker Test [FMILibrary: Test] build date: Jun  4 2023
 [INFO][FMUCHK] Called with following options:
-[INFO][FMUCHK] ../fmuCheck.linux64 -h 1 -s 14 -f -l 6 -e inc.log inc.fmu
+[INFO][FMUCHK] ../fmuCheck.linux64 -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
 [INFO][FMUCHK] Will process FMU inc.fmu
 [VERBOSE][FMILIB] Allocating FMIL context
 [VERBOSE][FMILIB] Detecting FMI standard version
-[VERBOSE][FMIZIP] Unpacking FMU into /tmp/fmucktmpXMMJGJ
+[VERBOSE][FMIZIP] Unpacking FMU into /tmp/fmucktmpcnZHmI
 [VERBOSE][FMIXML] Parsing XML to detect FMI standard version
 [VERBOSE][FMIXML] XML specifies FMI 2.0
 [INFO][FMILIB] XML specifies FMI standard version 2.0
@@ -42,7 +42,7 @@
 [INFO][FMUCHK] Printing output file header
 [INFO][FMUCHK] Model identifier for CoSimulation: inc
 [INFO][FMILIB] Loading 'linux64' binary with 'default' platform types
-[VERBOSE][FMICAPI] Loaded FMU binary from /tmp/fmucktmpXMMJGJ/binaries/linux64/inc.so
+[VERBOSE][FMICAPI] Loaded FMU binary from /tmp/fmucktmpcnZHmI/binaries/linux64/inc.so
 [VERBOSE][FMICAPI] Loading functions for the co-simulation interface
 [VERBOSE][FMILIB] Successfully loaded all the interface functions
 [INFO][FMUCHK] Version returned from CS FMU:   2.0
@@ -118,7 +118,7 @@ currentCommunicationPoint = 13.0, communicationStepSize = 1.0, noSetFMUStatePrio
 [VERBOSE][FMILIB] Releasing allocated library resources
 [VERBOSE][FMILIB] Releasing FMU CAPI interface
 [VERBOSE][FMICAPI] Successfully unloaded FMU binary
-[VERBOSE][JMPRT] Removing /tmp/fmucktmpXMMJGJ
+[VERBOSE][JMPRT] Removing /tmp/fmucktmpcnZHmI
 FMU check summary:
 FMU reported:
 	0 warning(s) and error(s)
