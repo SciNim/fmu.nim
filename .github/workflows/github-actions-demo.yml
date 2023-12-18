@@ -28,7 +28,7 @@ jobs:
       #    nimble test 
       - name: Install fmu.nim
         run: |
-          nimble install
+          nimble install -y
 
       - name: inc
         run: |
