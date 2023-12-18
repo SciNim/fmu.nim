@@ -76,7 +76,7 @@ model(bb):
     if comp.state == modelInitializationMode:
         # set first time event
         comp["der(v)"] = comp["g"] * (-1.0)
-        comp.isPositive["z=0"] = comp["h"] > 0 
+        comp.isPositive["z>0"] = comp["h"] > 0 
           
   proc getReal*(comp: FmuRef;
                 key:string):float =
@@ -101,8 +101,8 @@ model(bb):
       prevV = comp["v"].valueR
       comp.isNewEventIteration = false
 
-    comp.isPositive["z=0"] = comp["h"] > 0  # positive while h>0
-    if comp.isPositive["z=0"] == false:    # What to do when h <= 0
+    comp.isPositive["z>0"] = comp["h"] > 0  # positive while h>0
+    if comp.isPositive["z>0"] == false:    # What to do when h <= 0
       var tempV:float = -comp["e"].valueR * prevV
       if comp["v"].valueR != tempV:
         comp["h"] = 0.0
