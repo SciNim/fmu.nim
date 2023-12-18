@@ -25,7 +25,11 @@ jobs:
       #- name: Test
       #  run: |
       #    nimble install -y
-      #    nimble test             
+      #    nimble test 
+      - name: Install fmu.nim
+        run: |
+          nimble install
+
       - name: inc
         run: |
           cd examples/inc
