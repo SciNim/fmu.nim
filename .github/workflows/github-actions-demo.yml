@@ -45,7 +45,7 @@ jobs:
       - name: Make FMUChecker executable
         run: |
           chmod +x /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64
-          chmod +x /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.win64
+          chmod +x /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64
       - name: Install fmu.nim
         run: |
           nimble install -y
