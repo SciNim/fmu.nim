@@ -71,7 +71,7 @@ jobs:
         if: runner.os == 'Linux'
 
       - name: Execute FMU checker over inc.fmu in Windows
-        #shell: bash      
+        shell: bash      
         #shell: cmd
         run: |
           echo "::add-path::${env:GITHUB_WORKSPACE}"
