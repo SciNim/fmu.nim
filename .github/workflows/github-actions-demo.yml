@@ -77,13 +77,11 @@ jobs:
       # https://github.com/marketplace/actions/smart-diff
 
       - name: Compare the result file
-        uses: LouisBrunner/diff-action@v0.2.0
+        uses: GuillaumeFalourd/diff-action@v1
         with:
-          old: examples/inc/inc_me.csv
-          new: examples/inc/inc.csv
-          mode: addition
-          #tolerance: better
-
+          first_file_path: examples/inc/inc_me.csv
+          second_file_path: examples/inc/inc.csv
+          expected_result: PASSED
 
       #- name: Compare result files
         
