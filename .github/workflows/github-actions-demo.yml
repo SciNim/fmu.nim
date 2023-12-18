@@ -27,12 +27,19 @@ jobs:
       #    nimble install -y
       #    nimble test 
 
-      - name: Install FMU Compliance Checker
-        uses: jaxxstorm/action-install-gh-release@v1.10.0
-        with: # Grab a specific tag
-          repo: modelica-tools/FMUComplianceChecker
-          tag: 2.0.4
-          extension: "\\.zip"   
+      - name: Install FMU Compliance Checker for Linux64
+        uses: robinraju/release-downloader@v1.8
+        with:
+          repository: "modelica-tools/FMUComplianceChecker"
+          fileName: "FMUChecker-2.0.4-linux64.zip"
+          extract: true
+          #
+      - name: Install FMU Compliance Checker for Win64
+        uses: robinraju/release-downloader@v1.8
+        with:
+          repository: "modelica-tools/FMUComplianceChecker"
+          fileName: "FMUChecker-2.0.4-win64.zip"
+          extract: true
       - name: Install fmu.nim
         run: |
           nimble install -y
