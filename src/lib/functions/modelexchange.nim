@@ -1,7 +1,7 @@
 import ../defs/[definitions, modelinstance, masks]
 import ../functions/helpers
 import ../meta/filteredlog
-import strformat
+import std/[strformat,sequtils]
 
 
 ## ---------------------------------------------------------------------------
@@ -160,7 +160,8 @@ proc fmi2GetEventIndicators*( comp: FmuRef; #ModelInstanceRef;
     when declared(getEventIndicator):
       if comp.nEventIndicators > 0:
         for i in 0 ..< ni.int:
-          var val = comp.getEventIndicator(i)
+          var key = comp.isPositive.keys.toSeq()[i]
+          var val = comp.getEventIndicator(key)
           eventIndicators[i] = val.fmi2Real # to be implemented by the includer of this file
 
           filteredLog(comp, fmi2OK, fmiCall, 

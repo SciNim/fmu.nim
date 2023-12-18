@@ -119,7 +119,8 @@ proc fmi2DoStep*( comp: FmuRef;
       if comp.nEventIndicators > 0:
         # initialize previous event indicators with current values
         for i in 0 ..< comp.nEventIndicators:
-          prevEventIndicators[i] = comp.getEventIndicator(i)  # <-- implemented by the user
+          var key = comp.isPositive.keys.toSeq()[i]
+          prevEventIndicators[i] = comp.getEventIndicator(key)  # <-- implemented by the user
 
     # break the step into n steps and do forward Euler.
     comp.time = currentCommunicationPoint
@@ -140,7 +141,8 @@ proc fmi2DoStep*( comp: FmuRef;
         if comp.nEventIndicators > 0:
             # check for state event
             for i in 0 ..< comp.nEventIndicators:
-                var ei = comp.getEventIndicator(i)
+                var key = comp.isPositive.keys.toSeq()[i]
+                var ei = comp.getEventIndicator(key)
                 if ei * prevEventIndicators[i] < 0.0:
                     var tmp:string
                     if ei < 0:

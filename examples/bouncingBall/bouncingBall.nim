@@ -57,7 +57,7 @@ bb.addFloat("e").setParameter.setTunable.setExact
    .setMin( 0.5 )
    .setMax( 1.0 )
 
-bb.isPositive["z=0"] = true
+bb.isPositive["z>0"] = true
 
 model(bb):
   const
@@ -115,9 +115,10 @@ model(bb):
         comp["der(v)"] = 0  # turn off gravity.
 
 
-  proc getEventIndicator*(comp:FmuRef; z:int):float =
-    if z == 0:  # FIXME: to change into something more friendly
-      var tmp = if comp.isPositive["z=0"]:
+  proc getEventIndicator*(comp:FmuRef; key:string):float =
+    case key
+    of "z>0":
+      var tmp = if comp.isPositive["z>0"]:
                   EPS_INDICATORS
                 else:
                   -EPS_INDICATORS
