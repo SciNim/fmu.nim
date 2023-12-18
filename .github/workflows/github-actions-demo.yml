@@ -44,11 +44,13 @@ jobs:
           extract: true
 
           # chmod +x /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64
-      - name: Make FMUChecker executable
-        run: |
-          if [ "$RUNNER_OS" == "Linux" ]; then 
-            chmod +x /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64
-          fi
+      - name: Make FMUChecker executable in Linux
+        run: chmod +x /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64
+        if: runner.os == 'Linux'
+        #run: |
+        #  if [ "$RUNNER_OS" == "Linux" ]; then 
+        #    chmod +x /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64
+        #  fi
           
         #elif [ "$RUNNER_OS" == "Windows" ]; then
         #  chmod +x /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64
