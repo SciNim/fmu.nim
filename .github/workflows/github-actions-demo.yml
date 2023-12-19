@@ -72,10 +72,10 @@ jobs:
 
       - name: Execute FMU checker over inc.fmu in Windows
         shell: bash      
-        #shell: cmd  # echo "::add-path::$GITHUB_WORKSPACE"  # echo "::add-path::${env:GITHUB_WORKSPACE}" 
-        # chmod +x D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe
-        #echo "D:\\a\\fmu.nim\\fmu.nim\\FMUChecker-2.0.4-win64" >> $GITHUB_PATH
+        # echo "D:\\a\\fmu.nim\\fmu.nim\\FMUChecker-2.0.4-win64" >> $GITHUB_PATH
         run: |
+          echo "D:\\a\\fmu.nim\\fmu.nim\\FMUChecker-2.0.4-win64" >> $GITHUB_PATH
+          echo "$PATH"
           ls D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe
           chmod +x D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe
           ls examples/inc
