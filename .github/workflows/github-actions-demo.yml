@@ -76,8 +76,8 @@ jobs:
         # chmod +x D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe
         #echo "D:\\a\\fmu.nim\\fmu.nim\\FMUChecker-2.0.4-win64" >> $GITHUB_PATH
         run: |
-          
           ls D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe
+          chmod +x D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe
           ls examples/inc
           D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
         if: runner.os == 'Windows'      
