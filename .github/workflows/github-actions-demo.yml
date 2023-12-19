@@ -70,6 +70,19 @@ jobs:
           /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64 -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
         if: runner.os == 'Linux'
 
+
+      - name: Set path
+        shell: bash
+        run: echo "/d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64" >> $GITHUB_PATH
+        if: runner.os == 'Windows' 
+
+      - name: Execute FMU checker over inc.fmu in Windows
+        shell: bash      
+        # echo "$PATH"
+        run: |
+          fmuCheck.win64.exe
+        if: runner.os == 'Windows' 
+
       - name: Execute FMU checker over inc.fmu in Windows
         shell: bash      
         # echo "$PATH"
@@ -77,26 +90,24 @@ jobs:
           /d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe
         if: runner.os == 'Windows' 
 
-      # - name: Execute FMU checker over inc.fmu in Windows (Testing cmd - not working)
-      #   shell: cmd      
-      #   run: D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
-      #   if: runner.os == 'Windows' 
+      - name: Execute FMU checker over inc.fmu in Windows (Testing cmd - not working)
+        shell: cmd      
+        run: D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
+        if: runner.os == 'Windows' 
 
       # - name: Execute FMU checker over inc.fmu in Windows (Testing PowerShell)
       #   run: D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
       #   if: runner.os == 'Windows' 
 
-      - name: Execute FMU checker over inc.fmu in Windows (Testing bash)
-        shell: bash
-        run: /d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
-        if: runner.os == 'Windows'
+      # - name: Execute FMU checker over inc.fmu in Windows (Testing bash)
+      #   shell: bash
+      #   run: /d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
+      #   if: runner.os == 'Windows'
+
 
       - name: Execute FMU checker over inc.fmu in Windows
-        shell: bash      
-        # echo "$PATH"
+        shell: bash
         run: |
-          echo "/d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64" >> $GITHUB_PATH
-          export PATH="/d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64:$PATH"
           chmod +x /d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe
           ls examples/inc
           fmuCheck.win64.exe
