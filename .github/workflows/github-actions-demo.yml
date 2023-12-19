@@ -71,11 +71,13 @@ jobs:
         if: runner.os == 'Linux'
 
       - name: Execute FMU checker over inc.fmu in Windows
-        shell: cmd      
+        shell: bash      
         #shell: cmd  # echo "::add-path::$GITHUB_WORKSPACE"  # echo "::add-path::${env:GITHUB_WORKSPACE}" 
         # chmod +x D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe
         run: |
           echo "D:\\a\\fmu.nim\\fmu.nim\\FMUChecker-2.0.4-win64" >> $GITHUB_PATH
+          echo $GITHUB_PATH
+          ls D:\\a\\fmu.nim\\fmu.nim\\FMUChecker-2.0.4-win64
           cd examples/inc
           fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
         if: runner.os == 'Windows'      
