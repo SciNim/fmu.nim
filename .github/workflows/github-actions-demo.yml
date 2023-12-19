@@ -77,16 +77,19 @@ jobs:
           /d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe
         if: runner.os == 'Windows' 
 
-      # - name: Execute FMU checker over inc.fmu in Windows (not working)
-      #   shell: cmd      
-      #   run: |
-      #     D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe  -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
+      - name: Execute FMU checker over inc.fmu in Windows (Testing cmd)
+        shell: cmd      
+        run: D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe  -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
+        if: runner.os == 'Windows' 
+
+      # - name: Execute FMU checker over inc.fmu in Windows (Testing PowerShell)
+      #   run: D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe  -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
       #   if: runner.os == 'Windows' 
 
-      - name: Execute FMU checker over inc.fmu in Windows (not working)
-        run: |
-          D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe  -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
-        if: runner.os == 'Windows' 
+      # - name: Execute FMU checker over inc.fmu in Windows (Testing bash)
+      #   shell: bash
+      #   run: /d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe  -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
+      #   if: runner.os == 'Windows'
 
       - name: Execute FMU checker over inc.fmu in Windows
         shell: bash      
