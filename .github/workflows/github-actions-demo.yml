@@ -80,6 +80,7 @@ jobs:
           ls D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe
           chmod +x /d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe
           ls examples/inc
+          fmuCheck.win64.exe
           /d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
         if: runner.os == 'Windows'      
 
