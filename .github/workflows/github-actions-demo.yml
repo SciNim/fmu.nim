@@ -73,7 +73,9 @@ jobs:
 
       - name: Set path for windows (working)
         shell: bash
-        run: echo "/d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64" >> $GITHUB_PATH
+        run: |
+          echo "/d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64" >> $GITHUB_PATH
+          echo "C:\msys64\usr\bin" >> $GITHUB_PATH
         if: runner.os == 'Windows' 
 
       - name: Execute FMU checker over inc.fmu in Windows
