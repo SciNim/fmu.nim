@@ -75,6 +75,7 @@ jobs:
         # echo "D:\\a\\fmu.nim\\fmu.nim\\FMUChecker-2.0.4-win64" >> $GITHUB_PATH
         run: |
           echo "/d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64" >> $GITHUB_PATH
+          export PATH="/d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64:$PATH"
           echo "$PATH"
           ls D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe
           chmod +x /d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe
