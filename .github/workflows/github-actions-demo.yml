@@ -1,4 +1,4 @@
-name: Testing examples with FMU Checker
+name: nim compilation - Model Exchange
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
