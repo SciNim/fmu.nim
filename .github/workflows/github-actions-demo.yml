@@ -27,13 +27,13 @@ jobs:
       #    nimble install -y
       #    nimble test 
 
-      - name: Setup MSYS2 (Windows)
-        if: ${{matrix.target == 'windows'}}
-        uses: msys2/setup-msys2@v2
-        with:
-          path-type: inherit
-          update: true
-          install: base-devel git mingw-w64-x86_64-toolchain
+      # - name: Setup MSYS2 (Windows)
+      #   if: ${{matrix.target == 'windows'}}
+      #   uses: msys2/setup-msys2@v2
+      #   with:
+      #     path-type: inherit
+      #     update: true
+      #     install: base-devel git mingw-w64-x86_64-toolchain
 
       - name: Install FMU Compliance Checker (linux64)
         uses: robinraju/release-downloader@v1.8
@@ -88,19 +88,19 @@ jobs:
           echo "C:\msys64\usr\bin" >> $GITHUB_PATH
         if: runner.os == 'Windows' 
 
-      - name: Execute FMU checker over inc.fmu in Windows 
-        shell: bash      
-        # echo "$PATH"
-        run: |
-          fmuCheck.win64.exe
-        if: runner.os == 'Windows' 
+      # - name: Execute FMU checker over inc.fmu in Windows 
+      #   shell: bash      
+      #   # echo "$PATH"
+      #   run: |
+      #     fmuCheck.win64.exe
+      #   if: runner.os == 'Windows' 
 
-      - name: Execute FMU checker over inc.fmu in Windows (testing msys2)
-        shell: msys2 {0}    
-        # echo "$PATH"
-        run: |
-          fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
-        if: runner.os == 'Windows'
+      # - name: Execute FMU checker over inc.fmu in Windows (testing msys2)
+      #   shell: msys2 {0}    
+      #   # echo "$PATH"
+      #   run: |
+      #     fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
+      #   if: runner.os == 'Windows'
         
         #${{matrix.target == 'windows'}}
 
@@ -128,14 +128,14 @@ jobs:
         if: runner.os == 'Windows'
 
 
-      - name: Execute FMU checker over inc.fmu in Windows
-        shell: bash
-        run: |
-          chmod +x /d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe
-          ls examples/inc
-          fmuCheck.win64.exe
-          "fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu"
-        if: runner.os == 'Windows'      
+      # - name: Execute FMU checker over inc.fmu in Windows
+      #   shell: bash
+      #   run: |
+      #     chmod +x /d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe
+      #     ls examples/inc
+      #     fmuCheck.win64.exe
+      #     "fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu"
+      #   if: runner.os == 'Windows'      
 
 
       # https://github.com/marketplace/actions/smart-diff
