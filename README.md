@@ -9,7 +9,7 @@ You need [Nim](https://nim-lang.org/) v2.0. You can use [choosenim](https://gith
 
 To intall the `fmu.nim` library, as usual, with nimble:
 ```sh
-nimble install https://github.com/mantielero/fmu.nim
+nimble install https://github.com/SciNim/fmu.nim
 ```
 
 ## Status
