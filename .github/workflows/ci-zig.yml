@@ -60,7 +60,7 @@ jobs:
 
       - name: Install zigcc
         run: |
-          nimble install zigcc 
+          nimble install -y zigcc 
 
       - name: Install fmu.nim
         run: |
