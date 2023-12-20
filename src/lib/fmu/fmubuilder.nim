@@ -37,10 +37,10 @@ template exportFmu*( fmu:Fmu;
 
     var cmdline = "nim c --app:lib "
     
-    var zigPath = "zigcc"
+    var zigPath = "zigcc" # linux
     if defined(windows):
       zigPath &= ".cmd"
-    #var osvalue, relpath, ext, target: string
+
     for (osvalue, relpath, ext, target) in @[("linux",   "binaries/linux64", ".so",  "x86_64-linux-gnu"),  ("windows", "binaries/win64",   ".dll", "x86_64-windows")]:
       var execLine = cmdline
       execLine &= " --os:" & osvalue & " --cc:clang --cpu:amd64 --os:" & osvalue
@@ -60,7 +60,9 @@ template exportFmu*( fmu:Fmu;
 
   # x86_64-windows
   # aarch64-linux
-  # nim c --cpu:arm --os:linux --cc:clang --os:linux  --clang.exe="zigcc" --clang.linkerexe="zigcc" --passC:"-target arm-linux-musleabi -mcpu=arm1176jzf_s -fno-sanitize=undefined" --passL:"-target arm-linux-musleabi -mcpu=arm1176jzf_s" alarma.nim
+  # nim c --cpu:arm --os:linux --cc:clang --os:linux  
+  # --passC:"-target arm-linux-musleabi -mcpu=arm1176jzf_s -fno-sanitize=undefined" 
+  # --passL:"-target arm-linux-musleabi -mcpu=arm1176jzf_s"
 
 
 

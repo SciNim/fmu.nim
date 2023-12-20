@@ -16,8 +16,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: iffy/install-nim@v5
         with:
-          nim-version: ${{ matrix.nimversion }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }} 
+          version: ${{ matrix.nimversion }}
+          #repo-token: ${{ secrets.GITHUB_TOKEN }} 
           #env:
           #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
       - uses: goto-bus-stop/setup-zig@v2
@@ -61,14 +61,14 @@ jobs:
       - name: Execute FMU checker over inc.fmu in Linux
         run: |  
           cd examples/inc          
-          export LD_PRELOAD=/lib/x86_64-linux-gnu/libstdc++.so.6:$LD_PRELOAD  
+          #export LD_PRELOAD=/lib/x86_64-linux-gnu/libstdc++.so.6:$LD_PRELOAD  
           /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64 -h 1 -s 14 -f inc.fmu
         if: runner.os == 'Linux'
 
       - name: Execute FMU checker over inc.fmu in Linux
         run: |  
           cd examples/inc
-          export LD_PRELOAD=/lib/x86_64-linux-gnu/libstdc++.so.6:$LD_PRELOAD       
+          #export LD_PRELOAD=/lib/x86_64-linux-gnu/libstdc++.so.6:$LD_PRELOAD       
           /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64 -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
         if: runner.os == 'Linux'
 
