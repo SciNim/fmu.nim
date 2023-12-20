@@ -123,7 +123,7 @@ jobs:
       #   if: runner.os == 'Windows' 
 
 
-      - name: Execute FMU checker over inc.fmu in Windows - enables why it fails when it does
+      - name: Execute FMU checker over inc.fmu in Windows - enables seeing why it fails when it does
         shell: bash
         run: |
           cd examples/inc
