@@ -24,7 +24,7 @@ template exportFmu*( fmu:Fmu;
     if defined(linux) and defined(amd64):
       libFolder = joinPath(tmpFolder, "binaries/linux64", fmu.id & ".so") 
     elif defined(windows) and defined(amd64):  # x86
-      libFolder = joinPath(tmpFolder, "binaries/windows", fmu.id & ".dll")     
+      libFolder = joinPath(tmpFolder, "binaries/win64", fmu.id & ".dll")     
 
     var cmdline = "nim c --app:lib "
     cmdline &= "-o:" & libFolder & " --mm:orc -f -d:release " & fmu.nimFile
