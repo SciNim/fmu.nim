@@ -84,8 +84,15 @@ jobs:
         shell: bash      
         # echo "$PATH"
         run: |
-          fmuCheck.win64.exe -d
+          fmuCheck.win64.exe
         if: runner.os == 'Windows' 
+
+      - name: Execute FMU checker over inc.fmu in Windows
+        shell: msys2 {0}    
+        # echo "$PATH"
+        run: |
+          fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
+        if: ${{matrix.target == 'windows'}}
 
       # - name: Execute FMU checker over inc.fmu in Windows [working]
       #   shell: bash      
