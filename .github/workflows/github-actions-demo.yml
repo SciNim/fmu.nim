@@ -27,6 +27,14 @@ jobs:
       #    nimble install -y
       #    nimble test 
 
+      - name: Setup MSYS2 (Windows)
+        if: ${{matrix.target == 'windows'}}
+        uses: msys2/setup-msys2@v2
+        with:
+          path-type: inherit
+          update: true
+          install: base-devel git mingw-w64-x86_64-toolchain
+
       - name: Install FMU Compliance Checker (linux64)
         uses: robinraju/release-downloader@v1.8
         if: runner.os == 'Linux'
@@ -80,14 +88,14 @@ jobs:
           echo "C:\msys64\usr\bin" >> $GITHUB_PATH
         if: runner.os == 'Windows' 
 
-      - name: Execute FMU checker over inc.fmu in Windows (testing msys2)
+      - name: Execute FMU checker over inc.fmu in Windows 
         shell: bash      
         # echo "$PATH"
         run: |
           fmuCheck.win64.exe
         if: runner.os == 'Windows' 
 
-      - name: Execute FMU checker over inc.fmu in Windows
+      - name: Execute FMU checker over inc.fmu in Windows (testing msys2)
         shell: msys2 {0}    
         # echo "$PATH"
         run: |
