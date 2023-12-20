@@ -125,12 +125,16 @@ jobs:
 
       - name: Execute FMU checker over inc.fmu in Windows - enables why it fails when it does
         shell: bash
-        run: fmuCheck.win64.exe -h 1 -s 14 -f inc.fmu
+        run: |
+          cd examples/inc
+          fmuCheck.win64.exe -h 1 -s 14 -f inc.fmu
         if: runner.os == 'Windows'
 
       - name: Execute FMU checker over inc.fmu in Windows (Testing bash)
         shell: bash
-        run: fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
+        run: |
+          cd examples/inc
+          fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
         if: runner.os == 'Windows'
 
 
