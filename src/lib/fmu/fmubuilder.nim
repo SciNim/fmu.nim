@@ -34,58 +34,25 @@ template exportFmu*( fmu:Fmu;
     doAssert execCmdEx( cmdline ).exitCode == QuitSuccess
 
   else:  # -d:zig
-    if defined(linux):
-      var libFolder = joinPath(tmpFolder, "binaries/linux64", fmu.id & ".so") 
 
-      var cmdline = "nim c --app:lib "
-      var zig = """ --os:linux --cc:clang --cpu:amd64 --os:linux --clang.exe="zigcc" --clang.linkerexe="zigcc" """
-      zig &= """ --passC:"-target x86_64-linux-gnu -fno-sanitize=undefined" """
-      zig &= """ --passL:"-target x86_64-linux-gnu -fno-sanitize=undefined" """
-      cmdline &= zig
-      cmdline &= "-o:" & libFolder & " --mm:orc -f -d:release " & fmu.nimFile
-
-      consoleLogger.log(lvlInfo, "fmuBuilder > exportFmu: exporting library using command line:\n" & "   " & cmdline)  
-
-      doAssert execCmdEx( cmdline ).exitCode == QuitSuccess
-
-
-      libFolder = joinPath(tmpFolder, "binaries/win64", fmu.id & ".dll")
-      cmdline = "nim c --app:lib "   
-      zig = """ --os:windows --cc:clang --cpu:amd64 --os:windows --clang.exe="zigcc" --clang.linkerexe="zigcc" """
-      zig &= """ --passC:"-target x86_64-windows -fno-sanitize=undefined" """
-      zig &= """ --passL:"-target x86_64-windows -fno-sanitize=undefined" """
-      cmdline &= zig
-      cmdline &= "-o:" & libFolder & " --mm:orc -f -d:release " & fmu.nimFile
-
-      consoleLogger.log(lvlInfo, "fmuBuilder > exportFmu: exporting library using command line:\n" & "   " & cmdline)  
-      doAssert execCmdEx( cmdline ).exitCode == QuitSuccess
+    var cmdline = "nim c --app:lib "
     
-    
-    elif defined(windows):
-      var libFolder = joinPath(tmpFolder, "binaries/linux64", fmu.id & ".so") 
+    var zigPath = "zigcc"
+    if defined(windows):
+      zigPath &= ".cmd"
+    #var osvalue, relpath, ext, target: string
+    for (osvalue, relpath, ext, target) in @[("linux",   "binaries/linux64", ".so",  "x86_64-linux-gnu"),  ("windows", "binaries/win64",   ".dll", "x86_64-windows")]:
+      var execLine = cmdline
+      execLine &= " --os:" & osvalue & " --cc:clang --cpu:amd64 --os:" & osvalue
+      execLine &= " --clang.exe=\"" & zigPath & "\" --clang.linkerexe=\"" & zigPath & "\" "
+      execLine &= " --passC:\"-target " & target & " -fno-sanitize=undefined\" "
+      execLine &= " --passL:\"-target " & target & " -fno-sanitize=undefined\" "
+      var libFolder = joinPath(tmpFolder, relpath, fmu.id & ext) 
+      execLine &= "-o:" & libFolder & " --mm:orc -f -d:release " & fmu.nimFile
 
-      var cmdline = "nim c --app:lib "
-      var zig = """ --cc:clang --clang.exe="zigcc.cmd" --clang.linkerexe="zigcc.cmd" """
-      zig &= """ --passC:"-target x86_64-linux-gnu" """
-      zig &= """ --passL:"-target x86_64-linux-gnu" """
-      cmdline &= zig
-      cmdline &= "--os:linux -o:" & libFolder & " --mm:orc -f -d:release " & fmu.nimFile
+      consoleLogger.log(lvlInfo, "fmuBuilder > exportFmu: exporting library using command line:\n" & "   " & execLine)  
 
-      consoleLogger.log(lvlInfo, "fmuBuilder > exportFmu: exporting library using command line:\n" & "   " & cmdline)  
-
-      doAssert execCmdEx( cmdline ).exitCode == QuitSuccess
-
-
-      libFolder = joinPath(tmpFolder, "binaries/win64", fmu.id & ".dll")
-      cmdline = "nim c --app:lib "   
-      zig = """ --cc:clang --clang.exe="zigcc.cmd" --clang.linkerexe="zigcc.cmd" """
-      zig &= """ --passC:"-target x86_64-windows" """
-      zig &= """ --passL:"-target x86_64-windows" """
-      cmdline &= zig
-      cmdline &= "--os:windows -o:" & libFolder & " --mm:orc -f -d:release " & fmu.nimFile
-
-      consoleLogger.log(lvlInfo, "fmuBuilder > exportFmu: exporting library using command line:\n" & "   " & cmdline)  
-      doAssert execCmdEx( cmdline ).exitCode == QuitSuccess
+      doAssert execCmdEx( execLine ).exitCode == QuitSuccess
 
 
   #zig &= """ --passC:"-target x86_64-linux-musl -fno-sanitize=undefined" """
