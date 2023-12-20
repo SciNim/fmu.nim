@@ -21,19 +21,6 @@ jobs:
           #env:
           #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
       - uses: goto-bus-stop/setup-zig@v2
-      #- run: zig build test               
-      #- name: Test
-      #  run: |
-      #    nimble install -y
-      #    nimble test 
-
-      # - name: Setup MSYS2 (Windows)
-      #   if: ${{matrix.target == 'windows'}}
-      #   uses: msys2/setup-msys2@v2
-      #   with:
-      #     path-type: inherit
-      #     update: true
-      #     install: base-devel git mingw-w64-x86_64-toolchain
 
       - name: Install FMU Compliance Checker (linux64)
         uses: robinraju/release-downloader@v1.8
@@ -75,6 +62,12 @@ jobs:
       - name: Execute FMU checker over inc.fmu in Linux
         run: |  
           cd examples/inc          
+          /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64 -h 1 -s 14 -f inc.fmu
+        if: runner.os == 'Linux'
+
+      - name: Execute FMU checker over inc.fmu in Linux
+        run: |  
+          cd examples/inc          
           /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64 -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
         if: runner.os == 'Linux'
 
@@ -85,6 +78,11 @@ jobs:
           echo "C:\msys64\usr\bin" >> $GITHUB_PATH
         if: runner.os == 'Windows' 
 
+      - name: Execute FMU checker over inc.fmu in Windows
+        shell: bash
+        run: fmuCheck.win64.exe -h 1 -s 14 -f inc.fmu
+        if: runner.os == 'Windows'
+        
       - name: Execute FMU checker over inc.fmu in Windows
         shell: bash
         run: fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
