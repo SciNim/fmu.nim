@@ -18,22 +18,6 @@ jobs:
         with:
           nim-version: ${{ matrix.nimversion }}
           repo-token: ${{ secrets.GITHUB_TOKEN }} 
-          #env:
-          #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-      - uses: goto-bus-stop/setup-zig@v2
-      #- run: zig build test               
-      #- name: Test
-      #  run: |
-      #    nimble install -y
-      #    nimble test 
-
-      # - name: Setup MSYS2 (Windows)
-      #   if: ${{matrix.target == 'windows'}}
-      #   uses: msys2/setup-msys2@v2
-      #   with:
-      #     path-type: inherit
-      #     update: true
-      #     install: base-devel git mingw-w64-x86_64-toolchain
 
       - name: Install FMU Compliance Checker (linux64)
         uses: robinraju/release-downloader@v1.8
@@ -53,17 +37,9 @@ jobs:
           fileName: "FMUChecker-2.0.4-win64.zip"
           extract: true
 
-          # chmod +x /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64
       - name: Make FMUChecker executable in Linux
         run: chmod +x /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64
         if: runner.os == 'Linux'
-        #run: |
-        #  if [ "$RUNNER_OS" == "Linux" ]; then 
-        #    chmod +x /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64
-        #  fi
-          
-        #elif [ "$RUNNER_OS" == "Windows" ]; then
-        #  chmod +x /home/runner/work/fmu.nim/fmu.nim/FMUChecker-2.0.4-linux64/fmuCheck.linux64
 
       - name: Install fmu.nim
         run: |
@@ -88,39 +64,8 @@ jobs:
           echo "C:\msys64\usr\bin" >> $GITHUB_PATH
         if: runner.os == 'Windows' 
 
-      # - name: Execute FMU checker over inc.fmu in Windows 
-      #   shell: bash      
-      #   # echo "$PATH"
-      #   run: |
-      #     fmuCheck.win64.exe
-      #   if: runner.os == 'Windows' 
 
-      # - name: Execute FMU checker over inc.fmu in Windows (testing msys2)
-      #   shell: msys2 {0}    
-      #   # echo "$PATH"
-      #   run: |
-      #     fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
-      #   if: runner.os == 'Windows'
-        
         #${{matrix.target == 'windows'}}
-
-      # - name: Execute FMU checker over inc.fmu in Windows [working]
-      #   shell: bash      
-      #   # echo "$PATH"
-      #   run: |
-      #     /d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe
-      #   if: runner.os == 'Windows' 
-
-      # - name: Execute FMU checker over inc.fmu in Windows (Testing cmd - not working)
-      #   shell: cmd      
-      #   run: D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
-      #   if: runner.os == 'Windows' 
-
-      # D:/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/
-      # - name: Execute FMU checker over inc.fmu in Windows (Testing PowerShell)
-      #   run: |
-      #     & fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu
-      #   if: runner.os == 'Windows' 
 
 
       - name: Execute FMU checker over inc.fmu in Windows - enables seeing why it fails when it does
@@ -138,16 +83,6 @@ jobs:
         if: runner.os == 'Windows'
 
 
-      # - name: Execute FMU checker over inc.fmu in Windows
-      #   shell: bash
-      #   run: |
-      #     chmod +x /d/a/fmu.nim/fmu.nim/FMUChecker-2.0.4-win64/fmuCheck.win64.exe
-      #     ls examples/inc
-      #     fmuCheck.win64.exe
-      #     "fmuCheck.win64.exe -h 1 -s 14 -f -l 6 -e inc.log -o inc.csv inc.fmu"
-      #   if: runner.os == 'Windows'      
-
-
       # https://github.com/marketplace/actions/smart-diff
 
       - name: Compare the result file
@@ -158,4 +93,4 @@ jobs:
           expected_result: PASSED
 
 
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+      - run: echo "This job's status is ${{ job.status }}."
