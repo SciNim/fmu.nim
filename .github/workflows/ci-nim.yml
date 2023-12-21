@@ -11,6 +11,9 @@ jobs:
         os:
           - ubuntu-latest
           - windows-latest
+        modeltype:
+          - fmu2me
+          - fmu2cs
 
     steps:
       - uses: actions/checkout@v4
@@ -46,9 +49,11 @@ jobs:
           nimble install -y
 
       - name: Create inc.fmu as Model exchange
+        with:
+          modeltype: ${{ matrix.modeltype }}
         run: |
           cd examples/inc
-          nim c -r -d:fmu2me inc
+          nim c -r -d:${{ matrix.modeltype }} inc
 
       - name: Execute FMU checker over inc.fmu in Linux
         run: |  
