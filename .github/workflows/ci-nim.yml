@@ -48,7 +48,7 @@ jobs:
         run: |
           nimble install -y
 
-      - name: Create inc.fmu as Model exchange
+      - name: Create inc.fmu as fmu2me=Model exchange or fmu2cs=Co-Simulation - now=${{ matrix.modeltype }}
         with:
           modeltype: ${{ matrix.modeltype }}
         run: |
