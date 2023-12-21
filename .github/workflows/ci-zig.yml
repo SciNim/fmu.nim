@@ -101,9 +101,18 @@ jobs:
       - name: Compare the result file
         uses: GuillaumeFalourd/diff-action@v1
         with:
+          first_file_path: examples/inc/inc_me_win64.csv
+          second_file_path: examples/inc/inc.csv
+          expected_result: PASSED
+        if: runner.os == 'Windows'
+
+      - name: Compare the result file
+        uses: GuillaumeFalourd/diff-action@v1
+        with:
           first_file_path: examples/inc/inc_me.csv
           second_file_path: examples/inc/inc.csv
           expected_result: PASSED
+        if: runner.os == 'Linux'
 
         
 
