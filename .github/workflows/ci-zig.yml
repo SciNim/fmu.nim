@@ -22,7 +22,7 @@ jobs:
           #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
       - uses: goto-bus-stop/setup-zig@v2
         with:
-          version: 0.9.0
+          version: 0.12.0-dev
 
       - name: Install FMU Compliance Checker (linux64)
         uses: robinraju/release-downloader@v1.8
